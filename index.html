@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0a">
+  <meta name="description" content="Archivist is the complete, high-performance pipeline for discovering, curating, preserving, and playing game history.">
+  <title>Archivist — Own your game history</title>
+  <link rel="icon" href="mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Archivist home">
+      <img src="mark.svg" alt="" width="32" height="32">
+      <span>Archivist</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#features">Features</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#performance">Performance</a>
+    </nav>
+    <a class="nav-cta" href="#early-access">Private alpha <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> A preservation workstation for playable history</p>
+        <h1>Own your<br><em>game history.</em></h1>
+        <p class="hero-lede">Archivist turns a scattered ROM collection into one fast, accurate, explorable vault—from source manifests to the moment you press play.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#features">Explore Archivist <span aria-hidden="true">↓</span></a>
+          <a class="button button-quiet" href="#pipeline"><span class="play" aria-hidden="true">▶</span> See the full pipeline</a>
+        </div>
+        <dl class="hero-stats" aria-label="Archivist at a glance">
+          <div><dt>Native</dt><dd>Rust core</dd></div>
+          <div><dt>1G1R</dt><dd>Policy engine</dd></div>
+          <div><dt>End to end</dt><dd>Curate → play</dd></div>
+        </dl>
+      </div>
+
+      <div class="showcase" aria-roledescription="carousel" aria-label="Archivist product highlights">
+        <div class="showcase-glow"></div>
+        <div class="app-shell" data-slider>
+          <div class="window-bar">
+            <div class="window-brand"><img src="mark.svg" alt="" width="19" height="19"><b>ARCHIVIST</b></div>
+            <div class="window-tabs"><span class="active">HISTORIES</span><span>LIBRARY</span><span>ORGANIZER</span></div>
+            <div class="window-tools"><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="slides" aria-live="polite">
+            <article class="slide is-active" data-slide="0" aria-label="1 of 4: Explore game history">
+              <div class="history-scene">
+                <aside class="app-sidebar">
+                  <small>HISTORIES</small>
+                  <strong>GENERATIONS</strong>
+                  <button>01 · FIRST</button><button>02 · SECOND</button><button class="selected">03 · THIRD</button><button>04 · FOURTH</button><button>05 · FIFTH</button>
+                  <div class="side-meta"><span>1976</span><span>2026</span></div>
+                </aside>
+                <div class="lineage">
+                  <div class="scene-heading"><span>CONSOLE LINEAGE</span><b>THIRD GENERATION</b><small>1983—2003</small></div>
+                  <svg class="lineage-lines" viewBox="0 0 700 360" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M36 70H150L190 130H305L350 88H470L515 148H665"/><path d="M84 255H210L255 195H390L435 250H590"/><path d="M190 130V195M470 88V250"/>
+                  </svg>
+                  <div class="console c1"><span>1983</span><b>Famicom</b><small>Nintendo</small></div>
+                  <div class="console c2"><span>1985</span><b>NES</b><small>Nintendo</small></div>
+                  <div class="console c3"><span>1985</span><b>Mark III</b><small>Sega</small></div>
+                  <div class="console c4"><span>1986</span><b>7800</b><small>Atari</small></div>
+                  <div class="console c5"><span>1987</span><b>Master System</b><small>Sega</small></div>
+                  <div class="generation-stamp">GEN <b>03</b></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="slide" data-slide="1" aria-label="2 of 4: Native performance">
+              <div class="performance-scene">
+                <div class="perf-copy"><span class="code-tag">// BUILT DIFFERENT</span><h3>Native Rust.<br><em>Bare-metal fast.</em></h3><p>Predictable memory, parallel work, and caches designed for collections that stopped being small years ago.</p></div>
+                <div class="perf-monitor">
+                  <header><span>ARCHIVIST / RUNTIME</span><i>LIVE</i></header>
+                  <div class="metric"><span>FRAME TIME</span><b>4.2<small>ms</small></b></div>
+                  <svg viewBox="0 0 500 110" preserveAspectRatio="none" aria-hidden="true"><path d="M0 88L35 84L55 87L82 78L110 81L140 66L168 70L190 58L215 64L245 48L275 54L305 37L335 44L365 27L395 35L425 19L460 24L500 10"/></svg>
+                  <div class="cache-grid"><div><i></i><span>INDEX CACHE</span><b>99.8%</b></div><div><i></i><span>MEMORY</span><b>184 MB</b></div><div><i></i><span>UI THREAD</span><b>READY</b></div></div>
+                </div>
+                <div class="rust-orbit" aria-hidden="true"><span>RUST</span><i></i><i></i><i></i></div>
+              </div>
+            </article>
+
+            <article class="slide" data-slide="2" aria-label="3 of 4: Full preservation pipeline">
+              <div class="vault-scene">
+                <aside class="vault-nav"><small>WORKSPACE</small><b>FOUNDATION</b><b>SELECTION</b><b class="on">VAULT <i>12,482</i></b><b>ORGANIZER</b><div></div><small>PROVIDERS</small><span>No-Intro <i>●</i></span><span>Redump <i>●</i></span><span>MAME <i>●</i></span></aside>
+                <div class="vault-main">
+                  <header><div><small>SELECTION / NINTENDO</small><h3>Nintendo Game Boy Advance</h3></div><span class="verified">●  VERIFIED</span></header>
+                  <div class="hash-pulse"><span class="spinner"></span><div><b>Hashing titles… on your 24 cores</b><small>SHA-256 · 9,418 / 12,482</small></div><strong>75%</strong></div>
+                  <div class="vault-table"><div class="th"><span>TITLE</span><span>REGION</span><span>STATUS</span><span>HASH</span></div><div><b>Advance Wars</b><span>USA</span><i>ACCEPTED</i><code>7fa2…91c0</code></div><div><b>Castlevania: Aria of Sorrow</b><span>USA</span><i>ACCEPTED</i><code>e83b…4aa1</code></div><div><b>Golden Sun</b><span>EUR</span><i>ACCEPTED</i><code>19cd…77b4</code></div><div><b>Metroid Fusion</b><span>USA</span><i>ACCEPTED</i><code>c404…8f21</code></div></div>
+                  <footer><span>ReTool policy</span><b>1 GAME · 1 ROM</b><span>Accurate by construction</span></footer>
+                </div>
+              </div>
+            </article>
+
+            <article class="slide" data-slide="3" aria-label="4 of 4: Full controller support">
+              <div class="controller-scene">
+                <div class="modal-card">
+                  <header><div><small>INPUT</small><h3>Controller Guide</h3></div><button tabindex="-1" aria-hidden="true">×</button></header>
+                  <div class="controller-layout">
+                    <div class="gamepad" aria-hidden="true"><span class="pad-body"></span><i class="stick left"></i><i class="stick right"></i><i class="dpad">✚</i><i class="button a">A</i><i class="button b">B</i><i class="button x">X</i><i class="button y">Y</i><i class="center one">•••</i><i class="center two">▣</i></div>
+                    <div class="bindings"><div><kbd>ⓐ</kbd><span><b>Open / Launch</b><small>Select the focused title</small></span></div><div><kbd>ⓑ</kbd><span><b>Back</b><small>Return to the previous view</small></span></div><div><kbd>☰</kbd><span><b>Actions</b><small>Open contextual commands</small></span></div><div><kbd>↔</kbd><span><b>Navigate</b><small>Move through every surface</small></span></div></div>
+                  </div>
+                  <footer><span>Xbox · PlayStation · Switch Pro · Generic</span><b><i></i> CONTROLLER CONNECTED</b></footer>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="slider-footer">
+            <div class="slide-copy">
+              <div class="is-active" data-caption="0"><small>01 / EXPLORE</small><b>History has a shape.</b><span>Trace every branch, generation, and machine.</span></div>
+              <div data-caption="1"><small>02 / PERFORMANCE</small><b>Never wait for your library.</b><span>Native speed, even at archival scale.</span></div>
+              <div data-caption="2"><small>03 / PRESERVE</small><b>The whole pipeline. One place.</b><span>Source, select, verify, organize, launch.</span></div>
+              <div data-caption="3"><small>04 / PLAY</small><b>Lean back. Stay in control.</b><span>Every screen works from the couch.</span></div>
+            </div>
+            <div class="slider-controls">
+              <button type="button" data-prev aria-label="Previous highlight">←</button>
+              <div class="slider-dots" role="tablist" aria-label="Choose product highlight"><button class="is-active" role="tab" aria-selected="true" aria-label="Explore game history" data-dot="0"></button><button role="tab" aria-selected="false" aria-label="Native performance" data-dot="1"></button><button role="tab" aria-selected="false" aria-label="Full preservation pipeline" data-dot="2"></button><button role="tab" aria-selected="false" aria-label="Controller support" data-dot="3"></button></div>
+              <button type="button" data-next aria-label="Next highlight">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="thesis" id="features">
+      <p class="section-index">01 — WHAT IS ARCHIVIST?</p>
+      <h2>Not another launcher.<br><em>The system behind your collection.</em></h2>
+      <p class="thesis-copy">Most frontends begin when your library is already clean. Archivist begins at the source: it understands manifests, applies preservation policy, verifies every file, manages emulator intent, and turns the result into a living map of game history.</p>
+      <div class="feature-strip">
+        <article><span class="feature-icon">⌁</span><small>DISCOVER</small><h3>See the lineage</h3><p>Browse systems in historical context—not an endless grid of box art.</p></article>
+        <article><span class="feature-icon">◇</span><small>CURATE</small><h3>One game. One ROM.</h3><p>A rigorous selection policy carries ReTool’s mission forward.</p></article>
+        <article><span class="feature-icon">✓</span><small>VERIFY</small><h3>Know what you own</h3><p>Manifest-backed hashing makes every file’s provenance legible.</p></article>
+        <article><span class="feature-icon">▷</span><small>PLAY</small><h3>Launch without friction</h3><p>Bundled emulator intent and controller-first navigation.</p></article>
+      </div>
+    </section>
+
+    <section class="pipeline-section" id="pipeline">
+      <div class="pipeline-copy"><p class="section-index">02 — THE COMPLETE PIPELINE</p><h2>From chaotic files<br>to a <em>trusted vault.</em></h2><p>Archivist unifies work that used to mean a folder full of specialist tools, scripts, spreadsheets, and launchers.</p></div>
+      <ol class="pipeline-flow">
+        <li><span>01</span><div><small>INGEST</small><b>Provider manifests</b><p>No-Intro, Redump, MAME, and curated sources.</p></div></li>
+        <li><span>02</span><div><small>SELECT</small><b>Next-generation 1G1R</b><p>ReTool’s torch, carried into an auditable policy engine.</p></div></li>
+        <li><span>03</span><div><small>VERIFY</small><b>Parallel hashing</b><p>Use every core to identify and validate at full speed.</p></div></li>
+        <li><span>04</span><div><small>ORGANIZE</small><b>Vault management</b><p>Move from intake to a clean, deterministic collection.</p></div></li>
+        <li><span>05</span><div><small>LAUNCH</small><b>Emulator intent</b><p>Accurate system profiles, ready when you press play.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="speed-section" id="performance">
+      <div class="speed-visual" aria-hidden="true"><span class="speed-ring ring-one"></span><span class="speed-ring ring-two"></span><span class="speed-core"><i>24</i><b>CORES</b><small>IN FLIGHT</small></span><span class="speed-tick t1"></span><span class="speed-tick t2"></span><span class="speed-tick t3"></span><span class="speed-tick t4"></span></div>
+      <div class="speed-copy"><p class="section-index">03 — FAST BY CONSTRUCTION</p><h2>Enterprise-scale data.<br><em>Consumer-grade ease.</em></h2><p>No frozen windows. No stuttering over giant collections. Archivist’s Rust core, deliberate memory model, and high-performance caches keep the interface responsive while the real work saturates your hardware.</p><ul><li><span>01</span>Parallel, work-stealing pipelines</li><li><span>02</span>Bounded and predictable memory</li><li><span>03</span>Hot indexes, instant traversal</li></ul></div>
+    </section>
+
+    <section class="closing" id="early-access">
+      <img src="mark.svg" alt="" width="68" height="68">
+      <p class="eyebrow"><span></span> In private development</p>
+      <h2>The past deserves<br><em>better tools.</em></h2>
+      <p>Archivist is being built for collectors, preservationists, and people who care how game history fits together.</p>
+      <a class="button button-primary" href="https://github.com/overyonder/archivist">Follow the project <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand" href="#top"><img src="mark.svg" alt="" width="28" height="28"><span>Archivist</span></a><p>Preserve deliberately. Explore endlessly.</p><span>© <span data-year></span> Over Yonder</span></footer>
+  <script src="main.js"></script>
+</body>
+</html>
+
