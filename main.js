@@ -47,12 +47,3 @@ document.addEventListener("click", (event) => {
     historianInfo.setAttribute("aria-expanded", "false");
   }
 });
-
-const technicalDialog = document.querySelector("#technicalDialog");
-document.querySelectorAll("[data-technical-open]").forEach((button) => {
-  button.addEventListener("click", () => technicalDialog.showModal());
-});
-document.querySelector("[data-technical-close]").addEventListener("click", () => technicalDialog.close());
-technicalDialog.addEventListener("click", (event) => {
-  if (event.target === technicalDialog) technicalDialog.close();
-});

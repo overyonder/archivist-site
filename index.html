@@ -13,6 +13,8 @@
     .technical-link { padding: 0; color: var(--accent); background: none; border: 0; font: 600 11px ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
     .technical-link:hover { color: #ffad46; }
     .header-actions { display: flex; align-items: center; gap: 24px; }
+    .header-link { color: var(--muted); font: 600 10px ui-monospace, monospace; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
+    .header-link:hover { color: var(--accent); }
     .fact-with-callout { position: relative; }
     .fact-title { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; }
     .fact-info { width: 19px; height: 19px; display: grid; place-items: center; padding: 0; color: var(--accent); background: transparent; border: 1px solid #554536; border-radius: 50%; font: 700 11px ui-monospace, monospace; cursor: pointer; }
@@ -32,37 +34,11 @@
     .planned strong { display: block; margin: 10px 0 6px; color: var(--text); font-size: 18px; }
     .planned p { margin: 0; font-size: 12px; line-height: 1.5; }
     .tabs { grid-template-columns: repeat(8, 1fr); }
-    .technical-dialog { width: min(860px, calc(100vw - 32px)); max-height: min(860px, calc(100vh - 32px)); padding: 0; overflow: auto; color: var(--text); background: #11100e; border: 1px solid #493a2d; box-shadow: 0 30px 100px #000c; }
-    .technical-dialog::backdrop { background: #080604d9; backdrop-filter: blur(5px); }
-    .technical-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
-    .technical-header .eyebrow { margin: 0 0 3px; }
-    .technical-header h2 { margin: 0; font-size: 17px; }
-    .technical-close { width: 32px; height: 32px; color: var(--muted); background: #181512; border: 1px solid var(--line); cursor: pointer; }
-    .technical-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
-    .technical-grid article { min-height: 145px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .technical-grid article:nth-child(even) { border-right: 0; }
-    .technical-grid span { color: var(--accent); font: 11px ui-monospace, monospace; }
-    .technical-grid h3 { margin: 10px 0 8px; font-size: 15px; }
-    .technical-grid p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
-    .technical-grid code { color: #d7b790; font-size: 11px; }
-    .benchmark-card { grid-column: 1 / -1; border-right: 0 !important; border-bottom: 0 !important; }
-    .benchmark-card table { width: 100%; margin-top: 12px; border-collapse: collapse; color: var(--muted); font: 11px ui-monospace, monospace; }
-    .benchmark-card th, .benchmark-card td { padding: 7px 8px; border-top: 1px solid var(--line); text-align: right; }
-    .benchmark-card th:first-child, .benchmark-card td:first-child { text-align: left; }
-    .benchmark-card .win { color: #8fcf91; }
-    .benchmark-card .sota { color: #d7b790; }
-    .benchmark-card .partial { color: #d7b790; }
-    .benchmark-card .unsupported { color: #81776e; }
-    .support-matrix td:not(:first-child), .support-matrix th:not(:first-child) { text-align: center; }
-    .support-matrix small { display: block; margin-top: 2px; color: #81776e; font: 9px ui-monospace, monospace; }
-    .table-wrap { overflow-x: auto; }
-    .benchmark-note { margin-top: 10px !important; color: #81776e !important; font-size: 10px !important; }
     .benchmark-slide { position: relative; display: grid; place-items: center; padding: 30px; background: radial-gradient(circle at 50% 20%,#24180f,#090706 62%); text-align: center; }
     .benchmark-slide div { max-width: 570px; }
     .benchmark-slide span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
     .benchmark-slide strong { display: block; margin: 12px 0 9px; font-size: clamp(23px, 3vw, 38px); line-height: 1; }
     .benchmark-slide p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
-    @media (max-width: 600px) { .technical-grid { grid-template-columns: 1fr; } .technical-grid article { border-right: 0; } }
     @media (max-height: 800px) and (min-width: 901px) { .performance { margin-bottom: 16px; } }
     @media (max-width: 900px) {
       main { gap: 24px; padding-top: 24px; }
@@ -84,7 +60,7 @@
 <body>
   <header>
     <a class="brand" href="#top"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <div class="header-actions"><span class="status"><i></i> Early access in development</span></div>
+    <div class="header-actions"><a class="header-link" href="performance.html">Performance deep dive</a><span class="status"><i></i> Early access in development</span></div>
   </header>
 
   <main id="top">
@@ -92,7 +68,7 @@
       <p class="eyebrow">Frontend + 1G1R curator + ROM manager</p>
       <h1>Video game history,<br>made playable.</h1>
       <p class="lede">Archivist turns a ROM archive into a curated history of the medium. It selects releases, preserves their context, and gives you one place to explore and play them using the ROMs and emulators already on your system.</p>
-      <p class="performance"><strong>2.15 million manifest rows compiled in 1.31 seconds.</strong> A 222,242-entry live NAS snapshot crosses the network and hydrates the UI in 420 ms. <button class="technical-link" type="button" data-technical-open>Methodology and technical details →</button></p>
+      <p class="performance"><strong>2.15 million manifest rows compiled in 1.31 seconds.</strong> A 222,242-entry live NAS snapshot crosses the network and hydrates the UI in 420 ms. <a class="technical-link" href="performance.html">Read the performance deep dive →</a></p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
@@ -104,7 +80,7 @@
         <li class="fact-with-callout"><strong class="fact-title">Historian <button class="fact-info" type="button" data-historian-info aria-expanded="false" aria-controls="historianCallout" aria-label="Historian technical details">i</button></strong><span>live NAS index</span>
           <aside class="historian-callout" id="historianCallout" hidden>
             <h2>NAS Historian: storage-native Rust</h2>
-            <p><strong>One static appliance binary.</strong> Historian is compiled as a musl static PIE for broad x86-64 Linux appliance compatibility, without a glibc, Electron, or .NET runtime in the storage path.</p>
+            <p><strong>One static appliance binary.</strong> Historian is compiled as a statically linked musl executable for broad x86-64 Linux appliance compatibility, without a glibc, Electron, or .NET runtime in the storage path.</p>
             <p><strong>Compute beside the disks.</strong> The NAS inventories files, hashes logical ROM contents and matches selected DAT evidence locally. Authenticated WebSockets carry live status; bulk snapshots use a gzip envelope with MessagePack metadata and a typed columnar entry table.</p>
             <p><strong>Resident evidence, not raw DATs.</strong> Static policy reduced 1,221 selected manifests to 292 contributing sources, 313,914 releases and 1,239,634 unique strongest digests. The 50 MiB compiled catalogue memory-maps and hydrates warm in 0.557 seconds.</p>
             <p><strong>Restartable hashing.</strong> Per-file logical digests live in a compact SQLite WAL store. Size + nanosecond mtime validation reuses completed records after restart; two contiguous workers reuse 1 MiB buffers and avoid HDD seek thrash.</p>
@@ -145,64 +121,6 @@
       </div>
     </section>
   </main>
-
-  <dialog class="technical-dialog" id="technicalDialog" aria-labelledby="technicalTitle">
-    <div class="technical-header">
-      <div><p class="eyebrow">Measured implementation</p><h2 id="technicalTitle">Historian technical details</h2></div>
-      <button class="technical-close" type="button" data-technical-close aria-label="Close technical details">×</button>
-    </div>
-    <div class="technical-grid">
-      <article><span>01 / deployment</span><h3>Static musl appliance binary</h3><p>A stripped x86-64 static PIE removes the glibc dependency and ships the native Rust storage service as one file. It is designed for Linux NAS appliances such as TrueNAS SCALE; architecture and kernel compatibility still apply.</p></article>
-      <article><span>02 / data locality</span><h3>Hash where the bytes live</h3><p>The desktop never pulls whole ROMs across SMB or NFS to identify them. Historian reads locally, computes CRC32, MD5 and SHA-1 in one pass, verifies logical ZIP members, and performs guarded server-side moves.</p></article>
-      <article><span>03 / resident catalogue</span><h3>Selected evidence compiler</h3><p>Static policy and overrides prune discarded branches before runtime. The measured artefact retains 292 of 1,221 sources, 313,914 releases and 1,239,634 unique strongest digests in 50 MiB. Warm mmap + native hydration takes 0.557 seconds.</p></article>
-      <article><span>04 / hydration</span><h3>222,242 entries applied in 420 ms</h3><p>The 210,840-file, 11,402-directory tree is available while hashing continues. Its 4.70 MB compressed replica fetched in 51 ms, crossed Tauri IPC in another 28 ms, decoded into the frontend in 227 ms and was fully applied 420 ms after the request. A hot process reached the applied state in 1.167 seconds.</p></article>
-      <article><span>05 / live protocol</span><h3>HTTP bulk, WebSocket propagation</h3><p>Authenticated binary WebSockets carry status and generation notices. Bulk HTTP uses gzip once, then MessagePack metadata plus parent-indexed SoA columns: one UTF-8 basename decode, typed-array metadata views and linear path reconstruction. The two-million-record digest graph remains native.</p></article>
-      <article><span>06 / cache-aware native path</span><h3>Binary digests, reused buffers</h3><p>CRC32, MD5 and SHA-1 are computed together with assembly-backed digest crates. Fixed-width binary keys and Fx hash maps avoid hex parsing and SipHash; two contiguous workers reuse 1 MiB buffers. Status reads are O(1), and the encoded snapshot is cached rather than rebuilt per request.</p></article>
-      <article><span>07 / mutable history</span><h3>SQLite WAL, shipped</h3><p>Logical per-file digest records use SQLite WAL in <code>NORMAL</code> synchronous mode, batched 256 files at a time with passive checkpoints. Hashing happens outside the short write transaction. Progress ticks stay memory-only, while immutable UI replicas are atomically replaced.</p></article>
-      <article><span>08 / filesystem evidence</span><h3>Designed beyond path + read</h3><p>Planned providers include ZFS snapshot deltas, Linux <code>statx</code> identity for hard-link reuse, fs-verity digests and optional digest xattrs. Each provider must state exactly what its evidence proves.</p></article>
-      <article><span>09 / stable invalidation</span><h3>Policy changes rebuild policy</h3><p>The catalogue fingerprint covers selected manifests, policy tables and parser/selection code—not Cargo.lock or transport code. Codec and dependency changes therefore keep the sub-second resident artefact path instead of causing an unrelated multi-minute policy rebuild.</p></article>
-      <article><span>10 / restart behaviour</span><h3>Fast UI, resumable evidence</h3><p>The cached stat tree is explicitly a last-scan snapshot, not a freshness promise. The frontend displays its scan time. Watchers update live generations while Historian runs; WAL digest records make hashing restartable without sending raw ROM data or credentials into JavaScript.</p></article>
-      <article class="benchmark-card"><span>11 / digest microbenchmark</span><h3>Archivist versus OxyROMon 0.21.0</h3><p>Both static binaries ran on the same TrueNAS VM and dataset with OxyROMon’s 1 GiB <code>/dev/random</code> workload and 256 KiB buffer. <strong class="sota">OxyROMon is the existing SOTA—already much faster than more commonly used alternatives.</strong></p>
-        <table><thead><tr><th>Operation</th><th>Archivist</th><th>OxyROMon</th><th>Difference</th></tr></thead><tbody>
-          <tr><td>CRC32</td><td>796 MiB/s</td><td class="win">867 MiB/s</td><td>−8.2%</td></tr>
-          <tr><td>MD5</td><td class="win">486 MiB/s</td><td>376 MiB/s</td><td class="win">+29.4%</td></tr>
-          <tr><td>SHA-1</td><td class="win">462 MiB/s</td><td>373 MiB/s</td><td class="win">+24.0%</td></tr>
-          <tr><td>ROM write</td><td class="win">278 MiB/s</td><td>252 MiB/s</td><td class="win">+10.3%</td></tr>
-          <tr><td>Temporary write</td><td class="win">325 MiB/s</td><td>276 MiB/s</td><td class="win">+17.9%</td></tr>
-        </tbody></table>
-        <p class="benchmark-note">Single-run result on our hardware, not a universal claim. Read rates were excluded because ZFS ARC and run order materially affected them. Higher is better.</p>
-      </article>
-      <article class="benchmark-card"><span>12 / exact shared-corpus compiler</span><h3>503 identical manifests, copied locally</h3><p>The intersection excludes inputs the compared tools rejected. Archivist emits a deduplicated strongest-digest resident index; Igir emits a report; OxyROMon imports normalized relational records. The workloads are useful but not semantically identical.</p>
-        <div class="table-wrap"><table><thead><tr><th>Tool</th><th>Runtime</th><th>Measured result</th><th>Output</th></tr></thead><tbody>
-          <tr><td class="win">Archivist</td><td>native Rust</td><td class="win">1.314 s</td><td>2,151,769 media rows → 1,877,162 unique strongest digests</td></tr>
-          <tr><td class="sota">OxyROMon 0.21.0<br><small>existing SOTA</small></td><td>native Rust</td><td>200.337 s</td><td>2,148,554 ROM rows; 1.1 GB SQLite database</td></tr>
-          <tr><td>Igir 5.3.1</td><td>Bun binary</td><td>125.757 s</td><td>503-manifest report</td></tr>
-        </tbody></table></div>
-        <p class="benchmark-note">Release builds on the same workstation and exact 503-file, 487,201,103-byte corpus. Archivist used 16 workers on a 12-thread host; its 1-worker result was 6.001 s. Higher-level database/report work explains part of the competitors’ additional time.</p>
-      </article>
-      <article class="benchmark-card"><span>13 / full selected policy</span><h3>1,221 manifests: compatibility matters</h3>
-        <p>Archivist deliberately consumes several catalogue families in one policy. These marks report whether each tool accepted that family in the copied benchmark corpus—not merely whether it has a generic XML parser.</p>
-        <div class="table-wrap"><table class="support-matrix"><thead><tr><th>Tool</th><th>TOSEC DATs</th><th>MAME lists</th><th>RA DATs</th></tr></thead><tbody>
-          <tr><td class="win">Archivist</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>software-list + listxml</small></td><td class="win" aria-label="Accepted">✓<small>RetroAchievements</small></td></tr>
-          <tr><td>RomVault 3.7.6</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td></tr>
-          <tr><td>Igir 5.3.1</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="partial" aria-label="Partially accepted">△<small>metadata failure</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td></tr>
-          <tr><td class="sota">OxyROMon 0.21.0</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="unsupported" aria-label="Not accepted">—<small>native XML rejected</small></td><td class="partial" aria-label="Partially accepted">△<small>duplicate-entry failure</small></td></tr>
-          <tr><td>clrmame 0.7.1</td><td class="unsupported" aria-label="Not batch verified">—<small>not batch-verified</small></td><td class="win" aria-label="Documented support">✓<small>documented support</small></td><td class="unsupported" aria-label="Not batch verified">—<small>not batch-verified</small></td></tr>
-        </tbody></table></div>
-        <p class="benchmark-note">✓ accepted or explicitly supported · △ the format is understood but this corpus exposed an incompatibility · — not accepted or not verified. “RA” means RetroAchievements, not RetroArch.</p>
-        <div class="table-wrap"><table><thead><tr><th>Tool</th><th>Result</th><th>Peak/artefact note</th></tr></thead><tbody>
-          <tr><td>Archivist raw digest pass</td><td class="win">6.548 s</td><td>2,764,072 rows; one malformed 303 MB TDC input rejected</td></tr>
-          <tr><td>Archivist cold static policy</td><td>196.547 s</td><td>1.95× faster than the 383.289 s baseline; normally bypassed</td></tr>
-          <tr><td>Archivist warm catalogue</td><td class="win">0.557 s</td><td>50 MiB resident artefact</td></tr>
-          <tr><td>RomVault 3.7.6</td><td>95.253 s</td><td>Completed all 1,221 DAT updates; self-contained .NET CLI</td></tr>
-          <tr><td>Igir 5.3.1</td><td>failed after 583.919 s</td><td>Over 14 GB RSS before a MAME metadata exception</td></tr>
-          <tr><td>OxyROMon 0.21.0</td><td>not accepted</td><td>MAME software-list, duplicate RA and malformed TDC inputs failed sequential attempts</td></tr>
-          <tr><td>clrmame 0.7.1</td><td>not batch-compared</td><td>Native C++; scan CLI accepts one XML per invocation</td></tr>
-        </tbody></table></div>
-        <p class="benchmark-note">These full-policy rows deliberately disclose different scopes and failures; they are not presented as one interchangeable speed ranking. Times are wall clock on the copied local corpus.</p>
-      </article>
-    </div>
-  </dialog>
 
   <script src="main.js"></script>
 </body>

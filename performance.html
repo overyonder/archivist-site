@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A measured technical deep dive into Archivist's NAS historian, resident catalogue compiler, storage hashing, binary snapshot codec, and 420 ms frontend hydration path.">
+  <title>Archivist performance — 222,242 library entries in 420 ms</title>
+  <link rel="icon" href="mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="performance.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="nav" aria-label="Site navigation">
+      <a href="index.html">Product</a>
+      <a href="performance.html" aria-current="page">Performance</a>
+    </nav>
+  </header>
+
+  <main>
+    <header class="article-hero">
+      <p class="eyebrow">Performance engineering · measured implementation · July 2026</p>
+      <h1>How long does your game launcher take to load?</h1>
+      <p class="hero-result">We hydrate <strong>222,242 library entries in 420&nbsp;ms.</strong></p>
+      <p class="hero-lede">Archivist is a highly visual way to explore the canon of video games. That means performance is not an implementation detail: it is part of how the collection feels. Search, timelines, verification and browsing need to stay immediate even when the library is absurdly large.</p>
+      <p class="hero-lede">We are high-performance game developers at heart. We believe software needs to be fast to feel good. Also, if we are honest, we simply could not help ourselves.</p>
+      <p class="hero-aside">The headline is deliberately precise: 210,840 files plus 11,402 directories—not 222,242 distinct games. The measured 420 ms begins when the already-running frontend requests its snapshot and ends when that snapshot is applied. A hot process reached the same applied state 1.167 seconds after launch.</p>
+    </header>
+
+    <div class="metric-strip" aria-label="Headline measurements">
+      <div class="metric"><strong>2,151,769</strong><span>manifest media rows compiled in 1.314 seconds</span></div>
+      <div class="metric"><strong>4.70 MB</strong><span>compressed live NAS snapshot</span></div>
+      <div class="metric"><strong>420 ms</strong><span>request to frontend-applied snapshot</span></div>
+      <div class="metric"><strong>11.7×</strong><span>faster hydration than the original representation</span></div>
+    </div>
+
+    <div class="article-layout">
+      <aside class="toc" aria-label="Article contents">
+        <p>Contents</p>
+        <a href="#principle">Why speed matters</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#hydration">Hydration gains</a>
+        <a href="#compiler">Catalogue compiler</a>
+        <a href="#formats">Codec experiments</a>
+        <a href="#hashing">Hashing and matching</a>
+        <a href="#competition">Competitors</a>
+        <a href="#shipped">What shipped</a>
+        <a href="#hardware">Hardware acceleration</a>
+        <a href="#remaining">What remains</a>
+        <a href="#native-ui">Native UI plan</a>
+        <a href="#method">Methodology</a>
+      </aside>
+
+      <article class="article">
+        <section id="principle">
+          <span class="section-no">01 / the constraint</span>
+          <h2>Fast enough to disappear.</h2>
+          <p>Archivist is closer to a media presentation system than a spreadsheet. A user can move from a platform timeline to a genre genealogy, inspect release evidence, browse cover art and launch a game. Any pause breaks the illusion that the entire history is simply there.</p>
+          <p><strong>Our success criterion is 144 frames per second on every screen.</strong> That is a 6.94 ms frame budget. Startup work may use the brief interval in which the operating system is already creating the process, but no later interaction gets a licence to hitch.</p>
+          <p class="pullquote">Keep the complete working set resident. Keep its layout predictable. Move cold work beside the disks. Never make browsing wait for discovery.</p>
+          <p>This is why Archivist does not treat just-in-time loading as the primary architecture. The full selected catalogue stays native and resident. The storage snapshot is loaded up front. Rendering may be virtualised to visible rows, but the data itself is not evicted merely because it is off-screen.</p>
+        </section>
+
+        <section id="architecture">
+          <span class="section-no">02 / architecture</span>
+          <h2>Compute where the bytes already live.</h2>
+          <p>The first large gain was architectural. Pulling every ROM across NFS to a desktop process is wasteful before an algorithm even begins. The NAS Historian performs metadata discovery, logical archive hashing and manifest matching beside the storage pool, then sends a compact immutable projection to the desktop.</p>
+          <div class="architecture" aria-label="Historian data flow">
+            <div><span>01 / storage</span><strong>Vault + Intake</strong><small>Local reads, archive members and server-side renames.</small></div>
+            <div><span>02 / historian</span><strong>Native Rust</strong><small>Combined hashes, matching, watchers and WAL state.</small></div>
+            <div><span>03 / snapshot</span><strong>Hybrid SoA</strong><small>MessagePack metadata, aligned columns and one name blob.</small></div>
+            <div><span>04 / desktop</span><strong>Tauri Rust</strong><small>Authenticated HTTP bulk plus WebSocket generations.</small></div>
+            <div><span>05 / presentation</span><strong>Typed arrays</strong><small>Native gzip, one UTF-8 decode and a resident frontend view.</small></div>
+          </div>
+          <div class="cards">
+            <div class="card"><span>Appliance deployment</span><h3>One static musl binary</h3><p>No glibc, Electron or .NET runtime in the storage path. The statically linked x86-64 executable is designed to copy onto Linux NAS appliances such as TrueNAS SCALE.</p></div>
+            <div class="card"><span>Protocol split</span><h3>HTTP bulk, WebSocket propagation</h3><p>Bulk snapshots use one authenticated compressed response. A persistent Rust-to-Rust WebSocket carries status and generation notices without exposing historian credentials to JavaScript.</p></div>
+            <div class="card"><span>Mutable evidence</span><h3>SQLite WAL, not a UI database</h3><p>Per-file logical digests are restartable in a WAL store. Hashing happens outside short batched transactions; immutable UI snapshots are cached separately.</p></div>
+            <div class="card"><span>Safe semantics</span><h3>Snapshot time is explicit</h3><p>The UI says when storage was last scanned. A cached scan is useful evidence, not a false promise that an offline filesystem remained unchanged.</p></div>
+          </div>
+        </section>
+
+        <section id="hydration">
+          <span class="section-no">03 / frontend hydration</span>
+          <h2>From 4.9 seconds to 420 milliseconds.</h2>
+          <p>The original representation was convenient: a MessagePack graph of named objects and full paths. Convenience produced a 56.43 MB payload, repeated strings, millions of property assignments and 3.0 seconds in JavaScript decode alone.</p>
+          <div class="waterfall" role="img" aria-label="Hydration time reduced from 4,911 milliseconds to 420 milliseconds across five representations">
+            <div class="waterfall-row"><span class="waterfall-label">Named object graph</span><div class="waterfall-track"><div class="waterfall-bar" style="--w:100%"></div></div><span class="waterfall-time">4,911 ms</span></div>
+            <div class="waterfall-row"><span class="waterfall-label">Tuple arrays</span><div class="waterfall-track"><div class="waterfall-bar" style="--w:22.3%"></div></div><span class="waterfall-time">1,096 ms</span></div>
+            <div class="waterfall-row"><span class="waterfall-label">Parent index</span><div class="waterfall-track"><div class="waterfall-bar" style="--w:11.2%"></div></div><span class="waterfall-time">549 ms</span></div>
+            <div class="waterfall-row"><span class="waterfall-label">Parent + gzip</span><div class="waterfall-track"><div class="waterfall-bar" style="--w:10%"></div></div><span class="waterfall-time">491 ms</span></div>
+            <div class="waterfall-row"><span class="waterfall-label">Hybrid SoA + gzip</span><div class="waterfall-track"><div class="waterfall-bar" style="--w:8.6%"></div></div><span class="waterfall-time">420 ms</span></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <caption>The optimisation sequence</caption>
+              <thead><tr><th>Representation</th><th>Wire payload</th><th>Request → applied</th><th>Cumulative gain</th></tr></thead>
+              <tbody>
+                <tr><td>Named-map MessagePack</td><td>56.43 MB</td><td>4,911 ms</td><td>baseline</td></tr>
+                <tr><td>Struct tuple arrays</td><td>31.96 MB</td><td>1,096 ms</td><td>4.48×</td></tr>
+                <tr><td>Parent-index MessagePack</td><td>14.23 MB</td><td>549 ms</td><td>8.95×</td></tr>
+                <tr><td>Parent index + native gzip</td><td>5.46 MB</td><td>491 ms</td><td>10.0×</td></tr>
+                <tr class="shipped"><td>Hybrid aligned SoA + gzip</td><td class="win">4.70 MB</td><td class="win">420 ms</td><td class="win">11.7×</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The shipped snapshot fetch took 51 ms, Tauri added another 28 ms, decode and path hydration took 227 ms, and the snapshot was fully applied at 420 ms. Rust decoded its own resident replica in 174 ms on a parallel, off-path thread.</p>
+        </section>
+
+        <section id="compiler">
+          <span class="section-no">04 / resident catalogue</span>
+          <h2>Two million rows before you can blink.</h2>
+          <p>The catalogue compiler does not build a general-purpose relational database. It extracts the evidence Archivist actually needs, normalises binary digest keys and produces a strongest-digest lookup optimised for the validation join.</p>
+          <div class="chart">
+            <h3>503 identical manifests · wall time</h3>
+            <p>Logarithmic scale. Same copied 487,201,103-byte compatible corpus; different disclosed outputs.</p>
+            <svg viewBox="0 0 850 300" role="img" aria-label="Archivist 1.314 seconds, Igir 125.757 seconds, OxyROMon 200.337 seconds on a logarithmic scale">
+              <line class="axis" x1="160" y1="246" x2="812" y2="246"/>
+              <line class="grid" x1="250" y1="32" x2="250" y2="246"/><text class="minor" x="250" y="268" text-anchor="middle">1 s</text>
+              <line class="grid" x1="460" y1="32" x2="460" y2="246"/><text class="minor" x="460" y="268" text-anchor="middle">10 s</text>
+              <line class="grid" x1="670" y1="32" x2="670" y2="246"/><text class="minor" x="670" y="268" text-anchor="middle">100 s</text>
+              <text class="label" x="0" y="74">Archivist</text><rect x="160" y="52" width="115" height="34" rx="3" fill="#ff8a00"/><text class="value" x="286" y="75">1.314 s</text>
+              <text class="label" x="0" y="145">Igir 5.3.1</text><rect x="160" y="123" width="537" height="34" rx="3" fill="#6d5643"/><text class="value" x="708" y="146">125.757 s</text>
+              <text class="label" x="0" y="216">OxyROMon</text><rect x="160" y="194" width="580" height="34" rx="3" fill="#9c6a35"/><text class="value" x="751" y="217">200.337 s</text>
+            </svg>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <caption>Parallel manifest compiler scaling</caption>
+              <thead><tr><th>Workers</th><th>Wall time</th><th>Speedup</th><th>Observation</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>6.001 s</td><td>1.00×</td><td>single-thread reference</td></tr>
+                <tr><td>2</td><td>3.139 s</td><td>1.91×</td><td>near-linear</td></tr>
+                <tr><td>4</td><td>1.625 s</td><td>3.69×</td><td>near-linear</td></tr>
+                <tr><td>8</td><td>1.405 s</td><td>4.27×</td><td>memory/allocation pressure begins</td></tr>
+                <tr class="shipped"><td>16</td><td class="win">1.314 s</td><td class="win">4.57×</td><td>best measured result</td></tr>
+                <tr><td>24</td><td>1.557 s</td><td>3.85×</td><td>oversubscribed regression</td></tr>
+                <tr><td>32</td><td>1.360 s</td><td>4.41×</td><td>no useful gain over 16</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>On all 1,221 selected manifests the raw pass took 6.548 seconds, parsed 909,779,869 bytes, produced 842,486 releases and 2,764,072 media rows, and rejected one malformed 303 MB TDC input. The heavier static selection build fell from 383.289 to 196.547 seconds after bounded parallelism. It is normally bypassed by the versioned resident artefact, which memory-maps and hydrates in 0.557 seconds.</p>
+        </section>
+
+        <section id="formats">
+          <span class="section-no">05 / format tournament</span>
+          <h2>MessagePack survived—just not everywhere.</h2>
+          <p>MessagePack remains a good fit for the small irregular header. It lost badly as the representation for hundreds of thousands of repetitive rows. The winning format is a hybrid: MessagePack metadata followed by aligned struct-of-arrays columns and a single NUL-separated basename blob.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Isolated catalogue encoding experiment</caption>
+              <thead><tr><th>Encoding</th><th>Raw</th><th>gzip</th><th>Verdict</th></tr></thead>
+              <tbody>
+                <tr><td>JSON</td><td>19.495 MiB</td><td>4.526 MiB</td><td class="dim">portable, much too much parsing</td></tr>
+                <tr><td>CBOR</td><td>13.590 MiB</td><td>4.504 MiB</td><td class="dim">no advantage over MessagePack</td></tr>
+                <tr><td>Parent-index MessagePack</td><td>13.567 MiB</td><td>4.512 MiB</td><td>good baseline</td></tr>
+                <tr><td>Protobuf-style rows</td><td>10.082 MiB</td><td>4.053 MiB</td><td>smaller, still row-oriented</td></tr>
+                <tr><td>Custom varint rows</td><td class="win">9.256 MiB</td><td>3.752 MiB</td><td>smallest raw row format</td></tr>
+                <tr><td>FlatBuffer-style aligned</td><td>13.779 MiB</td><td>3.458 MiB</td><td>direct access, extra structure</td></tr>
+                <tr class="shipped"><td>Custom aligned SoA</td><td>12.296 MiB</td><td class="win">3.222 MiB</td><td class="win">best compressed + typed views</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The live 4.70 MB payload is larger than the isolated 3.22 MiB codec fixture because it also carries the real roots, match projection, vault files, timestamps and status metadata.</p>
+
+          <h3>What about tokenising “Pokémon”?</h3>
+          <p>It was worth trying. In the path corpus, 69.4% of component occurrences fit within the top 128 tokens. But the repeated directory vocabulary was already captured by the parent index, while leaf filenames remained mostly unique. A second dictionary reduced bytes but added pointer chasing and reconstruction work.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Path representation experiment</caption>
+              <thead><tr><th>Representation</th><th>Raw size</th><th>zstd level 1</th><th>Decode observation</th></tr></thead>
+              <tbody>
+                <tr><td>Original tuples</td><td>30.477 MiB</td><td>—</td><td class="dim">repeated full paths</td></tr>
+                <tr class="shipped"><td>Parent index + basename</td><td>13.567 MiB</td><td class="win">4.331 MiB</td><td class="win">~126.8 ms proxy; simplest</td></tr>
+                <tr><td>Full component arrays</td><td>13.728 MiB</td><td>4.442 MiB</td><td>extra indices, no size win</td></tr>
+                <tr><td>Parent + name dictionary</td><td>13.508 MiB</td><td>—</td><td>almost no raw saving</td></tr>
+                <tr><td>Parent + front coding</td><td>12.527 MiB</td><td>—</td><td>smaller, more reconstruction</td></tr>
+                <tr><td>Parent + front coding + extension</td><td>11.926 MiB</td><td>—</td><td>more branches and tables</td></tr>
+                <tr><td>Parent + lexical tokens</td><td class="win">11.591 MiB</td><td>4.379 MiB</td><td class="warn">~182.5 ms proxy; 44% slower</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>gzip already tokenises repeated byte strings such as “Pokemon” through backreferences, and the browser provides a native streaming <code>DecompressionStream</code>. zstd produced excellent sizes, but would require a JavaScript/Wasm decoder in the current WebView. The native gzip path won end-to-end.</p>
+        </section>
+
+        <section id="hashing">
+          <span class="section-no">06 / disks, digests and joins</span>
+          <h2>Read once. Prove three things.</h2>
+          <p>ROM manifests commonly provide CRC32, MD5 and SHA-1. Historian updates all three digest states during the same sequential read, including logical members inside ZIP containers. It does not read the file three times.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>OxyROMon-compatible 1 GiB TrueNAS microbenchmark</caption>
+              <thead><tr><th>Operation</th><th>Archivist</th><th>OxyROMon 0.21.0</th><th>Difference</th></tr></thead>
+              <tbody>
+                <tr><td>CRC32</td><td>796 MiB/s</td><td class="win">867 MiB/s</td><td>−8.2%</td></tr>
+                <tr><td>MD5</td><td class="win">486 MiB/s</td><td>376 MiB/s</td><td class="win">+29.4%</td></tr>
+                <tr><td>SHA-1</td><td class="win">462 MiB/s</td><td>373 MiB/s</td><td class="win">+24.0%</td></tr>
+                <tr><td>ROM write</td><td class="win">278 MiB/s</td><td>252 MiB/s</td><td class="win">+10.3%</td></tr>
+                <tr><td>Temporary write</td><td class="win">325 MiB/s</td><td>276 MiB/s</td><td class="win">+17.9%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">Single run on our hardware. Read rates were excluded because ZFS ARC and run order materially changed them. This is not presented as a universal win: OxyROMon retained the faster CRC32 result.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Real copied 1.77 GB file set · combined CRC32 + MD5 + SHA-1</caption>
+              <thead><tr><th>Workers</th><th>Wall time</th><th>Throughput</th><th>Observation</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>13.928 s</td><td>~121 MiB/s</td><td>first/cold run</td></tr>
+                <tr class="shipped"><td>2</td><td class="win">3.801–3.867 s</td><td class="win">436–444 MiB/s</td><td>best result</td></tr>
+                <tr><td>3</td><td>4.152 s</td><td>~407 MiB/s</td><td>contention begins</td></tr>
+                <tr><td>4</td><td>4.312 s</td><td>~392 MiB/s</td><td>more workers made it worse</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Inventory took between 110 and 386 ms depending on cache state. Joining 12,297 computed digests against the resident manifest evidence took about <strong>1.17 ms</strong>. A B-tree would not improve that join: fixed-width binary keys in an <code>FxHashMap</code> provide the cache-friendly O(1) lookup this workload wants.</p>
+        </section>
+
+        <section id="competition">
+          <span class="section-no">07 / comparison</span>
+          <h2>Fast, with the footnotes attached.</h2>
+          <p><strong>OxyROMon is the existing state of the art and already much faster than more commonly used alternatives.</strong> Our exact compatible-corpus result is dramatically faster, but the outputs differ: Archivist creates a deduplicated resident digest index, Igir emits a report, and OxyROMon imports normalised relational records.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Exact 503-manifest shared corpus</caption>
+              <thead><tr><th>Tool</th><th>Runtime</th><th>Wall time</th><th>Measured output</th></tr></thead>
+              <tbody>
+                <tr class="shipped"><td>Archivist</td><td>native Rust</td><td class="win">1.314 s</td><td>2,151,769 rows → 1,877,162 strongest digests</td></tr>
+                <tr><td>Igir 5.3.1</td><td>Bun binary</td><td>125.757 s</td><td>503-manifest report</td></tr>
+                <tr><td>OxyROMon 0.21.0</td><td>native Rust</td><td>200.337 s</td><td>2,148,554 ROM rows; 1.1 GB SQLite</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>On this scope, the purpose-built compiler is approximately 96× faster than Igir and 152× faster than OxyROMon. Higher-level database and reporting work explains part of their additional time.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Catalogue-family compatibility observed in the copied corpus</caption>
+              <thead><tr><th>Tool</th><th>TOSEC</th><th>MAME software-list/listxml</th><th>RetroAchievements</th></tr></thead>
+              <tbody>
+                <tr class="shipped"><td>Archivist</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td></tr>
+                <tr><td>RomVault 3.7.6</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td></tr>
+                <tr><td>Igir 5.3.1</td><td class="win">✓</td><td class="warn">△ metadata failure</td><td class="win">✓</td></tr>
+                <tr><td>OxyROMon 0.21.0</td><td class="win">✓</td><td class="dim">— native XML rejected</td><td class="warn">△ duplicate-entry failure</td></tr>
+                <tr><td>clrmame 0.7.1</td><td class="dim">— not batch-verified</td><td class="win">✓ documented</td><td class="dim">— not batch-verified</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <caption>Full 1,221-manifest selected policy</caption>
+              <thead><tr><th>Tool/path</th><th>Result</th><th>Scope note</th></tr></thead>
+              <tbody>
+                <tr><td>Archivist raw digest pass</td><td class="win">6.548 s</td><td>2,764,072 rows; one malformed 303 MB input rejected</td></tr>
+                <tr><td>Archivist cold static policy</td><td>196.547 s</td><td>1.95× faster than baseline; normally bypassed</td></tr>
+                <tr class="shipped"><td>Archivist warm catalogue</td><td class="win">0.557 s</td><td>50 MiB resident artefact</td></tr>
+                <tr><td>RomVault 3.7.6</td><td>95.253 s</td><td>completed all DAT updates</td></tr>
+                <tr><td>Igir 5.3.1</td><td>failed after 583.919 s</td><td>&gt;14 GB RSS before MAME metadata exception</td></tr>
+                <tr><td>OxyROMon 0.21.0</td><td>not accepted</td><td>MAME, duplicate RA and malformed inputs failed sequential attempts</td></tr>
+                <tr><td>clrmame 0.7.1</td><td>not batch-compared</td><td>scan CLI accepts one XML per invocation</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="shipped">
+          <span class="section-no">08 / shipped optimisation ledger</span>
+          <h2>What actually made the binary.</h2>
+          <ul class="status-list">
+            <li><strong>Shipped</strong><span>NAS-side inventory, logical archive hashing, matching, filesystem notifications and guarded same-filesystem rename.</span></li>
+            <li><strong>Shipped</strong><span>CRC32, MD5 and SHA-1 updated together during one read through reusable 1 MiB per-worker buffers.</span></li>
+            <li><strong>Shipped</strong><span>Assembly-enabled digest crates with runtime CPU-feature dispatch; binary digest arrays instead of hexadecimal strings.</span></li>
+            <li><strong>Shipped</strong><span>Fixed-width <code>FxHashMap</code> evidence joins; the detailed two-million-row digest graph never crosses into JavaScript.</span></li>
+            <li><strong>Shipped</strong><span>Static policy pruning: 1,221 sources become 292 contributing sources, 313,914 retained releases and 1,239,634 unique strongest digests.</span></li>
+            <li><strong>Shipped</strong><span>Versioned 50 MiB native catalogue artefact, memory-mapped on warm startup; policy invalidation ignores unrelated transport and dependency changes.</span></li>
+            <li><strong>Shipped</strong><span>SQLite WAL with <code>NORMAL</code> synchronous mode, 256-record batches, passive checkpoints and hashing outside write transactions.</span></li>
+            <li><strong>Shipped</strong><span>Immutable encoded snapshot cache, O(1) status counters and WebSocket generation propagation.</span></li>
+            <li><strong>Shipped</strong><span>Hybrid MessagePack + aligned SoA snapshot, gzip via zlib-rs, parent indices, relative paths and a single basename string blob.</span></li>
+            <li><strong>Shipped</strong><span>Direct browser <code>DecompressionStream</code>, typed-array views and one UTF-8 decode; Rust replica decoding runs concurrently.</span></li>
+            <li><strong>Shipped</strong><span>Startup request cleanup: the frontend consumes its resident snapshot and no longer greedily asks for manifests, intake listings or verification details.</span></li>
+            <li><strong>Shipped</strong><span>End-to-end timestamp logging from process creation through HTTP, Tauri IPC, decode and frontend application.</span></li>
+          </ul>
+        </section>
+
+        <section id="hardware">
+          <span class="section-no">09 / hardware acceleration audit</span>
+          <h2>The fastest instructions are currently hidden by the VM.</h2>
+          <p>The physical Intel N100 exposes AVX2, PCLMULQDQ, SHA-NI, VAES and VPCLMULQDQ. The TrueNAS VM is configured as <code>x86-64-v2-AES</code>, exposing SSE4.2 and AES but hiding PCLMUL, AVX2 and SHA-NI. Our portable static binary already contains runtime-dispatched assembly implementations, but a guest cannot select instructions its virtual CPU does not advertise.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>One-run CPU-feature experiment · same static binary · hot 1 GiB sparse file</caption>
+              <thead><tr><th>Execution environment</th><th>SHA-1</th><th>CRC32 + MD5 + SHA-1</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>TrueNAS VM · x86-64-v2-AES</td><td>465.63 MiB/s</td><td>240.32 MiB/s</td><td>current deployment</td></tr>
+                <tr><td>Proxmox host · full Intel N100 ISA</td><td class="win">1,767.81 MiB/s</td><td class="win">366.31 MiB/s</td><td class="warn">candidate: +52% combined</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">This isolates a likely opportunity, not a final production claim. Host and guest are different execution environments and the run count is one. The 3.8× SHA-1 result is consistent with SHA-NI becoming visible; the combined path is the more relevant number. We should switch VM CPU type to host passthrough during a maintenance window, then rerun the full controlled benchmark.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Acceleration opportunities</caption>
+              <thead><tr><th>Technique</th><th>Current state</th><th>Expected value</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr class="shipped"><td>SHA/MD5 assembly dispatch</td><td>compiled in</td><td>large when ISA is exposed</td><td>keep; expose host CPU flags</td></tr>
+                <tr class="shipped"><td>CRC SIMD/PCLMUL dispatch</td><td>crate support compiled in</td><td>moderate</td><td>retest after passthrough</td></tr>
+                <tr><td>GPU hashing</td><td>not implemented</td><td>poor on HDD; possible on large NVMe batches</td><td>not a priority</td></tr>
+                <tr><td><code>io_uring</code> batched reads</td><td>not implemented</td><td>small on HDD, plausible on SSD/NVMe</td><td>benchmark behind a provider</td></tr>
+                <tr><td><code>posix_fadvise</code> / readahead</td><td>not implemented</td><td>workload and ZFS dependent</td><td>cheap controlled experiment</td></tr>
+                <tr><td>WebView GPU compositor</td><td>platform-managed</td><td>helps compositing, not DOM construction</td><td>insufficient for retained 144 Hz goal</td></tr>
+                <tr><td>Native <code>wgpu</code> renderer</td><td>not implemented</td><td>largest remaining frame-time control</td><td>proposed next architecture</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A GPU is not automatically a faster hash engine. Files must still travel from storage into host memory and then across the PCIe/device boundary, while our production NAS is currently limited by spinning disks and file scheduling. GPU hashing becomes interesting only for large contiguous NVMe workloads or when a GPU is already processing the same bytes.</p>
+        </section>
+
+        <section id="remaining">
+          <span class="section-no">10 / what remains</span>
+          <h2>We stopped where evidence stopped.</h2>
+          <p>Not every idea became code. Some lost their benchmark; others need platform-specific work large enough to deserve their own milestone.</p>
+          <ul class="status-list">
+            <li><strong class="candidate">Next</strong><span>Expose the N100 host ISA to the TrueNAS VM and rerun hashing, historian startup and power measurements.</span></li>
+            <li><strong class="candidate">Candidate</strong><span>ZFS snapshot-delta inventory, so a new scan can identify changed paths in one filesystem-native sweep.</span></li>
+            <li><strong class="candidate">Candidate</strong><span>Linux <code>statx</code> identity reuse for hard links; fs-verity digests where the filesystem can prove them; optional digest xattrs for portable rehash avoidance.</span></li>
+            <li><strong class="candidate">Candidate</strong><span><code>getdents64</code>/<code>statx</code> scanner and <code>io_uring</code> reader providers, benchmarked separately on HDD, SATA SSD and NVMe rather than assumed faster.</span></li>
+            <li><strong class="candidate">Candidate</strong><span>Patch snapshots over WebSocket for small live changes. Startup should retain the single dense snapshot; a one-file mutation should not require another full projection.</span></li>
+            <li><strong class="candidate">Candidate</strong><span>Same-pool reflinks and <code>copy_file_range</code> for moves that cannot use <code>rename(2)</code>.</span></li>
+            <li><strong>Rejected</strong><span>Wholesale JSON, CBOR, protobuf rows, FlatBuffer-style rows, lexical path tokens and a global filename dictionary. Each lost on total bytes, decode time or complexity.</span></li>
+            <li><strong>Rejected</strong><span>A B-tree digest index. Ordered traversal is not the operation; exact digest lookup is.</span></li>
+            <li><strong>Deferred</strong><span>Portable zero-copy shared memory into the WebView. Tauri does not provide a cross-platform borrowed Rust buffer to JavaScript, and custom platform bridges would still leave JavaScript object materialisation.</span></li>
+          </ul>
+        </section>
+
+        <section id="native-ui">
+          <span class="section-no">11 / the next ceiling</span>
+          <h2>Native retained-mode Rust—without losing the look.</h2>
+          <p>The current WebView boundary is no longer the catastrophic cost it was: the live snapshot applies in 420 ms and all heavy evidence remains native. But 144 Hz on every screen means controlling allocation, layout, text shaping, upload and draw submission every frame. A native renderer is the clearest route to that control.</p>
+          <p>We would not begin by choosing a generic widget toolkit and rebuilding every screen. The aesthetic is part of Archivist. The migration should treat the existing interface as a visual contract.</p>
+          <ol class="roadmap">
+            <li><strong>Freeze the visual contract.</strong><span>Extract colours, type scale, spacing, borders, shadows, animation curves and responsive rules into shared design tokens. Capture reference screenshots for every state and viewport.</span></li>
+            <li><strong>Separate presentation models from DOM models.</strong><span>Move sorting, grouping, selection and row projection into Rust read models backed by the existing resident SoA catalogue. Keep full data resident; virtualise only visual nodes.</span></li>
+            <li><strong>Build one native performance screen.</strong><span>Use the largest timeline or verification tree as the vertical slice. Run it beside the current screen behind a feature flag and compare frame time, memory, input latency and pixel output.</span></li>
+            <li><strong>Render with <code>winit</code> + <code>wgpu</code>.</strong><span>Use persistent GPU buffers, instanced rectangles and images, a glyph atlas with <code>cosmic-text</code>/<code>swash</code>, explicit clipping and no per-frame heap allocation in steady state.</span></li>
+            <li><strong>Retain and invalidate.</strong><span>Keep a scene graph and layout cache. Recompute only dirty subtrees; update only changed GPU ranges; render only visible rows while every catalogue record remains immediately addressable.</span></li>
+            <li><strong>Preserve desktop quality.</strong><span>Add AccessKit accessibility, IME and clipboard support, keyboard/gamepad focus, high-DPI scaling and platform window semantics before replacing the corresponding WebView screen.</span></li>
+            <li><strong>Gate on measurable parity.</strong><span>Require perceptual screenshot parity, 144 Hz frame pacing on target hardware, bounded allocations and equal-or-better accessibility. Migrate screen by screen; keep the proven web implementation until each replacement wins.</span></li>
+          </ol>
+          <p>Why not egui? It is excellent, but its immediate-mode ergonomics are not the same thing as the explicitly retained, dirty-region-controlled renderer we want. Why not Slint or Iced? Both are credible prototypes, and Slint in particular preserves declarative layout, but a custom <code>wgpu</code> presentation layer gives us the most direct control over this unusually data-heavy, game-like interface. We should prove that choice with the vertical slice before committing the whole product.</p>
+        </section>
+
+        <section id="method">
+          <span class="section-no">12 / methodology and honesty</span>
+          <h2>Numbers need boundaries.</h2>
+          <p>All timings on this page are development measurements from the copied corpus and hardware described beside them. Release binaries were used for comparative runs. Results are not blended across stages to invent a “two million games loaded” claim.</p>
+          <div class="cards">
+            <div class="card"><span>Benchmark mirror</span><h3>12,297 DAT files · 1.77 GB copied locally</h3><p>The selected policy contains 1,221 manifests. The exact OxyROMon/Igir compatible intersection contains 503 files and 487,201,103 bytes.</p></div>
+            <div class="card"><span>Live storage corpus</span><h3>222,242 filesystem entries</h3><p>210,840 files and 11,402 directories in the measured historian snapshot. These entries are not all distinct playable games.</p></div>
+            <div class="card"><span>Output semantics</span><h3>Compiler ≠ database import</h3><p>Archivist builds the resident strongest-digest evidence it needs. Competitors may perform additional relational, reporting or repair work.</p></div>
+            <div class="card"><span>Cache effects</span><h3>Called out, not averaged away</h3><p>ZFS ARC, Linux page cache and run order materially affect disk tests. Cold, warm and one-run figures are labelled where known.</p></div>
+          </div>
+          <p>The benchmark tools live with Archivist so future changes can be measured using the same inventory, combined-hash, matching and catalogue workloads. If a later implementation is slower, the page should change rather than the methodology.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="article-footer">
+    <div class="footer-inner">
+      <p class="eyebrow">Over Yonder</p>
+      <h2>We make games—and occasionally optimise something past the point of reason.</h2>
+      <p>Archivist comes from the same instincts behind our systems work and our forthcoming game, Mythaea. For another performance rabbit hole, read how <code>rstat</code> moved system monitoring into the Linux kernel.</p>
+      <div class="footer-links">
+        <a href="index.html">Archivist</a>
+        <a href="https://over-yonder.tech/" title="Mythaea — forthcoming from Over Yonder">Mythaea · coming soon</a>
+        <a href="https://over-yonder.tech/#articles/rstat">Read the rstat article</a>
+        <a href="https://github.com/overyonder/archivist">Source on GitHub</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
