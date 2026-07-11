@@ -12,6 +12,7 @@
     .performance strong { color: var(--text); font-weight: 650; }
     .technical-link { padding: 0; color: var(--accent); background: none; border: 0; font: 600 11px ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
     .technical-link:hover { color: #ffad46; }
+    .header-actions { display: flex; align-items: center; gap: 24px; }
     .technical-dialog { width: min(720px, calc(100vw - 32px)); padding: 0; color: var(--text); background: #11100e; border: 1px solid #493a2d; box-shadow: 0 30px 100px #000c; }
     .technical-dialog::backdrop { background: #080604d9; backdrop-filter: blur(5px); }
     .technical-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
@@ -46,15 +47,14 @@
 <body>
   <header>
     <a class="brand" href="#top"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <span class="status"><i></i> Early access in development</span>
+    <div class="header-actions"><button class="technical-link" type="button" data-open-technicals>Under the hood</button><span class="status"><i></i> Early access in development</span></div>
   </header>
 
   <main id="top">
     <section class="intro">
-      <p class="eyebrow">Frontend + 1G1R + ROM manager</p>
-      <h1>Bring your games.<br>We handle the rest.</h1>
-      <p class="lede">Retool continued: one app to select releases, verify your collection, configure emulators, and launch.</p>
-      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines and NAS Historian keep repeat scans and matching instant. <button class="technical-link" type="button" data-open-technicals>Technical details →</button></p>
+      <p class="eyebrow">Game preservation, collection, and play</p>
+      <h1>Your entire game collection.<br>One app.</h1>
+      <p class="lede">Archivist is a high-performance desktop frontend, 1G1R curator, ROM manager, verifier, and launcher. Bring your ROMs and emulators; it discovers, organises, and configures the rest.</p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
