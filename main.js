@@ -6,7 +6,7 @@ const features = [
   ["Genre genealogy", "Trace the games that shaped a genre and the works that followed from them."],
   ["Gamepad interface", "Navigate Archivist from the couch with documented controller hotkeys."],
   ["Live Vault updates", "NAS Historian streams filesystem changes to the desktop as new snapshot generations."],
-  ["Native processing", "A reproducible comparison with OxyROMon will be published after benchmarking."],
+  ["Resident compiler", "2,151,769 manifest media rows compiled in 1.314 seconds; a 222,242-entry NAS snapshot hydrates into the frontend in 420 ms."],
 ];
 
 const slides = [...document.querySelectorAll(".slide")];
@@ -46,4 +46,13 @@ document.addEventListener("click", (event) => {
     historianCallout.hidden = true;
     historianInfo.setAttribute("aria-expanded", "false");
   }
+});
+
+const technicalDialog = document.querySelector("#technicalDialog");
+document.querySelectorAll("[data-technical-open]").forEach((button) => {
+  button.addEventListener("click", () => technicalDialog.showModal());
+});
+document.querySelector("[data-technical-close]").addEventListener("click", () => technicalDialog.close());
+technicalDialog.addEventListener("click", (event) => {
+  if (event.target === technicalDialog) technicalDialog.close();
 });
