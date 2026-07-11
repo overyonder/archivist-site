@@ -1,8 +1,8 @@
 const features = [
-  ["See the whole history.", "Browse systems as a connected, navigable timeline."],
-  ["More emulators. Less configuration.", "Archivist ships more than 1,800 launch configurations and detects what is already installed."],
-  ["Make it yours.", "Tinted Theming support, system light and dark modes, and an 8:1 high-contrast option."],
-  ["Know what you have.", "See manifests, emulators, BIOS files, selected releases, and collection state together."],
+  ["System history", "Browse system families and releases on an interactive timeline."],
+  ["Emulator configuration", "Archivist includes more than 1,800 launch configurations and detects installed emulators."],
+  ["Themes and accessibility", "Archivist supports Tinted Theming, system light and dark modes, and an 8:1 high-contrast option."],
+  ["Collection verification", "Review manifests, emulators, BIOS files, selected releases, and collection state."],
 ];
 
 const slides = [...document.querySelectorAll(".slide")];

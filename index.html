@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Archivist combines a game frontend, 1G1R selection, ROM management, verification, and launching in one fast desktop app.">
-  <title>Archivist — Your collection, ready to play</title>
+  <meta name="description" content="Archivist is a desktop game frontend with 1G1R selection, ROM management, verification, emulator configuration, and launching.">
+  <title>Archivist — Game frontend and ROM manager</title>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -47,23 +47,23 @@
 <body>
   <header>
     <a class="brand" href="#top"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <div class="header-actions"><button class="technical-link" type="button" data-open-technicals>Under the hood</button><span class="status"><i></i> Early access in development</span></div>
+    <div class="header-actions"><button class="technical-link" type="button" data-open-technicals>Technical details</button><span class="status"><i></i> Early access in development</span></div>
   </header>
 
   <main id="top">
     <section class="intro">
-      <p class="eyebrow">Game preservation, collection, and play</p>
-      <h1>Your entire game collection.<br>One app.</h1>
-      <p class="lede">Archivist is a high-performance desktop frontend, 1G1R curator, ROM manager, verifier, and launcher. Bring your ROMs and emulators; it discovers, organises, and configures the rest.</p>
+      <p class="eyebrow">Desktop game frontend and ROM manager</p>
+      <h1>Manage and launch<br>your game collection.</h1>
+      <p class="lede">Archivist handles 1G1R release selection, ROM verification, emulator configuration, and launching. It works with the ROMs and emulators already on your system.</p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
-        <small>Launch updates and founding access. No noise.</small>
+        <small>We’ll email you when early access opens.</small>
       </form>
       <ul class="facts" aria-label="Product highlights">
         <li><strong>1,812</strong><span>launch configurations</span></li>
-        <li><strong>Retool</strong><span>selection continued</span></li>
-        <li><strong>Historian</strong><span>instant cached scans</span></li>
+        <li><strong>Retool</strong><span>1G1R selection rules</span></li>
+        <li><strong>Historian</strong><span>cached Vault index</span></li>
       </ul>
     </section>
 
@@ -77,7 +77,7 @@
         </div>
         <div class="caption" aria-live="polite">
           <span class="index">01 / 04</span>
-          <div><h2>See the whole history.</h2><p>Browse systems as a connected, navigable timeline.</p></div>
+          <div><h2>System history</h2><p>Browse system families and releases on an interactive timeline.</p></div>
           <div class="controls"><button type="button" data-prev aria-label="Previous feature">←</button><button type="button" data-next aria-label="Next feature">→</button></div>
         </div>
       </div>
@@ -91,12 +91,12 @@
   </main>
 
   <dialog class="technical-dialog" id="technicalDialog" aria-labelledby="technicalTitle">
-    <header class="technical-header"><h2 id="technicalTitle">How NAS Historian avoids rework</h2><button class="technical-close" type="button" data-close-technicals aria-label="Close technical details">×</button></header>
+    <header class="technical-header"><h2 id="technicalTitle">NAS Historian technical details</h2><button class="technical-close" type="button" data-close-technicals aria-label="Close technical details">×</button></header>
     <div class="technical-grid">
-      <article><span>01 / CACHE</span><h3>Dense binary history</h3><p>A compact cache records Vault identity and digest state, turning subsequent scans and matching passes into indexed lookups instead of repeated discovery.</p></article>
-      <article><span>02 / ZFS</span><h3>Snapshot-aware change detection</h3><p>On ZFS, Historian can compare snapshots to identify filesystem changes in one sweep and restrict deeper work to the affected data.</p></article>
-      <article><span>03 / STATX</span><h3>Reuse identity before bytes</h3><p>On other Linux filesystems, <code>statx</code> metadata and inode identity avoid hashing files and links whose recorded identity still matches.</p></article>
-      <article><span>04 / TRUST</span><h3>Digests where the files live</h3><p>When configured, Historian can consume fs-verity digests or persist its own digests in extended attributes, eliminating future content rehashes while that trusted state remains valid.</p></article>
+      <article><span>01 / CACHE</span><h3>Binary cache format</h3><p>The cache records Vault file identities and digests. Later scans use this index instead of reading unchanged file contents again.</p></article>
+      <article><span>02 / ZFS</span><h3>ZFS change detection</h3><p>Historian can compare ZFS snapshots to identify which paths changed between scans.</p></article>
+      <article><span>03 / STATX</span><h3>Linux identity checks</h3><p>On other Linux filesystems, <code>statx</code> metadata and inode identity allow existing files and links to reuse recorded digests.</p></article>
+      <article><span>04 / DIGESTS</span><h3>Filesystem digest support</h3><p>Historian can use fs-verity digests where available. It can also store computed digests in extended attributes so later scans do not need to hash the file again.</p></article>
     </div>
   </dialog>
 
