@@ -51,6 +51,10 @@
     .benchmark-card th:first-child, .benchmark-card td:first-child { text-align: left; }
     .benchmark-card .win { color: #8fcf91; }
     .benchmark-card .sota { color: #d7b790; }
+    .benchmark-card .partial { color: #d7b790; }
+    .benchmark-card .unsupported { color: #81776e; }
+    .support-matrix td:not(:first-child), .support-matrix th:not(:first-child) { text-align: center; }
+    .support-matrix small { display: block; margin-top: 2px; color: #81776e; font: 9px ui-monospace, monospace; }
     .table-wrap { overflow-x: auto; }
     .benchmark-note { margin-top: 10px !important; color: #81776e !important; font-size: 10px !important; }
     .benchmark-slide { position: relative; display: grid; place-items: center; padding: 30px; background: radial-gradient(circle at 50% 20%,#24180f,#090706 62%); text-align: center; }
@@ -177,6 +181,15 @@
         <p class="benchmark-note">Release builds on the same workstation and exact 503-file, 487,201,103-byte corpus. Archivist used 16 workers on a 12-thread host; its 1-worker result was 6.001 s. Higher-level database/report work explains part of the competitors’ additional time.</p>
       </article>
       <article class="benchmark-card"><span>13 / full selected policy</span><h3>1,221 manifests: compatibility matters</h3>
+        <p>Archivist deliberately consumes several catalogue families in one policy. These marks report whether each tool accepted that family in the copied benchmark corpus—not merely whether it has a generic XML parser.</p>
+        <div class="table-wrap"><table class="support-matrix"><thead><tr><th>Tool</th><th>TOSEC DATs</th><th>MAME lists</th><th>RA DATs</th></tr></thead><tbody>
+          <tr><td class="win">Archivist</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>software-list + listxml</small></td><td class="win" aria-label="Accepted">✓<small>RetroAchievements</small></td></tr>
+          <tr><td>RomVault 3.7.6</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td></tr>
+          <tr><td>Igir 5.3.1</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="partial" aria-label="Partially accepted">△<small>metadata failure</small></td><td class="win" aria-label="Accepted">✓<small>accepted</small></td></tr>
+          <tr><td class="sota">OxyROMon 0.21.0</td><td class="win" aria-label="Accepted">✓<small>accepted</small></td><td class="unsupported" aria-label="Not accepted">—<small>native XML rejected</small></td><td class="partial" aria-label="Partially accepted">△<small>duplicate-entry failure</small></td></tr>
+          <tr><td>clrmame 0.7.1</td><td class="unsupported" aria-label="Not batch verified">—<small>not batch-verified</small></td><td class="win" aria-label="Documented support">✓<small>documented support</small></td><td class="unsupported" aria-label="Not batch verified">—<small>not batch-verified</small></td></tr>
+        </tbody></table></div>
+        <p class="benchmark-note">✓ accepted or explicitly supported · △ the format is understood but this corpus exposed an incompatibility · — not accepted or not verified. “RA” means RetroAchievements, not RetroArch.</p>
         <div class="table-wrap"><table><thead><tr><th>Tool</th><th>Result</th><th>Peak/artefact note</th></tr></thead><tbody>
           <tr><td>Archivist raw digest pass</td><td class="win">6.548 s</td><td>2,764,072 rows; one malformed 303 MB TDC input rejected</td></tr>
           <tr><td>Archivist cold static policy</td><td>196.547 s</td><td>1.95× faster than the 383.289 s baseline; normally bypassed</td></tr>
