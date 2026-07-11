@@ -13,6 +13,25 @@
     .technical-link { padding: 0; color: var(--accent); background: none; border: 0; font: 600 11px ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
     .technical-link:hover { color: #ffad46; }
     .header-actions { display: flex; align-items: center; gap: 24px; }
+    .fact-with-callout { position: relative; }
+    .fact-title { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; }
+    .fact-info { width: 19px; height: 19px; display: grid; place-items: center; padding: 0; color: var(--accent); background: transparent; border: 1px solid #554536; border-radius: 50%; font: 700 11px ui-monospace, monospace; cursor: pointer; }
+    .historian-callout { position: absolute; right: -1px; bottom: calc(100% + 10px); z-index: 20; width: min(410px, 84vw); padding: 15px; color: var(--muted); background: #12100e; border: 1px solid #60452d; box-shadow: 0 18px 60px #000c; font-size: 11px; line-height: 1.5; }
+    .historian-callout::after { position: absolute; right: 13px; bottom: -6px; width: 10px; height: 10px; content: ""; background: #12100e; border-right: 1px solid #60452d; border-bottom: 1px solid #60452d; transform: rotate(45deg); }
+    .historian-callout h2 { margin: 0 0 8px; color: var(--text); font-size: 14px; }
+    .historian-callout p { margin: 0 0 8px; }
+    .historian-callout p:last-child { margin: 0; }
+    @media (min-width: 901px) {
+      .historian-callout { left: calc(100% + 12px); right: auto; bottom: -1px; }
+      .historian-callout::after { left: -6px; right: auto; bottom: 14px; border: 0; border-left: 1px solid #60452d; border-bottom: 1px solid #60452d; }
+    }
+    .planned { position: relative; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg,#120e0b,#080706); color: var(--muted); text-align: center; }
+    .planned::before { position: absolute; inset: 15px; content: ""; border: 1px dashed #4a392b; }
+    .planned div { position: relative; max-width: 440px; }
+    .planned span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .planned strong { display: block; margin: 10px 0 6px; color: var(--text); font-size: 18px; }
+    .planned p { margin: 0; font-size: 12px; line-height: 1.5; }
+    .tabs { grid-template-columns: repeat(8, 1fr); }
     .technical-dialog { width: min(720px, calc(100vw - 32px)); padding: 0; color: var(--text); background: #11100e; border: 1px solid #493a2d; box-shadow: 0 30px 100px #000c; }
     .technical-dialog::backdrop { background: #080604d9; backdrop-filter: blur(5px); }
     .technical-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
@@ -47,7 +66,7 @@
 <body>
   <header>
     <a class="brand" href="#top"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <div class="header-actions"><button class="technical-link" type="button" data-open-technicals>Technical details</button><span class="status"><i></i> Early access in development</span></div>
+    <div class="header-actions"><span class="status"><i></i> Early access in development</span></div>
   </header>
 
   <main id="top">
@@ -62,8 +81,15 @@
       </form>
       <ul class="facts" aria-label="Product highlights">
         <li><strong>1,812</strong><span>launch configurations</span></li>
-        <li><strong>Retool</strong><span>1G1R selection rules</span></li>
-        <li><strong>Historian</strong><span>cached Vault index</span></li>
+        <li><strong>1,451</strong><span>new rules beyond Retool</span></li>
+        <li class="fact-with-callout"><strong class="fact-title">Historian <button class="fact-info" type="button" data-historian-info aria-expanded="false" aria-controls="historianCallout" aria-label="Historian technical details">i</button></strong><span>live NAS index</span>
+          <aside class="historian-callout" id="historianCallout" hidden>
+            <h2>NAS Historian</h2>
+            <p>A storage-side Rust service watches the Vault and Intake directories, hashes changed paths beside the data, and publishes immutable MessagePack snapshot generations.</p>
+            <p>An authenticated WebSocket streams status and generation changes to Archivist. The desktop updates while connected without starting another full hash pass, and retains the last local snapshot for offline browsing.</p>
+            <p>ZFS snapshot comparison, <code>statx</code> identity reuse, fs-verity digests, and digest xattrs are planned evidence providers; the current implementation uses recursive filesystem notifications and SHA-256.</p>
+          </aside>
+        </li>
       </ul>
     </section>
 
@@ -74,10 +100,14 @@
           <figure class="slide" data-slide="1"><img src="assets/screenshots/emulators.png" alt="Archivist emulator configuration table" width="1368" height="912"></figure>
           <figure class="slide" data-slide="2"><img src="assets/screenshots/themes.png" alt="Archivist theme and high-contrast settings" width="1368" height="912"></figure>
           <figure class="slide" data-slide="3"><img src="assets/screenshots/verify.png" alt="Archivist collection verification view" width="1368" height="912"></figure>
+          <figure class="slide planned" data-slide="4"><div><span>Capture placeholder</span><strong>Genre genealogy</strong><p>A genealogy view showing games in the context of the works that influenced them and the genres they helped create.</p></div></figure>
+          <figure class="slide planned" data-slide="5"><div><span>Video placeholder</span><strong>Gamepad interface</strong><p>A short capture of controller navigation and the gamepad hotkey guide.</p></div></figure>
+          <figure class="slide planned" data-slide="6"><div><span>Video placeholder</span><strong>Live Vault updates</strong><p>A capture of NAS Historian publishing a filesystem change into Archivist over the live connection.</p></div></figure>
+          <figure class="slide planned" data-slide="7"><div><span>Benchmark placeholder</span><strong>Native processing</strong><p>Measured scan time, matching time, memory use, and throughput against OxyROMon.</p></div></figure>
         </div>
         <div class="caption" aria-live="polite">
-          <span class="index">01 / 04</span>
-          <div><h2>System history</h2><p>Browse system families and releases on an interactive timeline.</p></div>
+          <span class="index">01 / 08</span>
+          <div><h2>Explore the canon</h2><p>View games in context through genre family trees and platform timelines spanning the 1950s to today.</p></div>
           <div class="controls"><button type="button" data-prev aria-label="Previous feature">←</button><button type="button" data-next aria-label="Next feature">→</button></div>
         </div>
       </div>
@@ -86,19 +116,13 @@
         <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Emulators</button>
         <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Themes</button>
         <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Verify</button>
+        <button role="tab" aria-selected="false" data-tab="4"><span>05</span>Genealogy</button>
+        <button role="tab" aria-selected="false" data-tab="5"><span>06</span>Gamepad</button>
+        <button role="tab" aria-selected="false" data-tab="6"><span>07</span>Historian</button>
+        <button role="tab" aria-selected="false" data-tab="7"><span>08</span>Speed</button>
       </div>
     </section>
   </main>
-
-  <dialog class="technical-dialog" id="technicalDialog" aria-labelledby="technicalTitle">
-    <header class="technical-header"><h2 id="technicalTitle">NAS Historian technical details</h2><button class="technical-close" type="button" data-close-technicals aria-label="Close technical details">×</button></header>
-    <div class="technical-grid">
-      <article><span>01 / CACHE</span><h3>Binary cache format</h3><p>The cache records Vault file identities and digests. Later scans use this index instead of reading unchanged file contents again.</p></article>
-      <article><span>02 / ZFS</span><h3>ZFS change detection</h3><p>Historian can compare ZFS snapshots to identify which paths changed between scans.</p></article>
-      <article><span>03 / STATX</span><h3>Linux identity checks</h3><p>On other Linux filesystems, <code>statx</code> metadata and inode identity allow existing files and links to reuse recorded digests.</p></article>
-      <article><span>04 / DIGESTS</span><h3>Filesystem digest support</h3><p>Historian can use fs-verity digests where available. It can also store computed digests in extended attributes so later scans do not need to hash the file again.</p></article>
-    </div>
-  </dialog>
 
   <script src="main.js"></script>
 </body>
