@@ -26,6 +26,21 @@
     .technical-grid p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
     @media (max-width: 600px) { .technical-grid { grid-template-columns: 1fr; } .technical-grid article { border-right: 0; } .technical-grid article:nth-last-child(2) { border-bottom: 1px solid var(--line); } }
     @media (max-height: 800px) and (min-width: 901px) { .performance { margin-bottom: 16px; } }
+    @media (max-width: 900px) {
+      main { gap: 24px; padding-top: 24px; }
+      .intro { align-self: start; }
+      .eyebrow { margin-bottom: 13px; }
+      .lede { margin: 17px 0 10px; }
+      .performance { margin: 0 0 16px; }
+      .facts { display: none; }
+    }
+    @media (max-width: 560px) {
+      h1 { font-size: clamp(38px, 12vw, 48px); line-height: .91; }
+      .lede { font-size: 14px; line-height: 1.45; }
+      .performance { font-size: 11px; }
+      .signup small { display: none; }
+      .signup button { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -37,9 +52,9 @@
   <main id="top">
     <section class="intro">
       <p class="eyebrow">Frontend + 1G1R + ROM manager</p>
-      <h1>Bring your games.<br>Archivist handles the rest.</h1>
-      <p class="lede">A continuation of the Retool project: detect your emulators and ROMs, select the right releases, verify the collection, and launch it from one app.</p>
-      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines do the heavy work. NAS Historian maintains a dense binary cache of your Vault, so new ROMs can be scanned and matched against work already completed. <button class="technical-link" type="button" data-open-technicals>Technical details →</button></p>
+      <h1>Bring your games.<br>We handle the rest.</h1>
+      <p class="lede">Retool continued: one app to select releases, verify your collection, configure emulators, and launch.</p>
+      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines and NAS Historian keep repeat scans and matching instant. <button class="technical-link" type="button" data-open-technicals>Technical details →</button></p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
