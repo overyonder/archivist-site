@@ -7,6 +7,11 @@
   <title>Archivist — Your collection, ready to play</title>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .performance { max-width: 530px; margin: -12px 0 24px; color: #81776e; font-size: 12px; line-height: 1.5; }
+    .performance strong { color: var(--text); font-weight: 650; }
+    @media (max-height: 800px) and (min-width: 901px) { .performance { margin-bottom: 16px; } }
+  </style>
 </head>
 <body>
   <header>
@@ -19,6 +24,7 @@
       <p class="eyebrow">Frontend + 1G1R + ROM manager</p>
       <h1>Bring your games.<br>Archivist handles the rest.</h1>
       <p class="lede">A continuation of the Retool project: detect your emulators and ROMs, select the right releases, verify the collection, and launch it from one app.</p>
+      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines do the heavy work. NAS Historian maintains a dense binary cache of your Vault, so new ROMs can be scanned and matched against work already completed.</p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
@@ -27,7 +33,7 @@
       <ul class="facts" aria-label="Product highlights">
         <li><strong>1,812</strong><span>launch configurations</span></li>
         <li><strong>Retool</strong><span>selection continued</span></li>
-        <li><strong>Native</strong><span>Rust desktop app</span></li>
+        <li><strong>Historian</strong><span>instant cached scans</span></li>
       </ul>
     </section>
 
