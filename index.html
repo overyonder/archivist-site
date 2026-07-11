@@ -84,10 +84,10 @@
         <li><strong>1,451</strong><span>new rules beyond Retool</span></li>
         <li class="fact-with-callout"><strong class="fact-title">Historian <button class="fact-info" type="button" data-historian-info aria-expanded="false" aria-controls="historianCallout" aria-label="Historian technical details">i</button></strong><span>live NAS index</span>
           <aside class="historian-callout" id="historianCallout" hidden>
-            <h2>NAS Historian</h2>
-            <p>A storage-side Rust service watches the Vault and Intake directories, hashes changed paths beside the data, and publishes immutable MessagePack snapshot generations.</p>
-            <p>An authenticated WebSocket streams status and generation changes to Archivist. The desktop updates while connected without starting another full hash pass, and retains the last local snapshot for offline browsing.</p>
-            <p>ZFS snapshot comparison, <code>statx</code> identity reuse, fs-verity digests, and digest xattrs are planned evidence providers; the current implementation uses recursive filesystem notifications and SHA-256.</p>
+            <h2>NAS Historian: bare-metal storage speed</h2>
+            <p><strong>Native Rust, beside the disks.</strong> Historian runs on the NAS and hashes changed files where they are stored. ROM contents never need to cross the network for Archivist to inventory or match them.</p>
+            <p><strong>Live while you work.</strong> Filesystem notifications produce new immutable snapshot generations. An authenticated binary WebSocket pushes those changes straight into Archivist, so the desktop does not begin another crawl or hashing pass.</p>
+            <p><strong>Built for filesystem-native evidence.</strong> The next providers use ZFS snapshot differences to find changes in one sweep, <code>statx</code> identity to reuse hard-link digests, fs-verity for kernel-enforced hashes, and xattrs so Archivist digests can remain attached to the files themselves.</p>
           </aside>
         </li>
       </ul>
