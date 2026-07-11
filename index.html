@@ -10,6 +10,21 @@
   <style>
     .performance { max-width: 530px; margin: -12px 0 24px; color: #81776e; font-size: 12px; line-height: 1.5; }
     .performance strong { color: var(--text); font-weight: 650; }
+    .technical-link { padding: 0; color: var(--accent); background: none; border: 0; font: 600 11px ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+    .technical-link:hover { color: #ffad46; }
+    .technical-dialog { width: min(720px, calc(100vw - 32px)); padding: 0; color: var(--text); background: #11100e; border: 1px solid #493a2d; box-shadow: 0 30px 100px #000c; }
+    .technical-dialog::backdrop { background: #080604d9; backdrop-filter: blur(5px); }
+    .technical-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .technical-header h2 { margin: 0; font-size: 17px; }
+    .technical-close { width: 32px; height: 32px; color: var(--muted); background: #181512; border: 1px solid var(--line); cursor: pointer; }
+    .technical-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .technical-grid article { min-height: 145px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .technical-grid article:nth-child(even) { border-right: 0; }
+    .technical-grid article:nth-last-child(-n+2) { border-bottom: 0; }
+    .technical-grid span { color: var(--accent); font: 11px ui-monospace, monospace; }
+    .technical-grid h3 { margin: 10px 0 8px; font-size: 15px; }
+    .technical-grid p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    @media (max-width: 600px) { .technical-grid { grid-template-columns: 1fr; } .technical-grid article { border-right: 0; } .technical-grid article:nth-last-child(2) { border-bottom: 1px solid var(--line); } }
     @media (max-height: 800px) and (min-width: 901px) { .performance { margin-bottom: 16px; } }
   </style>
 </head>
@@ -24,7 +39,7 @@
       <p class="eyebrow">Frontend + 1G1R + ROM manager</p>
       <h1>Bring your games.<br>Archivist handles the rest.</h1>
       <p class="lede">A continuation of the Retool project: detect your emulators and ROMs, select the right releases, verify the collection, and launch it from one app.</p>
-      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines do the heavy work. NAS Historian maintains a dense binary cache of your Vault, so new ROMs can be scanned and matched against work already completed.</p>
+      <p class="performance"><strong>Fast by construction.</strong> Native Rust pipelines do the heavy work. NAS Historian maintains a dense binary cache of your Vault, so new ROMs can be scanned and matched against work already completed. <button class="technical-link" type="button" data-open-technicals>Technical details →</button></p>
       <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
         <input type="hidden" name="subject" value="Archivist early access">
         <button type="submit">Join early access <span aria-hidden="true">→</span></button>
@@ -59,6 +74,16 @@
       </div>
     </section>
   </main>
+
+  <dialog class="technical-dialog" id="technicalDialog" aria-labelledby="technicalTitle">
+    <header class="technical-header"><h2 id="technicalTitle">How NAS Historian avoids rework</h2><button class="technical-close" type="button" data-close-technicals aria-label="Close technical details">×</button></header>
+    <div class="technical-grid">
+      <article><span>01 / CACHE</span><h3>Dense binary history</h3><p>A compact cache records Vault identity and digest state, turning subsequent scans and matching passes into indexed lookups instead of repeated discovery.</p></article>
+      <article><span>02 / ZFS</span><h3>Snapshot-aware change detection</h3><p>On ZFS, Historian can compare snapshots to identify filesystem changes in one sweep and restrict deeper work to the affected data.</p></article>
+      <article><span>03 / STATX</span><h3>Reuse identity before bytes</h3><p>On other Linux filesystems, <code>statx</code> metadata and inode identity avoid hashing files and links whose recorded identity still matches.</p></article>
+      <article><span>04 / TRUST</span><h3>Digests where the files live</h3><p>When configured, Historian can consume fs-verity digests or persist its own digests in extended attributes, eliminating future content rehashes while that trusted state remains valid.</p></article>
+    </div>
+  </dialog>
 
   <script src="main.js"></script>
 </body>

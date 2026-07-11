@@ -29,3 +29,10 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") show(current - 1);
   if (event.key === "ArrowRight") show(current + 1);
 });
+
+const technicalDialog = document.querySelector("#technicalDialog");
+document.querySelector("[data-open-technicals]").addEventListener("click", () => technicalDialog.showModal());
+document.querySelector("[data-close-technicals]").addEventListener("click", () => technicalDialog.close());
+technicalDialog.addEventListener("click", (event) => {
+  if (event.target === technicalDialog) technicalDialog.close();
+});
