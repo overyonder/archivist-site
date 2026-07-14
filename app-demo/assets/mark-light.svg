@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Archivist mark</title>
+  <desc id="desc">A light Archivist mark with an orange capital A drawn without a crossbar.</desc>
+  <rect x="22" y="22" width="212" height="212" rx="32" fill="#f6f1eb" stroke="#c45a13" stroke-width="10"/>
+  <path d="M70 194 128 58l58 136" fill="none" stroke="#c45a13" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

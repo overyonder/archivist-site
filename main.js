@@ -1,12 +1,10 @@
 const features = [
-  ["Explore the canon", "View games in context through genre family trees and platform timelines spanning the 1950s to today."],
-  ["Emulator configuration", "Archivist includes more than 1,800 launch configurations and detects installed emulators."],
-  ["Themes and accessibility", "Archivist supports Tinted Theming, system light and dark modes, and an 8:1 high-contrast option."],
-  ["Collection verification", "Review manifests, emulators, BIOS files, selected releases, and collection state."],
-  ["Genre genealogy", "Trace the games that shaped a genre and the works that followed from them."],
-  ["Gamepad interface", "Navigate Archivist from the couch with documented controller hotkeys."],
-  ["Live Vault updates", "NAS Historian streams filesystem changes to the desktop as new snapshot generations."],
-  ["Resident compiler", "2,151,769 manifest media rows compiled in 1.314 seconds; a 222,242-entry NAS snapshot hydrates into the frontend in 420 ms."],
+  ["A curated history.", "View games in context through genre family trees and platform timelines spanning the 1950s to today."],
+  ["Works out of the box.", "Archivist includes more than 1,800 launch configurations and detects installed emulators."],
+  ["Suits your needs—and your taste.", "Archivist supports a selectable tint colour, system light and dark modes, and an 8:1 high-contrast option."],
+  ["Checks every byte.", "Review preservation catalogues, emulators, system firmware, selected releases, and collection state."],
+  ["Suits however you play.", "Use every primary Archivist screen and launch games entirely with a controller."],
+  ["Runs like lightning.", "Archivist compiles 2,151,769 catalogue-manifest rows in 1.314 seconds. A 222,242-entry snapshot from network-attached storage is applied to the frontend in 420 milliseconds."],
 ];
 
 const slides = [...document.querySelectorAll(".slide")];
@@ -16,34 +14,45 @@ let current = 0;
 
 function show(index) {
   current = (index + slides.length) % slides.length;
-  slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+  slides.forEach((slide, i) => {
+    const active = i === current;
+    slide.classList.toggle("active", active);
+    slide.setAttribute("aria-hidden", String(!active));
+    slide.toggleAttribute("inert", !active);
+  });
   tabs.forEach((tab, i) => {
-    tab.classList.toggle("active", i === current);
-    tab.setAttribute("aria-selected", String(i === current));
+    const active = i === current;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
   });
   caption.querySelector(".index").textContent = `${String(current + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
   caption.querySelector("h2").textContent = features[current][0];
   caption.querySelector("p").textContent = features[current][1];
 }
 
-tabs.forEach((tab) => tab.addEventListener("click", () => show(Number(tab.dataset.tab))));
-document.querySelector("[data-prev]").addEventListener("click", () => show(current - 1));
-document.querySelector("[data-next]").addEventListener("click", () => show(current + 1));
-document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") show(current - 1);
-  if (event.key === "ArrowRight") show(current + 1);
+slides.forEach((slide, i) => {
+  slide.id = `feature-slide-${i}`;
+  slide.setAttribute("role", "tabpanel");
+  slide.setAttribute("aria-labelledby", `feature-tab-${i}`);
 });
 
-const historianInfo = document.querySelector("[data-historian-info]");
-const historianCallout = document.querySelector("#historianCallout");
-historianInfo.addEventListener("click", (event) => {
-  event.stopPropagation();
-  historianCallout.hidden = !historianCallout.hidden;
-  historianInfo.setAttribute("aria-expanded", String(!historianCallout.hidden));
+tabs.forEach((tab, i) => {
+  tab.id = `feature-tab-${i}`;
+  tab.setAttribute("aria-controls", `feature-slide-${i}`);
+  tab.addEventListener("click", () => show(i));
+  tab.addEventListener("keydown", (event) => {
+    const next = event.key === "ArrowLeft" ? i - 1
+      : event.key === "ArrowRight" ? i + 1
+      : event.key === "Home" ? 0
+      : event.key === "End" ? tabs.length - 1
+      : null;
+    if (next === null) return;
+    event.preventDefault();
+    show(next);
+    tabs[current].focus();
+  });
 });
-document.addEventListener("click", (event) => {
-  if (!historianCallout.hidden && !historianCallout.contains(event.target)) {
-    historianCallout.hidden = true;
-    historianInfo.setAttribute("aria-expanded", "false");
-  }
-});
+document.querySelector("[data-prev]").addEventListener("click", () => show(current - 1));
+document.querySelector("[data-next]").addEventListener("click", () => show(current + 1));
+show(current);

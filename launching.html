@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How Archivist replaces emulator profiles and platform associations with composable, system-parameterized launch plans for everything from VAPF to MAME.">
+  <title>Ready to Launch — Archivist</title>
+  <link rel="icon" href="mark.svg" type="image/svg+xml">
+  <script src="theme.js?v=2"></script>
+  <link rel="stylesheet" href="performance.css?site=archivist-v4">
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body class="performance-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="nav" aria-label="Site navigation">
+      <a href="index.html">Product</a><i aria-hidden="true">|</i><span>Articles:</span>
+      <a href="launching.html" aria-current="page">Ready to Launch</a><i aria-hidden="true">|</i>
+      <a href="retool.html">Reviving Retool</a><i aria-hidden="true">|</i>
+      <a href="performance.html">Performance</a>
+    </nav>
+  </header>
+
+  <main>
+    <header class="article-hero">
+      <p class="eyebrow">Emulator launching · architecture notes · July 2026</p>
+      <h1>Ready to Launch.</h1>
+      <p class="hero-result"><strong>82 distinct emulators.</strong> More than 1,800 unique system mappings.</p>
+      <p class="hero-lede">Archivist is a frontend for finding and launching games across a historical collection. Most frontends describe a launch as a relationship between an emulator, a profile and a platform. That model handles the easy cases well. Video game history contains rather a lot of difficult ones.</p>
+    </header>
+
+    <div class="article-layout">
+      <aside class="toc" aria-label="Article contents">
+        <p>Contents</p>
+        <a href="#landscape">The familiar model</a>
+        <a href="#problem">The problem</a>
+        <a href="#model">The launch schema</a>
+        <a href="#paths">Paths have meaning</a>
+        <a href="#vapf">Case: generated config</a>
+        <a href="#mame">Case: dependency graph</a>
+        <a href="#payoff">Why it scales</a>
+      </aside>
+
+      <article class="article">
+        <section id="landscape">
+          <span class="section-no">01 / the familiar model</span>
+          <h2>Emulator, profile, platform.</h2>
+          <p>Frontend launch configuration usually begins with three questions: which executable should run, which arguments should accompany it, and which platforms should use it? The answers naturally become an emulator record, one or more profiles, and an association table.</p>
+          <p><a href="https://github.com/JMBeresford/retrom/wiki/Emulators-Config">Our friends at Retrom document this model directly</a>. An emulator declares the platforms it supports. Its launch profiles add file-extension rules and custom arguments containing a <code>{file}</code> placeholder. Multiple profiles let one emulator serve different platforms or modes—RetroArch can, for example, have a profile for each core—and a default profile can be chosen for each platform.</p>
+          <p><a href="https://feedback.launchbox-app.com/help/articles/2163014-my-game-wont-play-in-launchbox-step-by-step-troubleshooting">LaunchBox, one of the longest-running PC game frontends, uses a closely related association</a>. An emulator has an application path and default parameters. Its Associated Platforms rows select cores and add platform-specific parameters. Individual games may override the command when necessary.</p>
+          <p><strong>These are sensible designs.</strong> For the common case, the user chooses an executable, a core or profile, a platform and a ROM path. The frontend assembles the command and starts it.</p>
+        </section>
+
+        <section id="problem">
+          <span class="section-no">02 / the problem</span>
+          <h2>A launch can be more than a command.</h2>
+          <p>A cartridge console running through a libretro emulator core fits the profile model beautifully. A historical computer may need a writable disk image staged before launch. Another emulator may only read its game selection from a generated configuration file. An arcade machine may need its emulated host, attached devices, system firmware, parent software images and catalogue entry to be available at the same time.</p>
+          <p>Once the machine, media and lifecycle matter, the command line is only the final output. The launch definition also needs to describe files, firmware, generated configuration, writable state and the dependencies between them.</p>
+          <blockquote class="author-note">
+            <p class="author-label">Author’s note</p>
+            <p>As an example, most folks who play old games now meet them through modern ports. I recently wanted to experience <cite>Temple of Apshai</cite> on the Commodore 64, so I chose the cassette release rather than the later, much faster floppy-disk version. It felt closer to what someone might actually have played in the early 1980s if their family owned a C64 but not its expensive disk drive.</p>
+            <p>The surprise was the wait. This simple game on an 8-bit machine takes about fifteen minutes to load from tape. It’s the same sort of cassette you could rewind with a hexagonal pencil, and that some of us remember carrying children’s songs in the car. Sorry if that one stings.</p>
+            <p>Then I tried the original <cite>Wizardry: Proving Grounds of the Mad Overlord</cite> on an Apple IIe, which MAME preserves wonderfully. Most players now see the MS-DOS or later console ports. Those still look ancient, but in 1981 even their improvements would have seemed like science fiction to someone playing on a four-year-old Apple II.</p>
+            <p>The Apple II experience turns you into a disk operator. You boot from the game disk, reach the menu, follow its instructions to create a scenario disk, then swap disks while the program is still running. You label stacks of 5¼-inch floppies with masking tape and a biro, and use write-protect tabs to avoid overwriting the wrong one. Multiple drives were a luxury. Today, pulling storage out of a running program feels like a good way to crash it. Back then, it was simply how the machine worked.</p>
+            <p>MAME can preserve that whole machine, but its completeness makes it formidable. Many people bounce off the first time an arcade game asks for a coin: usually <kbd>5</kbd>, then <kbd>1</kbd> for Player One, except when it isn’t. Libretro, which makes much of Archivist possible, takes a different approach by offering one interface, persistence model and control contract across dozens of systems. A historical frontend has to speak fluently to both. That’s the problem we’re solving.</p>
+          </blockquote>
+        </section>
+
+        <section id="model">
+          <span class="section-no">03 / Archivist's model</span>
+          <h2>Parameterize what differs. Share what doesn’t.</h2>
+          <p>Archivist gives every property that genuinely varies a typed place in the launch schema: the executable, core or machine target, media slots, BIOS choice, search paths, generated configuration and lifecycle hooks. Behaviour that doesn’t vary is federated into reusable modules instead of being copied into every system.</p>
+          <p>The schema documents the interdependencies too. It knows which firmware belongs to a machine, which media a slot accepts, which files may be written, and which resources must exist before launch. A system definition supplies only its concrete values and genuine exceptions.</p>
+          <p>The result is a minimum-surface-area launch definition that Archivist can inspect, validate and invoke from any interface. A thousand system associations don’t imply a thousand copies of slightly different RetroArch commands that the user has to do as homework. You’re here to explore video game history, so the tool shouldn’t make you feel like you have to research and write a specification yourself just to get things running.</p>
+        </section>
+
+        <section id="paths">
+          <span class="section-no">04 / portable player data</span>
+          <h2>One save archive, whatever runs the game.</h2>
+          <p>A typical frontend leaves each emulator to choose where saves, save states and configuration live. Some can redirect a save directory from the command line, but only when the emulator exposes that option cleanly. The result is several emulator-shaped silos rather than one history of the games you’ve played.</p>
+          <p><a href="https://www.launchbox-app.com/">LaunchBox</a> makes the trade-off easy to see. Its Windows edition can manage portable emulators under <code>LaunchBox\Emulators</code>. That’s a thoughtful design, and it lets people move a complete installation between Windows PCs by copying one folder. Each emulator still keeps its own player data: MAME puts NVRAM and save states in MAME’s tree, RetroArch keeps saves, states and configuration in RetroArch’s tree, and DOS and standalone emulators use still more sibling trees.</p>
+          <p>LaunchBox is currently available for Windows and Android—there’s no desktop Unix edition. Part of that is probably due to the complexity of moving a tightly coupled structure like that. Moving the complete Windows bundle is well supported, but that’s different from making a player’s history independent of the frontend, emulator and operating system that created it.</p>
+          <p>That comparison describes the products as they exist today, not what LaunchBox might support later. It illustrates two different approaches to the same problem and the trade-offs Archivist has chosen.</p>
+          <p>LaunchBox is <em>also</em> far more configurable than Archivist, at least for now. Archivist makes its experience as close to “one-click” as possible by being <em>opinionated</em>. We choose the emulator for each system, curate the One Game, One ROM collection, decide which equivalent releases to reject, and choose how IBM PC-compatible games should run. Players who enjoy comparing emulation technologies as much as the hardware they emulate may miss that control. That’s the price of reducing opportunities for a bad configuration.</p>
+          <p>Archivist’s launch layer can bridge the remaining filesystem assumptions with low-level operating-system facilities such as named pipes, bind mounts or mapped drives, and process substitution. Each gives an emulator the path or file-like handle it expects while the underlying save or configuration remains in the player’s chosen archive.</p>
+          <figure class="save-layout">
+            <div>
+              <figcaption>Organized by emulator</figcaption>
+              <pre><code>LaunchBox/
+└── Emulators/
+    ├── MAME/
+    │   ├── nvram/
+    │   └── sta/
+    ├── RetroArch/
+    │   ├── saves/
+    │   └── states/
+    └── Standalone/</code></pre>
+            </div>
+            <div class="save-layout-player">
+              <figcaption>Organized for the player</figcaption>
+              <pre><code>Saves/
+├── Ultima 7/
+├── Mass Effect 2/
+├── Akalabeth/
+└── Skyrim Special Edition/</code></pre>
+              <small>Each game can keep its saves, states and settings together.</small>
+            </div>
+          </figure>
+          <p>Archivist lets you choose the archival structure instead. You might point it at a network-attached storage folder that’s backed up regularly, with one recognizable directory per game and everything worth keeping inside it. It doesn’t matter whether the game ran through MAME, RetroArch, a standalone emulator or Steam. Your saves are in one place: easy to find, easy to browse, easy to protect—and easy to reminisce over later.</p>
+        </section>
+
+        <section id="vapf">
+          <span class="section-no">05 / case example: generated configuration</span>
+          <h2>VAPF needs configuration before it launches.</h2>
+          <p>VAPF is a compact standalone emulator for the APF MP-1000 and Imagination Machine, but launching it from a frontend exposes the limits of a command-only profile. The launch process must write the selected game into VAPF’s <code>default.ini</code> configuration file before <code>VAPF.exe</code> starts.</p>
+          <p>We know the integration intimately because we originally wrote <a href="https://gist.github.com/KaiStarkk/78687087950ae30be1e04d45109e353e">the helper that made VAPF work with LaunchBox</a>. That adapter accepts the new game path, rewrites the <code>GAMEfilename</code> entry in the INI file, and then starts the emulator. It’s a useful, focused workaround—and evidence that the real launch operation begins before process creation.</p>
+          <div class="config-example" aria-label="VAPF generated configuration example">
+            <div><span>System parameter</span><code>vault_game</code><small>The verified game selected by Archivist.</small></div>
+            <pre><code>[default.ini]
+GAMEfilename = "{vault_game}"</code></pre>
+            <div><span>Prepared launch</span><code>VAPF.exe</code><small>Starts with launch-owned configuration in the required directory.</small></div>
+          </div>
+          <p>In Archivist, those steps are the VAPF module's pre-flight stage. They remain visible to the system launch definition, use the same resource vocabulary as every other emulator, and don’t require the user to discover and maintain a separate wrapper.</p>
+        </section>
+
+        <section id="mame">
+          <span class="section-no">06 / case example: dependency graph</span>
+          <h2>MAME starts with the machine.</h2>
+          <p>A launch through the MAME emulator begins with the emulated machine. The selected game is only one part of the plan. Archivist’s system definition names the machine, attaches software to the right media slot, chooses its system firmware and exposes the paths containing parent, device and firmware archives.</p>
+          <blockquote class="dependency-aside">
+            <p>One MAME machine can be a family tree:</p>
+            <p>…the computer has its ROMs</p>
+            <p>…the floppy drive has a controller</p>
+            <p>…the floppy disk is a separate image</p>
+            <p>…the keyboard may have its own firmware archive</p>
+            <p>…an expansion card or speech synthesizer can add ROMs of its own</p>
+            <p>…an arcade cabinet can add a coin hopper</p>
+            <p>…and a pinball machine adds a tilt switch. Press <kbd>T</kbd> in MAME to bump the table and see how it punished players who tried to cheat.</p>
+          </blockquote>
+          <p>Archivist's MAME module records those relationships directly. A simple arcade board supplies only a few values. A computer backed by a MAME software list can add its host, slot, software identity and dependency roots without forking the launcher or pretending every required archive belongs to the game.</p>
+          <p>The direction of travel is encouraging. DOSBox once presented frontends with a similar pile of mounts, working directories, configuration and startup commands for every game. <a href="https://www.dosbox-staging.org/0.83/manual/using-dosbox-staging/command-line/">DOSBox Staging</a> can now accept a game directory or executable directly and layer per-game configuration over shared defaults. The <a href="https://docs.libretro.com/library/dosbox_pure/">libretro DOSBox Pure core</a> that Archivist uses goes further towards a console-like contract, with the game loaded as content through libretro’s shared interface. Progress in emulator projects and the libretro ecosystem keeps shrinking the special-case surface that a frontend has to own.</p>
+          <div class="cards">
+            <div class="card"><span>Machine</span><h3>The emulated host</h3><p>The system selects the MAME machine target and any machine-specific switches.</p></div>
+            <div class="card"><span>Devices</span><h3>The attached hardware</h3><p>Media slots and device archives describe how software reaches the machine.</p></div>
+            <div class="card"><span>Firmware</span><h3>The required BIOS set</h3><p>BIOS selection and dependency roots are explicit rather than hidden beside game files.</p></div>
+            <div class="card"><span>Software</span><h3>The complete media graph</h3><p>Software-list identity, parent ROMs and multiple media can be resolved as one plan.</p></div>
+          </div>
+          <p>The schema expands only where the machine demands it. Systems that need a filename stay small. Systems that need a hardware and media graph can describe the whole graph.</p>
+        </section>
+
+        <section id="payoff">
+          <span class="section-no">07 / the payoff</span>
+          <h2>Pre-configured should mean complete.</h2>
+          <p>Archivist's approach is better for its particular promise: making an unusually broad historical collection playable without turning every unusual machine into a research exercise. The product owns the launch knowledge, so a system definition can say what it needs and the shared modules can say how to provide it.</p>
+          <div class="table-wrap">
+            <table>
+              <caption>Where each abstraction places launch knowledge</caption>
+              <thead><tr><th>Model</th><th>Reusable unit</th><th>System specialization</th><th>Complex lifecycle</th></tr></thead>
+              <tbody>
+                <tr><td>Retrom</td><td>emulator + profile</td><td>profile/platform assignment</td><td>custom arguments or external integration</td></tr>
+                <tr><td>LaunchBox</td><td>emulator definition</td><td>associated platform, core and parameters</td><td>overrides, plugins or helpers</td></tr>
+                <tr class="shipped"><td>Archivist</td><td class="win">launch module</td><td class="win">typed system parameters</td><td class="win">part of the launch definition</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>That produces practical benefits beyond expressive power. Configuration can be validated before launch, missing dependencies can be named, mutable state stays out of the archive, generated files have an explicit lifetime, and improvements to one module flow to every system that uses it.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="article-footer">
+    <div class="footer-inner">
+      <h2>Video game history, made playable.</h2>
+      <p>Archivist curates the collection, verifies the media, resolves the dependencies and builds the launch plan. Even unusual hardware arrives as part of the library, with its configuration already handled.</p>
+      <div class="footer-links">
+        <a href="https://over-yonder.tech/">Visit over|yonder</a>
+        <a href="retool.html">Read Reviving Retool</a>
+        <a href="performance.html">Read the performance deep dive</a>
+        <button type="button" class="footer-cta" aria-disabled="true">Join early access <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </footer>
+  <footer class="legal-footer">
+    <a href="https://over-yonder.tech/">&copy; 2026 over|yonder tech</a>
+    <div class="legal-links">
+      <button type="button" data-dialog-open="privacyDialog"><em>Priv-</em>acy</button>
+      <i aria-hidden="true">|</i>
+      <button type="button" data-dialog-open="piracyDialog"><em>Pir-</em>acy<svg class="piracy-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--bg)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--bg)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></button>
+    </div>
+  </footer>
+
+  <dialog class="legal-dialog" id="privacyDialog">
+    <div>
+      <h2>Privacy, plainly.</h2>
+      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <dialog class="legal-dialog" id="piracyDialog">
+    <div>
+      <h2>Your collection, your software.<svg class="piracy-mark piracy-modal-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--panel)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--panel)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></h2>
+      <p>Archivist doesn’t provide copyrighted material. It’s strictly a collection manager for users to sort, verify, view, and launch their own legally obtained game software.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <script src="policies.js?site=archivist-v1"></script>
+</body>
+</html>

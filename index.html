@@ -4,124 +4,212 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Archivist is a desktop game frontend with 1G1R selection, ROM management, verification, emulator configuration, and launching.">
-  <title>Archivist — Game frontend and ROM manager</title>
-  <link rel="icon" href="mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <title>Archivist</title>
+  <link rel="icon" href="mark.svg?site=archivist" type="image/svg+xml">
+  <script src="theme.js?v=2"></script>
+  <link rel="stylesheet" href="styles.css?site=archivist">
   <style>
-    .performance { max-width: 530px; margin: -12px 0 24px; color: #81776e; font-size: 12px; line-height: 1.5; }
-    .performance strong { color: var(--text); font-weight: 650; }
-    .technical-link { padding: 0; color: var(--accent); background: none; border: 0; font: 600 11px ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
-    .technical-link:hover { color: #ffad46; }
-    .header-actions { display: flex; align-items: center; gap: 24px; }
+    body.landing-page > header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; }
+    .article-links { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--line-bright); font: 600 10px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .article-links a { color: var(--muted); text-decoration: none; }
+    .article-links a:hover { color: var(--accent); }
+    .article-links i { color: var(--line); font-style: normal; }
+    .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .header-separator { color: var(--line); font: 10px ui-monospace, monospace; }
     .header-link { color: var(--muted); font: 600 10px ui-monospace, monospace; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
     .header-link:hover { color: var(--accent); }
-    .fact-with-callout { position: relative; }
-    .fact-title { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; }
-    .fact-info { width: 19px; height: 19px; display: grid; place-items: center; padding: 0; color: var(--accent); background: transparent; border: 1px solid #554536; border-radius: 50%; font: 700 11px ui-monospace, monospace; cursor: pointer; }
-    .historian-callout { position: absolute; right: -1px; bottom: calc(100% + 10px); z-index: 20; width: min(410px, 84vw); padding: 15px; color: var(--muted); background: #12100e; border: 1px solid #60452d; box-shadow: 0 18px 60px #000c; font-size: 11px; line-height: 1.5; }
-    .historian-callout::after { position: absolute; right: 13px; bottom: -6px; width: 10px; height: 10px; content: ""; background: #12100e; border-right: 1px solid #60452d; border-bottom: 1px solid #60452d; transform: rotate(45deg); }
-    .historian-callout h2 { margin: 0 0 8px; color: var(--text); font-size: 14px; }
-    .historian-callout p { margin: 0 0 8px; }
-    .historian-callout p:last-child { margin: 0; }
-    @media (min-width: 901px) {
-      .historian-callout { left: calc(100% + 12px); right: auto; bottom: -1px; }
-      .historian-callout::after { left: -6px; right: auto; bottom: 14px; border: 0; border-left: 1px solid #60452d; border-bottom: 1px solid #60452d; }
-    }
+    .mobile-nav { position: relative; display: none; }
+    .mobile-nav summary { width: 32px; height: 32px; display: grid; place-items: center; color: var(--muted); border: 1px solid var(--line); cursor: pointer; font: 700 13px ui-monospace, monospace; list-style: none; }
+    .mobile-nav summary::-webkit-details-marker { display: none; }
+    .mobile-nav[open] summary { color: var(--accent); border-color: var(--accent); }
+    .mobile-nav nav { position: absolute; top: calc(100% + 10px); right: 0; z-index: 50; width: max-content; min-width: 190px; display: grid; padding: 5px; background: var(--panel); border: 1px solid var(--line-bright); box-shadow: 0 16px 50px #000c; }
+    .mobile-nav a { padding: 11px 12px; color: var(--muted); font: 600 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+    .mobile-nav a:hover { color: var(--accent); background: var(--control-bg); }
+    .eyebrow u { text-underline-offset: .22em; text-decoration-thickness: 1px; }
+    .lede p { margin: 0; }
+    .lede p + p { margin-top: .65em; }
+    .signup { flex-direction: column; justify-content: center; align-items: center; gap: 9px; text-align: center; }
+    .signup small { max-width: 310px; }
+    .signup button[aria-disabled="true"] { cursor: default; }
+    .signup button[aria-disabled="true"]:hover { background: var(--accent); }
+    .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
+    .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
+    .legal-dialog div { padding: 28px; }
+    .legal-dialog h2 { margin: 0 0 14px; font-size: 22px; }
+    .legal-dialog p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .legal-dialog button { padding: 10px 14px; color: var(--control-contrast); background: var(--accent); border: 0; font: 700 11px ui-monospace, monospace; text-transform: uppercase; cursor: pointer; }
     .planned { position: relative; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg,#120e0b,#080706); color: var(--muted); text-align: center; }
     .planned::before { position: absolute; inset: 15px; content: ""; border: 1px dashed #4a392b; }
     .planned div { position: relative; max-width: 440px; }
     .planned span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
     .planned strong { display: block; margin: 10px 0 6px; color: var(--text); font-size: 18px; }
     .planned p { margin: 0; font-size: 12px; line-height: 1.5; }
-    .tabs { grid-template-columns: repeat(8, 1fr); }
+    .tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .tabs button { min-width: 0; overflow: hidden; }
+    .slide.active { pointer-events: auto; }
+    .app-demo { width: 125%; height: 125%; display: block; border: 0; background: #080706; transform: scale(.8); transform-origin: top left; }
+    .facts { grid-template-columns: .92fr 1.14fr .94fr; overflow: visible; }
+    .facts li { min-width: 0; }
+    .facts span, .fact-link { overflow-wrap: anywhere; word-break: normal; }
+    .fact-link { display: inline-block !important; margin-top: 8px !important; color: var(--accent) !important; font: 700 9px ui-monospace, monospace; letter-spacing: .04em; text-decoration: none; }
+    .fact-link:hover { text-decoration: underline; }
     .benchmark-slide { position: relative; display: grid; place-items: center; padding: 30px; background: radial-gradient(circle at 50% 20%,#24180f,#090706 62%); text-align: center; }
     .benchmark-slide div { max-width: 570px; }
     .benchmark-slide span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
     .benchmark-slide strong { display: block; margin: 12px 0 9px; font-size: clamp(23px, 3vw, 38px); line-height: 1; }
     .benchmark-slide p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
-    @media (max-height: 800px) and (min-width: 901px) { .performance { margin-bottom: 16px; } }
+    .site-footer { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 clamp(24px, 4vw, 70px); color: var(--muted); border-top: 1px solid var(--line); font: 600 9px ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .site-footer a, .site-footer button { color: inherit; }
+    .site-footer a { text-decoration: none; }
+    .site-footer a:hover, .site-footer button:hover { color: var(--accent); }
+    .footer-policies { display: flex; align-items: center; gap: 12px; }
+    .footer-policies button { padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+    .footer-policies i { color: var(--line-bright); font-style: normal; }
+    .piracy-mark { width: 14px; height: 14px; margin-left: 4px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+    .piracy-mark .icon-fill { fill: currentColor; stroke: none; }
+    .piracy-mark .icon-cut { fill: var(--bg); stroke: none; }
+    .piracy-modal-mark { width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
+    @media (min-width: 901px) {
+      body.landing-page main { height: calc(100vh - 98px); padding-top: 15px; }
+      .slides { aspect-ratio: 1.77; }
+    }
+    @media (max-height: 800px) and (min-width: 901px) {
+      main { min-height: 0; padding-top: 15px; padding-bottom: 18px; }
+      .eyebrow { margin-bottom: 14px; }
+      .lede { margin: 18px 0; }
+      .facts { margin-top: 24px; }
+    }
+    @media (max-width: 1100px) and (min-width: 901px) {
+      header { padding-inline: 22px; }
+      body.landing-page > header { gap: 16px; }
+      .article-links { gap: 7px; font-size: 9px; letter-spacing: .06em; }
+      .header-actions { gap: 8px; }
+      .header-link, .status { font-size: 9px; letter-spacing: .08em; }
+      main { grid-template-columns: minmax(280px, 35%) minmax(0, 65%); padding-inline: 30px; gap: 28px; }
+      h1 { font-size: 48px; }
+    }
     @media (max-width: 900px) {
-      main { gap: 24px; padding-top: 24px; }
+      body.landing-page main { min-height: calc(100vh - 92px); gap: 24px; padding-top: 24px; }
       .intro { align-self: start; }
       .eyebrow { margin-bottom: 13px; }
       .lede { margin: 17px 0 10px; }
-      .performance { margin: 0 0 16px; }
       .facts { display: none; }
     }
     @media (max-width: 560px) {
+      header { padding-inline: 16px; }
+      body.landing-page > header { grid-template-columns: auto 1fr; gap: 12px; }
       h1 { font-size: clamp(38px, 12vw, 48px); line-height: .91; }
       .lede { font-size: 14px; line-height: 1.45; }
-      .performance { font-size: 11px; }
-      .signup small { display: none; }
+      .article-links { display: none; }
+      .header-separator { display: none; }
+      .mobile-nav { display: block; }
+      .signup small { display: block; }
       .signup button { width: 100%; }
+      .site-footer { padding-inline: 16px; }
     }
   </style>
+  <link rel="stylesheet" href="theme.css?site=archivist-v3">
 </head>
-<body>
+<body class="landing-page">
   <header>
-    <a class="brand" href="#top"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <div class="header-actions"><a class="header-link" href="performance.html">Performance deep dive</a><span class="status"><i></i> Early access in development</span></div>
+    <a class="brand" href="#top"><img src="mark.svg?site=archivist" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="article-links" aria-label="Articles">
+      <span>Articles:</span>
+      <a href="launching.html">Ready to Launch</a>
+      <i aria-hidden="true">|</i>
+      <a href="retool.html">Reviving Retool</a>
+      <i aria-hidden="true">|</i>
+      <a href="performance.html">Performance deep dive</a>
+    </nav>
+    <div class="header-actions">
+      <details class="mobile-nav">
+        <summary aria-label="Open site navigation">☰</summary>
+        <nav aria-label="Mobile site navigation">
+          <a href="launching.html">Ready to Launch</a>
+          <a href="retool.html">Reviving Retool</a>
+          <a href="performance.html">Performance deep dive</a>
+        </nav>
+      </details>
+      <span class="status"><i></i> Early access in development</span>
+      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
+        <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
+        <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
+      </span>
+    </div>
   </header>
 
   <main id="top">
     <section class="intro">
-      <p class="eyebrow">Frontend + 1G1R curator + ROM manager</p>
+      <p class="eyebrow">Emulator frontend + one-game-one-release curator + game-image manager = <u>finally!</u></p>
       <h1>Video game history,<br>made playable.</h1>
-      <p class="lede">Archivist turns a ROM archive into a curated history of the medium. It selects releases, preserves their context, and gives you one place to explore and play them using the ROMs and emulators already on your system.</p>
-      <p class="performance"><strong>2.15 million manifest rows compiled in 1.31 seconds.</strong> A 222,242-entry live NAS snapshot crosses the network and hydrates the UI in 420 ms. <a class="technical-link" href="performance.html">Read the performance deep dive →</a></p>
-      <form class="signup" action="mailto:hello@over-yonder.tech" method="get">
-        <input type="hidden" name="subject" value="Archivist early access">
-        <button type="submit">Join early access <span aria-hidden="true">→</span></button>
-        <small>We’ll email you when early access opens.</small>
-      </form>
+      <div class="lede">
+        <p>Archivist turns your collection of game images into a curated history of the medium.</p>
+        <p>It picks the best releases, traces the connections between games and platforms, and gives you one place to explore and play.</p>
+      </div>
+      <div class="signup" id="early-access">
+        <button type="button" aria-disabled="true">Join early access <span aria-hidden="true">→</span></button>
+        <small>Early-access signups aren’t open yet<br>(and this button doesn’t do anything&mdash;yet!)</small>
+      </div>
       <ul class="facts" aria-label="Product highlights">
-        <li><strong>1,812</strong><span>launch configurations</span></li>
-        <li><strong>1,451</strong><span>new rules beyond Retool</span></li>
-        <li class="fact-with-callout"><strong class="fact-title">Historian <button class="fact-info" type="button" data-historian-info aria-expanded="false" aria-controls="historianCallout" aria-label="Historian technical details">i</button></strong><span>live NAS index</span>
-          <aside class="historian-callout" id="historianCallout" hidden>
-            <h2>NAS Historian: storage-native Rust</h2>
-            <p><strong>One static appliance binary.</strong> Historian is compiled as a statically linked musl executable for broad x86-64 Linux appliance compatibility, without a glibc, Electron, or .NET runtime in the storage path.</p>
-            <p><strong>Compute beside the disks.</strong> The NAS inventories files, hashes logical ROM contents and matches selected DAT evidence locally. Authenticated WebSockets carry live status; bulk snapshots use a gzip envelope with MessagePack metadata and a typed columnar entry table.</p>
-            <p><strong>Resident evidence, not raw DATs.</strong> Static policy reduced 1,221 selected manifests to 292 contributing sources, 313,914 releases and 1,239,634 unique strongest digests. The 50 MiB compiled catalogue memory-maps and hydrates warm in 0.557 seconds.</p>
-            <p><strong>Restartable hashing.</strong> Per-file logical digests live in a compact SQLite WAL store. Size + nanosecond mtime validation reuses completed records after restart; two contiguous workers reuse 1 MiB buffers and avoid HDD seek thrash.</p>
-            <p><strong>Live while you work.</strong> Filesystem notifications publish immutable generations; same-filesystem moves use a guarded server-side rename rather than copying ROM bytes over the desktop.</p>
-            <p><strong>Built for filesystem-native evidence.</strong> The next providers use ZFS snapshot differences to find changes in one sweep, <code>statx</code> identity to reuse hard-link digests, fs-verity for kernel-enforced hashes, and xattrs so Archivist digests can remain attached to the files themselves.</p>
-          </aside>
-        </li>
+        <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching.html">Read Ready to Launch →</a></li>
+        <li><strong>1,477</strong><span>rules select the best version of each game</span><a class="fact-link" href="retool.html">Why we’re reviving Retool →</a></li>
+        <li><strong>222,242</strong><span>files and folders applied to the live interface in 0.42 seconds</span><a class="fact-link" href="performance.html">Read the tech deep dive →</a></li>
       </ul>
     </section>
 
     <section class="showcase" aria-label="Archivist features">
       <div class="frame">
         <div class="slides">
-          <figure class="slide active" data-slide="0"><img src="assets/screenshots/history.png" alt="Archivist system-history timeline" width="1368" height="893"></figure>
-          <figure class="slide" data-slide="1"><img src="assets/screenshots/emulators.png" alt="Archivist emulator configuration table" width="1368" height="912"></figure>
-          <figure class="slide" data-slide="2"><img src="assets/screenshots/themes.png" alt="Archivist theme and high-contrast settings" width="1368" height="912"></figure>
+          <figure class="slide active" data-slide="0"><img src="assets/screenshots/history.png?site=archivist-v55" alt="Archivist system history showing the Apple II selected in the computer timeline" width="1104" height="624"></figure>
+          <figure class="slide" data-slide="1"><iframe class="app-demo" src="app-demo/index.html?view=emulators&amp;v=65" title="Archivist emulator configuration table"></iframe></figure>
+          <figure class="slide" data-slide="2"><iframe class="app-demo" src="app-demo/index.html?view=themes&amp;v=60" title="Interactive Archivist theme and contrast settings"></iframe></figure>
           <figure class="slide" data-slide="3"><img src="assets/screenshots/verify.png" alt="Archivist collection verification view" width="1368" height="912"></figure>
-          <figure class="slide planned" data-slide="4"><div><span>Capture placeholder</span><strong>Genre genealogy</strong><p>A genealogy view showing games in the context of the works that influenced them and the genres they helped create.</p></div></figure>
-          <figure class="slide planned" data-slide="5"><div><span>Video placeholder</span><strong>Gamepad interface</strong><p>A short capture of controller navigation and the gamepad hotkey guide.</p></div></figure>
-          <figure class="slide planned" data-slide="6"><div><span>Video placeholder</span><strong>Live Vault updates</strong><p>A capture of NAS Historian publishing a filesystem change into Archivist over the live connection.</p></div></figure>
-          <figure class="slide benchmark-slide" data-slide="7"><div><span>Exact copied corpus · release builds</span><strong>2,151,769 rows · 1.31 s</strong><p>Archivist’s purpose-built resident digest compiler processed the same 503 compatible manifests that OxyROMon imported in 200.34 s and Igir reported in 125.76 s. Different outputs are disclosed in the methodology.</p></div></figure>
+          <figure class="slide planned" data-slide="4"><div><span>In development</span><strong>Gamepad interface</strong><p>Browse the catalogue and launch games without leaving the controller.</p></div></figure>
+          <figure class="slide benchmark-slide" data-slide="5"><div><span>503 manifests accepted by all three tools · release builds</span><strong>2,151,769 rows · 1.31 s</strong><p>Archivist’s purpose-built resident digest compiler processed the shared corpus in 1.31 seconds. Igir produced its report in 125.76 seconds, while OxyROMon imported relational records in 200.34 seconds; the performance article defines those different outputs before comparing them.</p></div></figure>
         </div>
         <div class="caption" aria-live="polite">
-          <span class="index">01 / 08</span>
-          <div><h2>Explore the canon</h2><p>View games in context through genre family trees and platform timelines spanning the 1950s to today.</p></div>
+          <span class="index">01 / 06</span>
+          <div><h2>A curated history.</h2><p>View games in context through genre family trees and platform timelines spanning the 1950s to today.</p></div>
           <div class="controls"><button type="button" data-prev aria-label="Previous feature">←</button><button type="button" data-next aria-label="Next feature">→</button></div>
         </div>
       </div>
-      <div class="tabs" role="tablist" aria-label="Choose a feature">
-        <button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>History</button>
-        <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Emulators</button>
-        <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Themes</button>
-        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Verify</button>
-        <button role="tab" aria-selected="false" data-tab="4"><span>05</span>Genealogy</button>
-        <button role="tab" aria-selected="false" data-tab="5"><span>06</span>Gamepad</button>
-        <button role="tab" aria-selected="false" data-tab="6"><span>07</span>Historian</button>
-        <button role="tab" aria-selected="false" data-tab="7"><span>08</span>Speed</button>
+      <div class="tabs" role="tablist" aria-label="Key features">
+        <button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>Curated</button>
+        <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Pre-configured</button>
+        <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Themeable</button>
+        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Validated</button>
+        <button role="tab" aria-selected="false" data-tab="4"><span>05</span>Ergonomic</button>
+        <button role="tab" aria-selected="false" data-tab="5"><span>06</span>Fast</button>
       </div>
     </section>
   </main>
 
-  <script src="main.js"></script>
+  <footer class="site-footer">
+    <a href="https://over-yonder.tech/">&copy; 2026 over|yonder tech</a>
+    <div class="footer-policies">
+      <button type="button" data-dialog-open="privacyDialog"><em>Priv-</em>acy</button>
+      <i aria-hidden="true">|</i>
+      <button type="button" data-dialog-open="piracyDialog"><em>Pir-</em>acy<svg class="piracy-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--bg)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--bg)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></button>
+    </div>
+  </footer>
+
+  <dialog class="legal-dialog" id="privacyDialog">
+    <div>
+      <h2>Privacy, plainly.</h2>
+      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <dialog class="legal-dialog" id="piracyDialog">
+    <div>
+      <h2>Your collection, your software.<svg class="piracy-mark piracy-modal-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--panel)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--panel)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></h2>
+      <p>Archivist doesn’t provide copyrighted material. It’s strictly a collection manager for users to sort, verify, view, and launch their own legally obtained game software.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <script src="main.js?site=archivist-v6"></script>
+  <script src="policies.js?site=archivist-v1"></script>
 </body>
 </html>

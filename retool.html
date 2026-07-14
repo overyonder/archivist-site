@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How Archivist extends Retool's One Game, One ROM policy from individual preservation catalogues to system-level curation across No-Intro, Redump, TOSEC, MAME and other sources.">
+  <title>Reviving Retool — Archivist</title>
+  <link rel="icon" href="mark.svg" type="image/svg+xml">
+  <script src="theme.js?v=2"></script>
+  <link rel="stylesheet" href="performance.css?site=archivist-v4">
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body class="performance-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="nav" aria-label="Site navigation">
+      <a href="index.html">Product</a><i aria-hidden="true">|</i><span>Articles:</span>
+      <a href="launching.html">Ready to Launch</a><i aria-hidden="true">|</i>
+      <a href="retool.html" aria-current="page">Reviving Retool</a><i aria-hidden="true">|</i>
+      <a href="performance.html">Performance</a>
+    </nav>
+  </header>
+  <main>
+    <header class="article-hero">
+      <p class="eyebrow">Catalogue curation · design notes · July 2026</p>
+      <h1>Reviving Retool.</h1>
+      <p class="hero-result"><strong>1,477 new selection rules and overrides</strong> extend Retool’s original policy tables.</p>
+      <p class="hero-lede">Retool showed that game-collection curation needed human policy. It grouped revisions, rereleases and regional names, ranked languages and versions, excluded unwanted material, and filled gaps with hand-maintained lists of equivalent releases. Archivist begins with that work, joins every preservation catalogue that describes a system, and then chooses the games a player should see.</p>
+    </header>
+
+    <div class="article-layout">
+      <aside class="toc" aria-label="Article contents">
+        <p>Contents</p>
+        <a href="#retool">What Retool solved</a>
+        <a href="#boundary">The single-catalogue boundary</a>
+        <a href="#preservation">Why categories leak</a>
+        <a href="#system">The system-level join</a>
+        <a href="#policy">Rules and review</a>
+        <a href="#mame">The MAME problem</a>
+        <a href="#result">The player’s collection</a>
+      </aside>
+
+      <article class="article">
+        <section id="retool">
+          <span class="section-no">01 / what Retool solved</span>
+          <h2>One Game, One ROM needed more than a region filter.</h2>
+          <p>A preservation catalogue file, commonly called a DAT, can contain dozens of releases of the same game. Regions, languages, revisions, budget rereleases, compilations and prototypes all sit beside one another. Traditional One Game, One ROM selection relies heavily on parent-and-clone links and region order. That can select a French release because Canada ranked first, or an older revision because it happened to appear earlier in the file.</p>
+          <p><a href="https://unexpectedpanda.github.io/retool/retool-1g1r/">Retool, created by unexpectedpanda, tackled the harder question</a>. It ignored the parent-and-clone assignments inherited from the input catalogue, derived relationships from normalized title names, and supplemented them with human-maintained lists of equivalent releases. Region, language, version, release status and edition all became ordered policy rather than a single score.</p>
+          <p>It also understood that some decisions require research. A compilation may supersede several separate releases. A regional title may be the same game under another name. A cosmetic reskin may belong to the same family, while a release with new levels deserves its own identity. Retool recorded that knowledge instead of asking every user to rediscover it.</p>
+          <p class="pullquote">Retool’s great contribution was treating curation as a body of knowledge that software could apply repeatedly.</p>
+          <p><a href="https://github.com/unexpectedpanda/retool/issues/337">Retool is no longer maintained</a>, but its idea and carefully assembled tables still form part of Archivist’s selection policy.</p>
+        </section>
+
+        <section id="boundary">
+          <span class="section-no">02 / the original boundary</span>
+          <h2>Retool worked one catalogue at a time.</h2>
+          <p>Retool reads one No-Intro or Redump catalogue, applies the user’s preferences, and writes a smaller catalogue for a collection manager. The input file defines the universe of possible titles. Equivalent-release detection, exclusions and selection all happen inside that boundary.</p>
+          <p>That boundary made Retool practical. It could understand the naming conventions of two preservation groups deeply, maintain equivalence lists for each catalogue, and leave file management to established tools such as RomVault, CLRMAMEPro and Igir.</p>
+          <p><a href="https://unexpectedpanda.github.io/retool/dat-support/">Its documentation is candid about the catalogues it left alone</a>. MAME and FinalBurn Neo would have required a large, frequently updated curated list. The Old School Emulation Center spans thousands of catalogue files and uses a naming system Retool didn’t implement. Retool chose depth over pretending to cover inputs it couldn’t curate well.</p>
+          <p>Archivist has a different unit of work: the historical system. A Sega Master System game may appear in No-Intro, a MAME software list, FinalBurn Neo, RetroAchievements and an older TOSEC catalogue. Those sources can disagree about names, categories, parentage and even which system owns the release. None of them gets to define the player’s shelf alone.</p>
+        </section>
+
+        <section id="preservation">
+          <span class="section-no">03 / preservation scope</span>
+          <h2>Preservation records far more than games.</h2>
+          <p><a href="https://datomatic.no-intro.org/">No-Intro</a>, <a href="http://redump.org/">Redump</a>, <a href="https://www.tosecdev.org/">TOSEC</a> and <a href="https://www.mamedev.org/">MAME</a> document media and machines for preservation. Their breadth is the reason Archivist can exist. It also means a raw import is a poor game menu.</p>
+          <p>Import every available catalogue and you collect hundreds of thousands of rows that were never meant to represent distinct playable games: commercials, magazine cover media, manuals, system firmware, test cartridges, store kiosks, McDonald’s toys, educational software, multimedia discs and many varieties of demo and prototype.</p>
+          <p>Choosing only a folder or category called <em>Games</em> doesn’t solve it. Gambling machines, skill testers and vending machines can still slip through. A real game can be filed under Multimedia, Applications, Unofficial, a generic software list, or an unexpected system name. Categories are evidence from the cataloguer who supplied them. They aren’t a final verdict on what belongs in Archivist.</p>
+          <p>That distinction isn’t a complaint about the preservation projects. A commercial, a diagnostic cartridge and a soda dispenser controller may all be worth preserving. Archivist is making the narrower promise that a player can browse the history of playable games without wading through every other artefact preserved alongside them.</p>
+        </section>
+
+        <section id="system">
+          <span class="section-no">04 / the system-level join</span>
+          <h2>Gather every account before choosing.</h2>
+          <p>Archivist begins with a reviewed system definition. That definition names the relevant catalogue sources, whether they use the common DAT format or another structured format such as XML. It also records aliases for catalogues whose filenames don’t line up neatly with the system’s canonical name. A source contributes to the playable collection only after it has been accepted into policy.</p>
+          <p>Each accepted manifest is parsed into the same release model. Archivist records its title and description, playable state, provider identifiers, parent relationships, media hashes and source path. The selection pass then runs across every accepted source for that system. When several catalogues describe the same game, their source paths accumulate under one selected title.</p>
+          <div class="architecture" aria-label="System catalogue selection stages">
+            <div><span>01 / sources</span><strong>Relevant catalogues</strong><small>No-Intro, Redump, TOSEC, MAME and specialist catalogues.</small></div>
+            <div><span>02 / scope</span><strong>System boundary</strong><small>Aliases, adjacent hardware and accepted source policy.</small></div>
+            <div><span>03 / projection</span><strong>Common releases</strong><small>Names, categories, hashes, parents and provenance.</small></div>
+            <div><span>04 / policy</span><strong>Rules + review</strong><small>Filter, group, prefer, include and exclude.</small></div>
+            <div><span>05 / catalogue</span><strong>Canonical games</strong><small>One title with every supporting source attached.</small></div>
+          </div>
+          <p>Some catalogues are useful as recognition evidence without being allowed to create titles. RetroAchievements, for example, can confirm that another source describes the same game while its unmatched rows wait for dedicated review. This lets Archivist retain useful evidence without silently expanding the playable collection.</p>
+        </section>
+
+        <section id="policy">
+          <span class="section-no">05 / policy layers</span>
+          <h2>Mechanical rules, reviewed exceptions.</h2>
+          <p>Once the sources have been joined, Archivist applies policy in layers. The broad rules are fast and repeatable. The narrow decisions record cases where filenames and provider metadata don’t tell the whole story.</p>
+          <div class="cards">
+            <div class="card"><span>Acceptance boundary</span><h3>Choose the source</h3><p>A manifest contributes playable titles only after review shows that it adds in-scope games or game hardware to the system.</p></div>
+            <div class="card"><span>Shared policy</span><h3>Handle familiar signals</h3><p>Retool-derived tables rank regions, languages, revisions, video standards and editions, while filtering demos, prototypes, bad dumps and other known tags.</p></div>
+            <div class="card"><span>Clone knowledge</span><h3>Join title families</h3><p>Built-in clone lists connect regional names, compilations, supersets and awkward families that normalization can’t discover mechanically.</p></div>
+            <div class="card"><span>Manual adjudication</span><h3>Record the exception</h3><p>Exact includes, excludes and fully curated source projections preserve decisions that require research into the release itself.</p></div>
+          </div>
+          <p>A broad rule can reject entries marked <code>(Unl)</code>, but some original-era commercial unlicensed games belong in the canon. A <code>Games</code> category can still contain a sewing-machine controller. A title with <code>Collection</code> in its name may be a redundant package or the only surviving release of unique material. Those cases become source-owned decisions with an explicit action and a stable canonical identity.</p>
+          <p>The review process inspects every plausible source, every selected title, every discarded title and every parent/clone family. Archivist pins dated releases from each preservation catalogue so the review has a stable foundation. The catalogue for a system such as the Magnavox Odyssey is unlikely to change radically next week. Fixing the inputs lets us audit its sources and exceptions against a known body of evidence.</p>
+          <p>Freshness is the trade-off. <a href="https://tosecdev.org/downloads">TOSEC’s complete packs have recently arrived about once a year</a>. <a href="https://datomatic.no-intro.org/">No-Intro records can change several times in a day</a>, <a href="https://wiki.redump.org/index.php?title=List_of_DB_Download_Links">Redump exposes catalogue files from its live database</a>, and <a href="https://www.mamedev.org/?p=437">MAME publishes monthly</a>. Many changes concern the furthest edges of the archive: a newly dumped prototype, a corrected category, or perhaps someone finally getting the Coca-Cola button working on a first-generation Burger King fountain controller.</p>
+          <p>Archivist won’t ingest each change as it lands. A new source can reopen decisions elsewhere in the joined system catalogue, so its snapshots will arrive less often. The preservation projects remain the live record. Archivist trades immediacy for a more thorough player-facing review.</p>
+        </section>
+
+        <section id="mame">
+          <span class="section-no">06 / the MAME problem</span>
+          <h2>MAME needs its own playable canon.</h2>
+          <p>Retool never attempted MAME. Its author described the likely solution as a massive curated list that would demand frequent updates. That diagnosis was fair. Archivist is taking on the work because MAME preserves too much of video game history to sit outside the catalogue.</p>
+          <p>MAME already provides valuable canonical structure. Its <a href="https://docs.mamedev.org/usingmame/aboutromsets.html#parents-clones-splitting-and-merging">parent and clone sets</a> group closely related machine revisions and allow ROM data to be shared. Its <a href="https://docs.mamedev.org/contributing/softlist.html">software lists</a> group releases, media parts and known variants for emulated systems. These relationships were designed around preservation, emulation and efficient storage. They don’t promise that the parent is the best player-facing release, and software-list parent links can’t cross from one list to another.</p>
+          <p>The remaining classification is leaky. Keeping runnable machines or rows labelled as games still admits gambling cabinets, redemption machines, skill testers, test fixtures, coffee and soda dispensers, and other fixed-function equipment. Filtering harder can remove unusual games, dedicated handhelds and playable electromechanical machines that belong in the history.</p>
+          <p>Our current MAME 0.288 audit starts with 50,097 machine records. The classifier proposes groups, but every uncertain boundary still requires review.</p>
+          <div class="cards">
+            <div class="card"><span>Software targets</span><h3>3,526 groups</h3><p>Systems with software lists, shared BIOS relationships or other loadable game media.</p></div>
+            <div class="card"><span>Fixed-function games</span><h3>1,016 groups</h3><p>Arcade boards, handhelds, redemption games and other machines whose game is part of the hardware.</p></div>
+            <div class="card"><span>Still under review</span><h3>931 groups</h3><p>Weak or conflicting signals that haven’t earned a final playable or excluded decision.</p></div>
+            <div class="card"><span>Excluded records</span><h3>24,486 entries</h3><p>Devices, gambling systems, non-game equipment and other records outside the playable catalogue.</p></div>
+          </div>
+        </section>
+
+        <section id="result">
+          <span class="section-no">07 / the player’s collection</span>
+          <h2>The player gets the finished shelf.</h2>
+          <p>When three catalogues describe the same game, Archivist records all three as provenance under one title. When a later revision should win, the policy chooses it. When a provider’s category is wrong, the reviewed override supplies the decision. When an unusual release remains uncertain, it stays out of the default collection until someone has done the research.</p>
+          <p>The selected catalogue identity connects this policy to the rest of Archivist. It tells the Historian catalogue service which files count as evidence, the collection verifier what a complete release requires, the interface which title to display, and the launch system what should run.</p>
+          <p>Reviving Retool means accepting the same wager its author made: good curation can be written down, shared and improved. Archivist extends that wager across preservation projects and into MAME, then ships the result as part of the product.</p>
+          <p class="pullquote">The archive can stay complete. The player’s shelf can stay curated.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="article-footer">
+    <div class="footer-inner">
+      <h2>Video game history, made playable.</h2>
+      <p>Archivist turns selection policy into a collection you can verify, understand and play.</p>
+      <div class="footer-links">
+        <a href="https://over-yonder.tech/">Visit over|yonder</a>
+        <a href="launching.html">Read Ready to Launch</a>
+        <a href="performance.html">Read the performance deep dive</a>
+        <button type="button" class="footer-cta" aria-disabled="true">Join early access <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </footer>
+  <footer class="legal-footer">
+    <a href="https://over-yonder.tech/">&copy; 2026 over|yonder tech</a>
+    <div class="legal-links">
+      <button type="button" data-dialog-open="privacyDialog"><em>Priv-</em>acy</button>
+      <i aria-hidden="true">|</i>
+      <button type="button" data-dialog-open="piracyDialog"><em>Pir-</em>acy<svg class="piracy-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--bg)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--bg)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></button>
+    </div>
+  </footer>
+
+  <dialog class="legal-dialog" id="privacyDialog">
+    <div>
+      <h2>Privacy, plainly.</h2>
+      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <dialog class="legal-dialog" id="piracyDialog">
+    <div>
+      <h2>Your collection, your software.<svg class="piracy-mark piracy-modal-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--panel)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--panel)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></h2>
+      <p>Archivist doesn’t provide copyrighted material. It’s strictly a collection manager for users to sort, verify, view, and launch their own legally obtained game software.</p>
+      <button type="button" data-dialog-close>Understood</button>
+    </div>
+  </dialog>
+
+  <script src="policies.js?site=archivist-v1"></script>
+</body>
+</html>

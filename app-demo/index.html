@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Archivist</title>
+  <link rel="stylesheet" href="./styles.css?v=16">
+</head>
+<body>
+  <header class="titlebar" data-drag-region>
+    <div class="titlebrand" data-drag-region aria-label="Archivist">
+      <span class="titlebrand-a" data-drag-region aria-hidden="true"></span><span data-drag-region aria-hidden="true">rchivist</span>
+    </div>
+    <nav class="titlemenu" aria-label="Application menu">
+      <button id="openEmulators" type="button" aria-haspopup="dialog" aria-expanded="false">Emulators</button>
+      <button id="openSettings" type="button" aria-haspopup="dialog" aria-expanded="false">Settings</button>
+      <button id="openAbout" type="button" aria-haspopup="dialog" aria-expanded="false">Help</button>
+      <div class="background-activity" id="backgroundActivity" role="status" aria-live="polite" hidden>
+        <span class="plato-pulse compact" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="loading-message" id="backgroundActivityText">Loading</span>
+      </div>
+      <div class="lamp-menu-control" id="lampMenuControl">
+        <span class="lamp-menu-label" id="lampMenuLabel">Show lamps</span>
+        <button id="toggleLamps" class="lamp-switch" type="button" role="switch" aria-checked="true" aria-labelledby="lampMenuLabel" title="Hide lamps">
+          <span class="lamp-switch-knob" aria-hidden="true"></span>
+        </button>
+        <span class="lamp-info-wrap">
+          <button class="lamp-info" type="button" aria-label="Lamp legend" aria-describedby="lampLegendTooltip">i</button>
+          <span class="lamp-tooltip" id="lampLegendTooltip" role="tooltip">
+            <span><span class="lamp green"></span>Correct in Vault</span>
+            <span><span class="lamp red"></span>Missing or unavailable</span>
+            <span><span class="lamp blue"></span>Ready in Intake</span>
+            <span><span class="lamp pink"></span>Unmatched or extra</span>
+            <span><span class="lamp accent"></span>Selected or current</span>
+          </span>
+        </span>
+      </div>
+    </nav>
+    <div class="window-controls" aria-label="Window controls">
+      <button class="window-button" id="minimizeWindow" type="button" title="Minimize to tray" aria-label="Minimize to tray" tabindex="-1">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 11.5h10"/></svg>
+      </button>
+      <button class="window-button" id="maximizeWindow" type="button" title="Maximize or restore" aria-label="Maximize or restore" tabindex="-1">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1"/></svg>
+      </button>
+      <button class="window-button close" id="closeWindow" type="button" title="Close to tray" aria-label="Close to tray" tabindex="-1">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="startup-splash" id="startupSplash" role="dialog" aria-modal="true" aria-labelledby="startupTitle">
+    <div class="startup-panel">
+      <img src="./assets/mark.svg" alt="" width="52" height="52">
+      <h1 id="startupTitle">Archivist</h1>
+      <div class="startup-track" aria-label="Loading application data">
+        <span class="startup-segment" data-startup-segment="systems"></span>
+        <span class="startup-milestone" data-startup-milestone="systems">
+          <i aria-hidden="true"></i>
+          <span>Systems</span>
+        </span>
+        <span class="startup-segment" data-startup-segment="titles"></span>
+        <span class="startup-milestone" data-startup-milestone="titles">
+          <i aria-hidden="true"></i>
+          <span>Titles</span>
+        </span>
+        <span class="startup-segment" data-startup-segment="vault"></span>
+        <span class="startup-milestone" data-startup-milestone="vault">
+          <i aria-hidden="true"></i>
+          <span>Vault</span>
+        </span>
+        <span class="startup-segment" data-startup-segment="ready"></span>
+      </div>
+      <p class="startup-error" id="startupError" role="alert" hidden></p>
+      <button class="dark-btn compact" id="startupRetry" type="button" hidden>Retry</button>
+    </div>
+  </section>
+
+  <div class="app" id="appShell" inert>
+    <nav class="rail" aria-label="Main sections">
+      <div class="brand"><img id="brandMark" src="./assets/mark.svg" alt="Archivist" width="34" height="34"></div>
+      <button class="nav-button active" data-view="explore" type="button" title="Explore history">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 14V7m6 7V4m6 10V9"/><circle cx="6" cy="7" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="18" cy="9" r="2"/></svg></span><span>Explore</span>
+      </button>
+      <button class="nav-button" data-view="launch" type="button" title="Launch games">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12"/><path d="M13 6l6 6-6 6"/><path d="M5 5v14"/></svg></span><span>Launch</span>
+      </button>
+      <button class="nav-button" data-view="verify" type="button" title="Verify collection">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v12H5z"/><path d="M8 10h8M8 14h5"/><path d="M17 3v4M7 3v4"/></svg></span><span>Verify</span>
+      </button>
+      <div></div>
+    </nav>
+
+    <main class="stage">
+      <section class="view explore-view active" id="view-explore">
+        <div class="canvas-wrap timeline-mode">
+          <header class="stage-title">
+            <div>
+              <h1 id="exploreTitle">System History</h1>
+              <p class="subtitle" id="exploreSubtitle">Open a category, then continue through generations and individual systems.</p>
+            </div>
+            <div class="top-controls">
+              <div class="select-control" id="exploreOrderControl">
+                <span>Child order:</span>
+                <button id="exploreOrderButton" class="select-button" type="button" aria-haspopup="menu" aria-expanded="false">First released</button>
+                <div class="select-menu" id="exploreOrderMenu" role="menu">
+                  <button type="button" role="menuitemradio" aria-checked="true" data-order="first-release">First released</button>
+                  <button type="button" role="menuitemradio" aria-checked="false" data-order="most-titles">Most titles</button>
+                  <button type="button" role="menuitemradio" aria-checked="false" data-order="most-units">Most units sold</button>
+                </div>
+              </div>
+              <div class="segmented" role="group" aria-label="Explore mode">
+                <button class="segment active" data-mode="systems" type="button">Systems</button>
+                <button class="segment" data-mode="games" type="button">Games</button>
+                <button class="segment" data-mode="network" type="button">Network</button>
+              </div>
+            </div>
+          </header>
+          <div class="canvas">
+            <canvas id="exploreCanvas" data-controller tabindex="0" aria-label="Explore history"></canvas>
+            <div class="timeline-density" id="timelineDensityControl" aria-hidden="false">
+              <svg viewBox="0 0 20 16" aria-hidden="true"><path d="M3 7h14M3 10h14"/></svg>
+              <input id="timelineDensity" type="range" min="0" max="100" step="10" value="50" aria-label="Card spacing" aria-valuetext="50% expanded">
+              <svg viewBox="0 0 20 16" aria-hidden="true"><path d="M3 3h14M3 13h14"/></svg>
+            </div>
+            <div id="nodeTooltip" class="node-tooltip" role="tooltip" hidden></div>
+            <div id="explorePlaceholder" class="explore-placeholder" role="status" aria-live="polite" hidden>
+              <div class="placeholder-widget" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <i></i>
+              </div>
+              <div class="placeholder-copy">
+                <strong data-placeholder-title>Loading application data</strong>
+                <small data-placeholder-detail>Reading local systems and vault state.</small>
+              </div>
+            </div>
+          </div>
+          <footer class="timeline-footer">
+            <div class="timeline-scale">
+              <div class="range-track" id="rangeTrack">
+                <div class="range-selection" id="rangeSelection"></div>
+                <button class="range-thumb" id="rangeStart" type="button" aria-label="Timeline start"><span id="rangeStartLabel">1970</span></button>
+                <button class="range-thumb" id="rangeEnd" type="button" aria-label="Timeline end"><span id="rangeEndLabel">2001</span></button>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </section>
+
+      <section class="view simple-view" id="view-launch">
+        <header class="stage-title">
+          <div>
+            <h1>Launch Games</h1>
+            <p class="subtitle">Game library, platform releases, and launch readiness.</p>
+          </div>
+          <div class="presentation-bar" id="launchPresentation"></div>
+        </header>
+        <div class="panel-body launch-layout">
+          <section class="panel launch-main">
+            <div id="launchLibrary" class="cover-grid"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view simple-view" id="view-verify">
+        <header class="stage-title">
+          <div>
+            <h1>Verify Collection</h1>
+            <p class="subtitle">Choose the preservation catalogues to verify against your collection.</p>
+          </div>
+          <div class="verify-steps" role="tablist" aria-label="Verify stage">
+            <button class="active" id="verifyArtifactsStep" type="button" role="tab" aria-selected="true">Requirements</button>
+            <i aria-hidden="true"></i>
+            <button id="verifyVaultStep" type="button" role="tab" aria-selected="false" disabled>Vault</button>
+          </div>
+        </header>
+        <div class="verify-body">
+          <section class="foundation-panel" id="foundationGate" aria-labelledby="foundationTitle">
+            <header class="foundation-header">
+              <h1 id="foundationTitle">Required files are missing</h1>
+              <button class="dark-btn compact" id="foundationRecheck" type="button">Recheck</button>
+            </header>
+            <div class="foundation-sections">
+              <section class="foundation-section">
+                <header><h2>Preservation catalogues</h2><span id="foundationManifestCount">Checking</span></header>
+                <div class="foundation-list" id="foundationManifests"></div>
+                <aside class="manifest-intake-guide" aria-labelledby="manifestIntakeGuideTitle">
+                  <strong id="manifestIntakeGuideTitle">No-Intro Daily pack</strong>
+                  <ol>
+                    <li>Under <span class="manifest-option">Set</span>, tick <span class="manifest-option">No-Intro</span>, <span class="manifest-option">Non-Redump</span>, <span class="manifest-option">Redump BIOS</span>, and <span class="manifest-option">Unofficial</span>.</li>
+                    <li>Download the generated pack and save the ZIP intact to <span class="manifest-option">Intake</span>.</li>
+                    <li>Keep the provider archive as the original copy; Archivist reads the extracted catalogue files, commonly called DATs, from the manifest directory.</li>
+                  </ol>
+                </aside>
+              </section>
+              <section class="foundation-section">
+                <header><h2>Emulators</h2><span id="foundationEmulatorCount">Checking</span></header>
+                <div class="foundation-list" id="foundationEmulators"></div>
+              </section>
+              <section class="foundation-section">
+                <header><h2>System firmware</h2><span id="foundationBiosCount">Checking</span></header>
+                <div class="foundation-list" id="foundationBioses"></div>
+              </section>
+            </div>
+            <footer class="foundation-actions">
+              <span id="foundationSummary">Checking local artifacts</span>
+              <button class="accent-btn compact foundation-continue" id="foundationContinue" type="button" disabled>Continue</button>
+            </footer>
+          </section>
+          <div class="verify-dashboard" id="verifyDashboard" hidden>
+            <section class="verify-browser">
+              <div class="verify-toolbar">
+                <h2>Manifests</h2>
+                <input class="search" id="verifySystemSearch" type="search" placeholder="Search systems or manifests" aria-label="Search systems or manifests">
+                <div class="segmented verify-manifest-filter" role="group" aria-label="Manifest filter">
+                  <button class="segment" data-manifest-filter="all" type="button">All</button>
+                  <button class="segment active" data-manifest-filter="selected" type="button">Selected</button>
+                  <button class="segment" data-manifest-filter="discarded" type="button">Discarded</button>
+                </div>
+              </div>
+              <div class="verify-system-list" id="verifySystems"></div>
+            </section>
+            <section class="verify-release-browser">
+              <div class="verify-release-header">
+                <div>
+                  <h2>Releases</h2>
+                  <p><span id="verifyReleaseTitle">Select a system or manifest</span> · <span id="verifyReleaseSummary">Selection decisions will appear here.</span></p>
+                </div>
+                <div class="segmented" id="verifyReleaseFilter" role="group" aria-label="Release filter">
+                  <button class="segment active" data-release-filter="all" type="button">All</button>
+                  <button class="segment" data-release-filter="selected" type="button">Selected</button>
+                  <button class="segment" data-release-filter="discarded" type="button">Discarded</button>
+                </div>
+              </div>
+              <div class="verify-release-list" id="verifyReleases"></div>
+            </section>
+            <section class="verify-organizer">
+              <header class="organizer-header">
+                <div>
+                  <h2>Files</h2>
+                  <p id="organizerSystem">Select a system or group</p>
+                </div>
+              </header>
+              <div class="organizer-columns">
+                <section class="organizer-location">
+                  <header><h3>Vault</h3><span id="organizerVaultCount">0 files</span></header>
+                  <div class="organizer-file-list" id="organizerVault"></div>
+                </section>
+                <section class="organizer-location">
+                  <header><h3>Intake</h3><span id="organizerIntakePath">/</span></header>
+                  <div class="organizer-file-list" id="organizerIntake"></div>
+                </section>
+              </div>
+              <footer class="organizer-actions">
+                <span id="organizerStage">Awaiting scan</span>
+                <div class="organizer-action-buttons">
+                  <button class="dark-btn compact" id="scanFiles" type="button">Scan</button>
+                  <button class="dark-btn compact" id="matchFiles" type="button" disabled>Match</button>
+                  <button class="accent-btn compact" id="moveFiles" type="button" hidden>Move</button>
+                </div>
+              </footer>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="side empty" id="detailSide">
+      <button class="drawer-close" id="closeDrawer" type="button" aria-label="Close drawer" title="Close drawer">×</button>
+      <div class="drawer-panel" id="exploreDrawer">
+        <section class="side-block">
+          <h2 id="detailTitle">System</h2>
+          <div class="select-card" id="detailCard"></div>
+        </section>
+        <section class="side-block scroll">
+          <h2 id="contextTitle">Emulation</h2>
+          <div class="mini-list" id="contextRows"></div>
+        </section>
+        <div class="side-actions">
+          <button class="dark-btn square-action" id="launchTitles" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h14"/><circle cx="3" cy="5.5" r=".8"/><circle cx="3" cy="12" r=".8"/><circle cx="3" cy="18.5" r=".8"/></svg>
+            <span>View</span><small>Titles</small>
+          </button>
+          <button class="dark-btn square-action" id="verifyTitles" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.2c0 4.4-2.7 7.6-7 9.3-4.3-1.7-7-4.9-7-9.3V6l7-2.5Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>
+            <span>Verify</span><small>Titles</small>
+          </button>
+        </div>
+      </div>
+      <div class="drawer-panel" id="launchDrawer" hidden>
+        <section class="side-block"><h2 class="section-title">Selected Game</h2><div id="launchGame" class="launch-game-card"></div></section>
+        <section class="side-block scroll"><h2 class="section-title">System Version</h2><div id="launchPorts" class="port-list"></div></section>
+        <section><h2 class="section-title">Launch Options</h2><div id="launchPlan" class="mini-list"></div></section>
+      </div>
+    </aside>
+  </div>
+  <div class="modal-backdrop" id="controllerModal" hidden>
+    <section class="controller-dialog" role="dialog" aria-modal="true" aria-labelledby="controllerTitle">
+      <header class="dialog-header">
+        <h2 id="controllerTitle">Controller Guide</h2>
+        <button class="dialog-close" id="closeControllerGuide" type="button" aria-label="Close controller guide" title="Close controller guide">×</button>
+      </header>
+      <svg class="controller-wireframe" viewBox="0 0 960 520" role="img" aria-labelledby="controllerDiagramTitle">
+        <title id="controllerDiagramTitle">Archivist controller layout</title>
+        <g class="controller-shell">
+          <path d="M312 125C342 94 385 82 430 96h100c45-14 88-2 118 29 31 33 48 82 64 136l35 119c8 29-6 54-31 60-19 5-37-4-52-24l-76-104H372l-76 104c-15 20-33 29-52 24-25-6-39-31-31-60l35-119c16-54 33-103 64-136Z"/>
+          <path d="M320 116h104M536 116h104"/>
+          <circle cx="385" cy="285" r="34"/><circle cx="575" cy="285" r="34"/>
+          <path d="M295 206h58M324 177v58"/>
+          <circle cx="664" cy="186" r="13"/><circle cx="704" cy="226" r="13"/>
+          <circle cx="664" cy="266" r="13"/><circle cx="624" cy="226" r="13"/>
+          <rect x="432" y="166" width="96" height="70" rx="8"/>
+          <circle cx="430" cy="265" r="7"/><circle cx="530" cy="265" r="7"/>
+          <circle cx="480" cy="286" r="10"/>
+        </g>
+        <g class="controller-labels">
+          <path d="M320 116 205 72H82"/><text x="82" y="62">LEFT BUMPER</text><text x="82" y="82">PREVIOUS PANE</text>
+          <path d="M640 116 755 72h123"/><text x="878" y="62" text-anchor="end">RIGHT BUMPER</text><text x="878" y="82" text-anchor="end">NEXT PANE</text>
+          <path d="M295 206 190 190H82"/><text x="82" y="180">D-PAD / LEFT STICK</text><text x="82" y="200">MOVE FOCUS</text>
+          <path d="M385 285 205 330H82"/><text x="82" y="320">LEFT STICK</text><text x="82" y="340">DIRECTIONAL MOVE</text>
+          <path d="M575 285 755 330h123"/><text x="878" y="320" text-anchor="end">RIGHT STICK</text><text x="878" y="340" text-anchor="end">SCROLL / PAN</text>
+          <path d="M704 226 790 190h88"/><text x="878" y="180" text-anchor="end">PRIMARY</text><text x="878" y="200" text-anchor="end">CONFIRM</text>
+          <path d="M664 266 790 265h88"/><text x="878" y="255" text-anchor="end">SECONDARY</text><text x="878" y="275" text-anchor="end">BACK</text>
+          <path d="M430 265 325 390H82"/><text x="82" y="380">SELECT / SHARE</text><text x="82" y="400">HEADER / BODY</text>
+          <path d="M530 265 635 390h243"/><text x="878" y="380" text-anchor="end">START / OPTIONS</text><text x="878" y="400" text-anchor="end">MAIN MENU</text>
+          <path d="M480 286v152"/><text x="480" y="464" text-anchor="middle">GUIDE / MAP</text><text x="480" y="484" text-anchor="middle">CONTROLS GUIDE</text>
+        </g>
+      </svg>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="aboutModal" hidden>
+    <section class="about-dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <header class="dialog-header">
+        <h2 id="aboutTitle">About</h2>
+        <button class="dialog-close" id="closeAbout" type="button" aria-label="Close About" title="Close About">×</button>
+      </header>
+      <div class="about-body">
+        <img src="./assets/mark.svg" alt="" width="52" height="52">
+        <strong>Archivist</strong>
+        <span id="aboutVersion"><span class="plato-pulse compact" aria-hidden="true"><i></i><i></i><i></i></span></span>
+      </div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="emulatorsModal" hidden>
+    <section class="emulator-dialog" role="dialog" aria-modal="true" aria-labelledby="emulatorsTitle">
+      <header class="dialog-header">
+        <h2 id="emulatorsTitle">Emulator Configuration</h2>
+        <button class="dialog-close" id="closeEmulators" type="button" aria-label="Close emulator configuration" title="Close emulator configuration">×</button>
+      </header>
+      <div class="emulator-toolbar">
+        <input class="search" id="emulatorSearch" type="search" placeholder="Search systems or emulators" aria-label="Search emulator configuration" autocomplete="off">
+        <span id="emulatorCount"></span>
+      </div>
+      <div class="emulator-table-wrap">
+        <table class="emulator-table">
+          <thead><tr><th>System</th><th>Emulator</th><th>Profile</th><th>Command</th></tr></thead>
+          <tbody id="emulatorProfiles"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <section class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <header class="dialog-header">
+        <h2 id="settingsTitle">Settings</h2>
+        <button class="dialog-close" id="closeSettings" type="button" aria-label="Close settings" title="Close settings">×</button>
+      </header>
+      <div class="settings-list">
+        <label class="settings-row">
+          <input id="settingLaunchOnStartup" type="checkbox">
+          <span>Launch on startup</span>
+        </label>
+        <label class="settings-row unavailable">
+          <input type="checkbox" disabled>
+          <span>Start minimized</span>
+          <small>Unavailable</small>
+        </label>
+        <label class="settings-row">
+          <span class="settings-spacer"></span>
+          <span>Theme polarity</span>
+          <select id="settingAppTheme" aria-label="Theme polarity">
+            <option value="system">Follow system</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label class="settings-row">
+          <span class="settings-spacer"></span>
+          <span>Light scheme</span>
+          <select id="settingLightColourScheme" aria-label="Light colour scheme"></select>
+        </label>
+        <label class="settings-row">
+          <input id="settingLightMinimumContrast" type="checkbox">
+          <span>8:1 UI contrast</span>
+          <small>Light</small>
+        </label>
+        <div class="custom-colour-tray" id="lightCustomColourTray" hidden></div>
+        <label class="settings-row">
+          <span class="settings-spacer"></span>
+          <span>Dark scheme</span>
+          <select id="settingDarkColourScheme" aria-label="Dark colour scheme"></select>
+        </label>
+        <small class="scheme-note theme-demo-allowed">
+          Archivist’s PLATO dark theme is inspired by the <a href="https://www.penguinrandomhouse.com/books/545610/the-friendly-orange-glow-by-brian-dear/" target="_blank" rel="noopener noreferrer">Friendly Orange Glow</a> of the <a href="https://grainger.illinois.edu/news/magazine/plato" target="_blank" rel="noopener noreferrer">mainframe network</a> that hosted <a href="https://en.wikipedia.org/wiki/Pedit5" target="_blank" rel="noopener noreferrer">one of the earliest surviving RPGs</a>, as covered in the wonderful <a href="https://crpgbook.wordpress.com/" target="_blank" rel="noopener noreferrer">CRPG Book Project</a>.
+        </small>
+        <label class="settings-row">
+          <input id="settingDarkMinimumContrast" type="checkbox">
+          <span>8:1 UI contrast</span>
+          <small>Dark</small>
+        </label>
+        <div class="custom-colour-tray" id="darkCustomColourTray" hidden></div>
+        <label class="settings-row">
+          <input id="settingMinimizeToTray" type="checkbox">
+          <span>Minimize to tray</span>
+        </label>
+        <label class="settings-row">
+          <input id="settingCloseToTray" type="checkbox">
+          <span>Close to tray</span>
+        </label>
+      </div>
+    </section>
+  </div>
+  <script src="./emulator-profiles.js?v=3"></script>
+  <script src="./mock-tauri.js?v=11"></script>
+  <script src="./base16-schemes.js"></script>
+  <script src="./main.js?v=41"></script>
+  <script src="./controller.js?v=9"></script>
+  <script src="./demo-controls.js?v=13"></script>
+</body>
+</html>
