@@ -1,11 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#101618"/>
   <g stroke="#263438" stroke-width="1"><path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/><path d="M150 0V630M300 0V630M450 0V630M600 0V630M750 0V630M900 0V630M1050 0V630"/></g>
-  <path d="M742 470H790V405H838V433H886V330H934V362H982V246H1030V188H1078" fill="none" stroke="#ee7b3a" stroke-width="5"/>
-  <g fill="#ee7b3a"><circle cx="790" cy="405" r="7"/><circle cx="886" cy="330" r="7"/><circle cx="982" cy="246" r="7"/><circle cx="1078" cy="188" r="7"/></g>
-  <text x="82" y="116" fill="#ee7b3a" font-family="ui-monospace, monospace" font-size="20" letter-spacing="5">ARCHIVIST / PERFORMANCE</text>
-  <text x="78" y="305" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="94" font-weight="700">222,242</text>
-  <text x="82" y="373" fill="#9dafae" font-family="Inter, Arial, sans-serif" font-size="34">catalogue entries applied</text>
-  <text x="80" y="522" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="700">420 ms</text>
-  <text x="82" y="581" fill="#9dafae" font-family="ui-monospace, monospace" font-size="18" letter-spacing="3">NETWORK STORAGE → READY FRONTEND</text>
+  <rect x="75" y="72" width="66" height="66" rx="10" fill="#10100f" stroke="#ff8a2a" stroke-width="4"/>
+  <path d="M91 122 108 83l17 39" fill="none" stroke="#ff8a2a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="166" y="119" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="39" font-weight="700">Archivist</text>
+  <text x="76" y="284" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="60" font-weight="700">Video game history,</text>
+  <text x="76" y="355" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="60" font-weight="700">made playable.</text>
+  <text x="80" y="438" fill="#9dafae" font-family="Inter, Arial, sans-serif" font-size="23">Curate, verify and launch your collection.</text>
+  <g transform="translate(744 78)">
+    <rect width="402" height="472" rx="10" fill="#151d20" stroke="#3b4c50" stroke-width="2"/>
+    <rect width="88" height="472" rx="10" fill="#0c1113"/><circle cx="44" cy="45" r="17" fill="#ff8a2a"/>
+    <g fill="#52666a"><rect x="24" y="91" width="40" height="5" rx="2"/><rect x="24" y="123" width="40" height="5" rx="2"/><rect x="24" y="155" width="40" height="5" rx="2"/><rect x="24" y="187" width="40" height="5" rx="2"/></g>
+    <text x="116" y="48" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">Library</text>
+    <g><rect x="116" y="78" width="78" height="104" rx="4" fill="#354b51"/><rect x="208" y="78" width="78" height="104" rx="4" fill="#7a4b32"/><rect x="300" y="78" width="78" height="104" rx="4" fill="#43583c"/><rect x="116" y="205" width="78" height="104" rx="4" fill="#62554a"/><rect x="208" y="205" width="78" height="104" rx="4" fill="#304b63"/><rect x="300" y="205" width="78" height="104" rx="4" fill="#69404c"/></g>
+    <g fill="#9dafae"><rect x="116" y="190" width="60" height="4"/><rect x="208" y="190" width="52" height="4"/><rect x="300" y="190" width="64" height="4"/><rect x="116" y="317" width="54" height="4"/><rect x="208" y="317" width="63" height="4"/><rect x="300" y="317" width="48" height="4"/></g>
+    <rect x="116" y="370" width="262" height="58" rx="5" fill="#ff8a2a"/><text x="247" y="407" text-anchor="middle" fill="#101618" font-family="ui-monospace, monospace" font-size="17" font-weight="700" letter-spacing="3">READY TO LAUNCH</text>
+  </g>
+  <text x="80" y="574" fill="#ff8a2a" font-family="ui-monospace, monospace" font-size="18" letter-spacing="3">ARCHIVE MANAGEMENT · 1G1R CURATION · EMULATOR LAUNCHING</text>
 </svg>
