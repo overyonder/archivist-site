@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#101618"/>
+  <g stroke="#263438" stroke-width="1"><path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/><path d="M150 0V630M300 0V630M450 0V630M600 0V630M750 0V630M900 0V630M1050 0V630"/></g>
+  <path d="M742 470H790V405H838V433H886V330H934V362H982V246H1030V188H1078" fill="none" stroke="#ee7b3a" stroke-width="5"/>
+  <g fill="#ee7b3a"><circle cx="790" cy="405" r="7"/><circle cx="886" cy="330" r="7"/><circle cx="982" cy="246" r="7"/><circle cx="1078" cy="188" r="7"/></g>
+  <text x="82" y="116" fill="#ee7b3a" font-family="ui-monospace, monospace" font-size="20" letter-spacing="5">ARCHIVIST / PERFORMANCE</text>
+  <text x="78" y="305" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="94" font-weight="700">222,242</text>
+  <text x="82" y="373" fill="#9dafae" font-family="Inter, Arial, sans-serif" font-size="34">catalogue entries applied</text>
+  <text x="80" y="522" fill="#edf1e9" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="700">420 ms</text>
+  <text x="82" y="581" fill="#9dafae" font-family="ui-monospace, monospace" font-size="18" letter-spacing="3">NETWORK STORAGE → READY FRONTEND</text>
+</svg>
