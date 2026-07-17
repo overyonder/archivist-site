@@ -1,57 +1,8 @@
-create table public.early_access_request_attempts (
-    id bigint generated always as identity primary key,
-    request_fingerprint bytea not null,
-    email_fingerprint bytea not null,
-    outcome text not null check (
-        outcome in (
-            'confirmation_required',
-            'already_confirmed',
-            'recently_requested',
-            'suppressed',
-            'full',
-            'rate_limited',
-            'daily_limit'
-        )
-    ),
-    attempted_at timestamptz not null default now()
-);
+-- Reinstall the request function after qualifying the attempt columns used by
+-- the daily capacity check. Its OUT parameter is also named `outcome`, so an
+-- unqualified reference is ambiguous in PL/pgSQL.
 
-create index early_access_attempts_request_time_idx
-    on public.early_access_request_attempts (request_fingerprint, attempted_at desc);
-create index early_access_attempts_email_time_idx
-    on public.early_access_request_attempts (email_fingerprint, attempted_at desc);
-create index early_access_attempts_outcome_time_idx
-    on public.early_access_request_attempts (outcome, attempted_at desc);
-
-create function public.early_access_status()
-returns jsonb
-language sql
-security definer
-set search_path = ''
-as $$
-    select jsonb_build_object(
-        'capacity', 10000,
-        'places_taken', count(*),
-        'open', count(*) < 10000
-    )
-    from public.early_access_memberships membership
-    where membership.status = 'confirmed'
-       or (
-           membership.status = 'pending'
-           and exists (
-               select 1
-               from public.action_tokens token
-               where token.contact_id = membership.contact_id
-                 and token.purpose = 'confirm'
-                 and token.consumed_at is null
-                 and token.expires_at > now()
-           )
-       );
-$$;
-
-drop function public.request_early_access(text, uuid, bytea, timestamptz, text, text, text);
-
-create function public.request_early_access(
+create or replace function public.request_early_access(
     p_email text,
     p_token_id uuid,
     p_token_hash bytea,
@@ -83,20 +34,18 @@ begin
         raise exception 'invalid early-access request' using errcode = '22023';
     end if;
 
-    -- Serialize the inexpensive abuse and capacity decisions. This prevents a
-    -- burst of concurrent requests from overshooting either global limit.
     perform pg_advisory_xact_lock(hashtext('archivist-early-access-request'));
 
     if (
         select count(*) >= 10
-        from public.early_access_request_attempts
-        where request_fingerprint = p_request_fingerprint
-          and attempted_at > now() - interval '1 hour'
+        from public.early_access_request_attempts attempt
+        where attempt.request_fingerprint = p_request_fingerprint
+          and attempt.attempted_at > now() - interval '1 hour'
     ) or (
         select count(*) >= 3
-        from public.early_access_request_attempts
-        where email_fingerprint = p_email_fingerprint
-          and attempted_at > now() - interval '24 hours'
+        from public.early_access_request_attempts attempt
+        where attempt.email_fingerprint = p_email_fingerprint
+          and attempt.attempted_at > now() - interval '24 hours'
     ) then
         insert into public.early_access_request_attempts (
             request_fingerprint, email_fingerprint, outcome
@@ -113,10 +62,10 @@ begin
 
     if v_contact_id is not null and exists (
         select 1
-        from public.suppressions
-        where suppressions.contact_id = v_contact_id
-          and cleared_at is null
-          and scope in ('archivist', 'all')
+        from public.suppressions suppression
+        where suppression.contact_id = v_contact_id
+          and suppression.cleared_at is null
+          and suppression.scope in ('archivist', 'all')
     ) then
         insert into public.early_access_request_attempts (
             request_fingerprint, email_fingerprint, outcome
@@ -136,19 +85,19 @@ begin
     if v_contact_id is not null then
         select exists (
             select 1
-            from public.action_tokens
-            where action_tokens.contact_id = v_contact_id
-              and purpose = 'confirm'
-              and consumed_at is null
-              and expires_at > now()
+            from public.action_tokens token
+            where token.contact_id = v_contact_id
+              and token.purpose = 'confirm'
+              and token.consumed_at is null
+              and token.expires_at > now()
         ) into v_has_live_place;
 
         if v_has_live_place and exists (
             select 1
-            from public.consent_events
-            where consent_events.contact_id = v_contact_id
-              and kind in ('join_requested', 'rejoin_requested')
-              and occurred_at > now() - interval '15 minutes'
+            from public.consent_events event
+            where event.contact_id = v_contact_id
+              and event.kind in ('join_requested', 'rejoin_requested')
+              and event.occurred_at > now() - interval '15 minutes'
         ) then
             insert into public.early_access_request_attempts (
                 request_fingerprint, email_fingerprint, outcome
@@ -210,11 +159,11 @@ begin
         p_policy_version
     );
 
-    update public.action_tokens
+    update public.action_tokens token
     set consumed_at = now()
-    where action_tokens.contact_id = v_contact_id
-      and purpose = 'confirm'
-      and consumed_at is null;
+    where token.contact_id = v_contact_id
+      and token.purpose = 'confirm'
+      and token.consumed_at is null;
 
     insert into public.early_access_memberships (
         contact_id, status, requested_at, confirmed_at, left_at
@@ -234,16 +183,3 @@ begin
     return query select 'confirmation_required'::text, v_contact_id, v_token_id;
 end;
 $$;
-
-alter table public.early_access_request_attempts enable row level security;
-revoke all on table public.early_access_request_attempts from anon, authenticated;
-revoke all on sequence public.early_access_request_attempts_id_seq from anon, authenticated;
-revoke execute on function public.early_access_status() from public, anon, authenticated;
-revoke execute on function public.request_early_access(text, uuid, bytea, timestamptz, text, text, text, bytea, bytea)
-    from public, anon, authenticated;
-
-grant all on table public.early_access_request_attempts to service_role;
-grant usage, select on sequence public.early_access_request_attempts_id_seq to service_role;
-grant execute on function public.early_access_status() to service_role;
-grant execute on function public.request_early_access(text, uuid, bytea, timestamptz, text, text, text, bytea, bytea)
-    to service_role;

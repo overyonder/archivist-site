@@ -8,7 +8,8 @@ OpenTofu owns the hosted infrastructure around Archivist early access:
 - the full-scope IAM administration identity used by OpenTofu;
 - the least-privilege IAM runtime identity used by Supabase;
 - the monthly AWS cost budget;
-- the Supabase project settings, Edge Functions and function secrets.
+- the Supabase project settings, database migrations, Edge Functions and
+  function secrets.
 
 The working `archivist` test project is in `ap-southeast-2`. OpenTofu creates
 its `archivist-us` production replacement in `us-east-1`; it must not import
@@ -16,10 +17,11 @@ the Sydney project into that resource. Settings, functions, secrets and the SNS
 webhook all derive the new project reference from
 `supabase_project.archivist.id`.
 
-The database schema remains in `../supabase/migrations`. Apply migrations to the
-new US project before deploying function versions that depend on them. Preserve
-the Sydney project until the US deployment passes the end-to-end test and its
-consent history has been copied or archived.
+`terraform_data.database_migrations` owns the database schema in
+`../supabase/migrations`. Its replacement trigger hashes every migration and
+its apply links the US project and runs Supabase's official migration command.
+Preserve the Sydney project until its consent history has been copied or
+archived.
 
 `terraform_data.edge_functions` owns Edge Function deployment. Its replacement
 trigger hashes the complete `supabase/functions` tree, and its apply invokes
@@ -34,7 +36,8 @@ passphrase as `TF_VAR_state_passphrase`; never put it in a `.tfvars` file.
 Provider credentials use their standard environment variables:
 
 - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` for a provisioning identity;
-- `CLOUDFLARE_API_TOKEN` with Turnstile and DNS read/write access;
+- `CLOUDFLARE_API_TOKEN` with the account and zone permissions used by the
+  declared Cloudflare resources;
 - `SUPABASE_ACCESS_TOKEN` for the Management API.
 
 The Supabase Management API token and the full-scope AWS provisioning access-key

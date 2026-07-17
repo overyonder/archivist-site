@@ -26,11 +26,37 @@ resource "supabase_settings" "archivist" {
 }
 
 locals {
+  migration_files = fileset("${path.module}/../supabase/migrations", "*.sql")
+  migration_checksum = sha256(join("", [
+    for file in sort(tolist(local.migration_files)) :
+    "${file}:${filesha256("${path.module}/../supabase/migrations/${file}")}\n"
+  ]))
+
   edge_function_files = fileset("${path.module}/../supabase/functions", "**")
   edge_function_checksum = sha256(join("", [
     for file in sort(tolist(local.edge_function_files)) :
     "${file}:${filesha256("${path.module}/../supabase/functions/${file}")}\n"
   ]))
+}
+
+resource "terraform_data" "database_migrations" {
+  triggers_replace = [
+    local.migration_checksum,
+    filesha256("${path.module}/flake.lock"),
+  ]
+
+  provisioner "local-exec" {
+    working_dir = "${path.module}/.."
+    command     = <<-EOT
+      nix develop ./infrastructure#supabase --command supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD" --yes
+      nix develop ./infrastructure#supabase --command supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
+    EOT
+
+    environment = {
+      SUPABASE_PROJECT_REF = supabase_project.archivist.id
+      SUPABASE_DB_PASSWORD = var.supabase_database_password
+    }
+  }
 }
 
 resource "terraform_data" "edge_functions" {

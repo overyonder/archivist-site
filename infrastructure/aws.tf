@@ -104,7 +104,15 @@ data "aws_iam_policy_document" "edge" {
     actions = [
       "ses:SendEmail",
     ]
-    resources = [aws_sesv2_email_identity.sending.arn]
+    resources = [
+      aws_sesv2_email_identity.sending.arn,
+      aws_sesv2_configuration_set.early_access.arn,
+      replace(
+        aws_sesv2_email_identity.sending.arn,
+        "/${local.domain}",
+        "/hello@${local.domain}",
+      ),
+    ]
   }
 
   statement {

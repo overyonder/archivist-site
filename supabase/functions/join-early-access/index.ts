@@ -34,11 +34,14 @@ Deno.serve(async (request) => {
       : json({ error: "A valid email address is required" }, 400, cors);
   }
 
-  // Supabase documents the first X-Forwarded-For entry as the client address
-  // supplied by its gateway. Turnstile is the primary bot check; this value is
-  // used only for the secondary request counter and Siteverify context.
-  const sourceAddress = request.headers.get("x-forwarded-for")?.split(",")[0]
-    ?.trim() || "unknown";
+  // Supabase's gateway supplies the originating address. It is deliberately
+  // used only for a keyed rate-limit fingerprint: Turnstile's optional
+  // remoteip check is brittle across proxies and isn't needed to validate the
+  // signed token, hostname, and action.
+  const sourceAddress = request.headers.get("cf-connecting-ip")?.trim() ||
+    request.headers.get("x-real-ip")?.trim() ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
   const normalizedEmail = email.toLowerCase();
   const challengeToken = (await requestField(
     challengeRequest,
@@ -46,7 +49,7 @@ Deno.serve(async (request) => {
   ))?.trim();
   if (
     !challengeToken ||
-    !(await verifyEarlyAccessChallenge(challengeToken, sourceAddress).catch(
+    !(await verifyEarlyAccessChallenge(challengeToken).catch(
       (error) => {
         console.error("Turnstile validation failed", error);
         return false;
@@ -71,8 +74,12 @@ Deno.serve(async (request) => {
     p_source: "archivist-site",
     p_form_version: Deno.env.get("EARLY_ACCESS_FORM_VERSION") || "1",
     p_policy_version: requiredEnv("EARLY_ACCESS_POLICY_VERSION"),
-    p_request_fingerprint: bytea(await requestFingerprint(`ip:${sourceAddress}`)),
-    p_email_fingerprint: bytea(await requestFingerprint(`email:${normalizedEmail}`)),
+    p_request_fingerprint: bytea(
+      await requestFingerprint(`ip:${sourceAddress}`),
+    ),
+    p_email_fingerprint: bytea(
+      await requestFingerprint(`email:${normalizedEmail}`),
+    ),
   });
 
   if (error) {

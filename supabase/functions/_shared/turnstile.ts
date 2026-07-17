@@ -9,12 +9,10 @@ interface TurnstileResult {
 
 export async function verifyEarlyAccessChallenge(
   token: string,
-  clientAddress: string,
 ): Promise<boolean> {
   const body = new URLSearchParams({
     secret: requiredEnv("TURNSTILE_SECRET_KEY"),
     response: token,
-    remoteip: clientAddress,
     idempotency_key: crypto.randomUUID(),
   });
 
