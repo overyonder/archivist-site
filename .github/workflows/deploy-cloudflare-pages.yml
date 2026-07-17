@@ -13,8 +13,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Assemble public site
+        run: |
+          mkdir public
+          cp -R \
+            404.html \
+            app-demo \
+            assets \
+            early-access \
+            early-access-form.js \
+            early-access.css \
+            index.html \
+            launching.html \
+            main.js \
+            mark.svg \
+            performance.css \
+            performance.html \
+            policies.js \
+            retool.html \
+            robots.txt \
+            sitemap.xml \
+            styles.css \
+            theme.css \
+            theme.js \
+            public/
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=archivist --branch=main
+          command: pages deploy public --project-name=archivist --branch=main
