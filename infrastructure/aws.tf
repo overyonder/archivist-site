@@ -139,18 +139,6 @@ resource "aws_iam_access_key" "edge" {
   user = aws_iam_user.edge.name
 }
 
-# Imported key still used by the Sydney project during migration. AWS does not
-# expose an existing secret access key, so the US project receives the newly
-# generated `edge` key above. Retire this key only after the US end-to-end test
-# passes and the Sydney project is no longer serving signups.
-resource "aws_iam_access_key" "edge_legacy" {
-  user = aws_iam_user.edge.name
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
 resource "aws_budgets_budget" "monthly" {
   name         = "Archivist AWS monthly spend"
   budget_type  = "COST"
