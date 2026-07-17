@@ -45,7 +45,6 @@
     .signup button:disabled { opacity: .52; cursor: wait; }
     .signup button:disabled:hover { background: var(--accent); }
     .signup small { display: block; max-width: none; margin-top: 9px; }
-    .turnstile-challenge { min-height: 0; margin-top: 9px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
     .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
@@ -125,7 +124,6 @@
     }
   </style>
   <link rel="stylesheet" href="theme.css?site=archivist-v3">
-  <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;7462f5834b4745449f0f5e46d98a53ab&quot;}"></script>
   <!-- End Cloudflare Web Analytics -->
@@ -150,7 +148,7 @@
           <a href="performance">Performance deep dive</a>
         </nav>
       </details>
-      <span class="status"><i></i> Early access open</span>
+      <span class="status"><i></i> Early access paused</span>
       <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
         <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
         <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
@@ -167,14 +165,13 @@
         <p>It picks the best releases, traces the connections between games and platforms, and gives you one place to explore and play.</p>
       </div>
       <div class="signup" id="early-access">
-        <form class="signup-form" method="post" action="https://xbwhevdunxftierqlpsr.supabase.co/functions/v1/join-early-access">
+        <form class="signup-form" aria-disabled="true">
           <div class="signup-fields">
             <label class="sr-only" for="early-access-email">Email address</label>
-            <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
-            <button type="submit" disabled>Join early access <span aria-hidden="true">→</span></button>
+            <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" disabled>
+            <button type="button" disabled>Early access paused</button>
           </div>
-          <div class="turnstile-challenge" data-early-access-challenge></div>
-          <small data-early-access-status aria-live="polite">We’ll send a confirmation link first. You can leave whenever you like.</small>
+          <small data-early-access-status aria-live="polite">Email delivery is being enabled. Early access will reopen shortly.</small>
         </form>
       </div>
       <ul class="facts" aria-label="Product highlights">
@@ -238,6 +235,5 @@
 
   <script src="main.js?site=archivist-v6"></script>
   <script src="policies.js?site=archivist-v1"></script>
-  <script type="module" src="early-access-form.js?site=archivist-v2"></script>
 </body>
 </html>
