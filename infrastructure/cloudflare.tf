@@ -10,6 +10,29 @@ resource "cloudflare_turnstile_widget" "early_access" {
   offlabel        = false
 }
 
+# The Pages deployment deliberately publishes only the public site directory.
+# Keep a second boundary at the edge so repository internals can never be
+# served from the production hostname, including from a stale Pages cache.
+resource "cloudflare_ruleset" "private_repository_paths" {
+  zone_id     = var.cloudflare_zone_id
+  name        = "Keep repository internals private"
+  description = "Block infrastructure, functions, workflows, and repository metadata on the public site."
+  kind        = "zone"
+  phase       = "http_request_firewall_custom"
+
+  rules = [{
+    action      = "block"
+    description = "Block repository-only paths"
+    enabled     = true
+    expression = join(" or ", [
+      "starts_with(http.request.uri.path, \"/infrastructure/\")",
+      "starts_with(http.request.uri.path, \"/supabase/\")",
+      "starts_with(http.request.uri.path, \"/.github/\")",
+      "http.request.uri.path in {\"/.gitignore\" \"/.assetsignore\" \"/AGENTS.md\" \"/README.md\"}",
+    ])
+  }]
+}
+
 check "turnstile_sitekey_is_published" {
   assert {
     condition     = strcontains(file("${path.module}/../early-access-form.js"), cloudflare_turnstile_widget.early_access.sitekey)
