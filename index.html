@@ -36,10 +36,17 @@
     .eyebrow u { text-underline-offset: .22em; text-decoration-thickness: 1px; }
     .lede p { margin: 0; }
     .lede p + p { margin-top: .65em; }
-    .signup { flex-direction: column; justify-content: center; align-items: center; gap: 9px; text-align: center; }
-    .signup small { max-width: 310px; }
-    .signup button[aria-disabled="true"] { cursor: default; }
-    .signup button[aria-disabled="true"]:hover { background: var(--accent); }
+    .signup { display: block; text-align: left; }
+    .signup-form { width: min(100%, 470px); }
+    .signup-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+    .signup input { min-width: 0; padding: 12px 13px; color: var(--text); background: var(--control-bg); border: 1px solid var(--line-bright); border-right: 0; border-radius: 0; font: 13px ui-monospace, monospace; outline: none; }
+    .signup input::placeholder { color: var(--muted); }
+    .signup input:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+    .signup button:disabled { opacity: .52; cursor: wait; }
+    .signup button:disabled:hover { background: var(--accent); }
+    .signup small { display: block; max-width: none; margin-top: 9px; }
+    .turnstile-challenge { min-height: 0; margin-top: 9px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
     .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
     .legal-dialog div { padding: 28px; }
@@ -111,12 +118,14 @@
       .article-links { display: none; }
       .header-separator { display: none; }
       .mobile-nav { display: block; }
-      .signup small { display: block; }
+      .signup-fields { grid-template-columns: 1fr; gap: 8px; }
+      .signup input { border-right: 1px solid var(--line-bright); }
       .signup button { width: 100%; }
       .site-footer { padding-inline: 16px; }
     }
   </style>
   <link rel="stylesheet" href="theme.css?site=archivist-v3">
+  <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;7462f5834b4745449f0f5e46d98a53ab&quot;}"></script>
   <!-- End Cloudflare Web Analytics -->
@@ -141,7 +150,7 @@
           <a href="performance">Performance deep dive</a>
         </nav>
       </details>
-      <span class="status"><i></i> Early access in development</span>
+      <span class="status"><i></i> Early access open</span>
       <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
         <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
         <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
@@ -158,8 +167,15 @@
         <p>It picks the best releases, traces the connections between games and platforms, and gives you one place to explore and play.</p>
       </div>
       <div class="signup" id="early-access">
-        <button type="button" aria-disabled="true">Join early access <span aria-hidden="true">→</span></button>
-        <small>Early-access signups aren’t open yet<br>(and this button doesn’t do anything&mdash;yet!)</small>
+        <form class="signup-form" method="post" action="https://xbwhevdunxftierqlpsr.supabase.co/functions/v1/join-early-access">
+          <div class="signup-fields">
+            <label class="sr-only" for="early-access-email">Email address</label>
+            <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+            <button type="submit" disabled>Join early access <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="turnstile-challenge" data-early-access-challenge></div>
+          <small data-early-access-status aria-live="polite">We’ll send a confirmation link first. You can leave whenever you like.</small>
+        </form>
       </div>
       <ul class="facts" aria-label="Product highlights">
         <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>
@@ -207,7 +223,7 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the early-access form from abuse. This site also stores your theme preference in your browser. If you join early access, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email and Archivist development or release updates. We won’t sell your address or add it to another list, and you can leave at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
@@ -222,5 +238,6 @@
 
   <script src="main.js?site=archivist-v6"></script>
   <script src="policies.js?site=archivist-v1"></script>
+  <script type="module" src="early-access-form.js?site=archivist-v2"></script>
 </body>
 </html>

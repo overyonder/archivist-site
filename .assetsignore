@@ -1,0 +1,7 @@
+.git/
+.github/
+.gitignore
+.assetsignore
+README.md
+infrastructure/
+supabase/

@@ -11,3 +11,7 @@ static file server:
 python3 -m http.server 4173
 ```
 
+The early-access database, Edge Functions and infrastructure are maintained as
+code in [`supabase/`](supabase/) and [`infrastructure/`](infrastructure/). The
+infrastructure directory contains the OpenTofu ownership and import workflow
+for Cloudflare, AWS and Supabase resources.

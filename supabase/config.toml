@@ -1,0 +1,25 @@
+project_id = "archivist"
+
+[functions.join-early-access]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.confirm-early-access]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.leave-early-access]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.ses-events]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.reconcile-early-access]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.early-access-status]
+verify_jwt = false
+import_map = "./functions/deno.json"

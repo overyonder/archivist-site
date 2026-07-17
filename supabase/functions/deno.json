@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@aws-sdk/client-sesv2": "npm:@aws-sdk/client-sesv2@3.1088.0",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.110.6"
+  }
+}

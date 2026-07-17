@@ -1,0 +1,60 @@
+# Copy this file to imports.auto.tf after replacing values discovered from the
+# live accounts. The copy is ignored because import blocks are a one-time state
+# adoption mechanism rather than desired infrastructure.
+
+import {
+  to = cloudflare_turnstile_widget.early_access
+  id = "72b0273abc2a8ea96004ee8846c4d0a2/0x4AAAAAAD3HeGKnFCrJqPE7"
+}
+
+import {
+  to = aws_sesv2_email_identity.sending
+  id = "over-yonder.tech"
+}
+
+import {
+  to = aws_sesv2_configuration_set.early_access
+  id = "archivist-early-access"
+}
+
+import {
+  to = aws_sesv2_contact_list.early_access
+  id = "archivist-early-access"
+}
+
+import {
+  to = aws_sns_topic.ses_events
+  id = "arn:aws:sns:us-east-1:ACCOUNT_ID:archivist-early-access-events"
+}
+
+import {
+  to = aws_iam_user.edge
+  id = "archivist-early-access-edge"
+}
+
+import {
+  to = aws_iam_user.provisioner
+  id = "archivist-provisioner"
+}
+
+import {
+  to = aws_iam_user_policy_attachment.provisioner_administrator
+  id = "archivist-provisioner/arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+# Replace with the key ID stored as
+# aws_archivist_provisioner_access_key_id in SOPS.
+import {
+  to = aws_iam_access_key.provisioner
+  id = "PROVISIONER_ACCESS_KEY_ID"
+}
+
+import {
+  to = aws_budgets_budget.monthly
+  id = "ACCOUNT_ID:Costs occuring"
+}
+
+# The existing Archivist project is in ap-southeast-2. Do not import it into
+# the us-east-1 project resource: region is part of the replacement boundary.
+# OpenTofu creates the US project and every dependent resource derives its
+# project reference from supabase_project.archivist.id.
