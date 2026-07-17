@@ -30,6 +30,8 @@ jobs:
             performance.css \
             performance.html \
             policies.js \
+            pro.css \
+            pro.html \
             retool.html \
             robots.txt \
             sitemap.xml \
