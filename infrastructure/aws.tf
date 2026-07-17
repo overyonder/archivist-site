@@ -104,15 +104,16 @@ data "aws_iam_policy_document" "edge" {
     actions = [
       "ses:SendEmail",
     ]
-    resources = [
-      aws_sesv2_email_identity.sending.arn,
-      aws_sesv2_configuration_set.early_access.arn,
-      replace(
-        aws_sesv2_email_identity.sending.arn,
-        "/${local.domain}",
-        "/hello@${local.domain}",
-      ),
-    ]
+    # SES evaluates destination identities as resources while an account is in
+    # the sandbox. Restrict the runtime by its only permitted sender instead,
+    # so arbitrary recipients work once production access is granted.
+    resources = ["*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "ses:FromAddress"
+      values   = ["hello@${local.domain}"]
+    }
   }
 
   statement {

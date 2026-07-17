@@ -54,7 +54,6 @@ import {
   id = "ACCOUNT_ID:Costs occuring"
 }
 
-# The existing Archivist project is in ap-southeast-2. Do not import it into
-# the us-east-1 project resource: region is part of the replacement boundary.
-# OpenTofu creates the US project and every dependent resource derives its
-# project reference from supabase_project.archivist.id.
+# The Supabase project is already represented by supabase_project.archivist.
+# Add a project import only when reconstructing state around that exact US
+# project; every dependent resource derives its reference from the resource.

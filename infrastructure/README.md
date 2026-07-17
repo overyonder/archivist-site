@@ -11,17 +11,14 @@ OpenTofu owns the hosted infrastructure around Archivist early access:
 - the Supabase project settings, database migrations, Edge Functions and
   function secrets.
 
-The working `archivist` test project is in `ap-southeast-2`. OpenTofu creates
-its `archivist-us` production replacement in `us-east-1`; it must not import
-the Sydney project into that resource. Settings, functions, secrets and the SNS
-webhook all derive the new project reference from
-`supabase_project.archivist.id`.
+OpenTofu owns the `archivist-us` production project in `us-east-1`. Settings,
+functions, secrets and the SNS webhook all derive its project reference from
+`supabase_project.archivist.id`. The former Sydney test project was retired
+after the US deployment passed its end-to-end test.
 
 `terraform_data.database_migrations` owns the database schema in
 `../supabase/migrations`. Its replacement trigger hashes every migration and
 its apply links the US project and runs Supabase's official migration command.
-Preserve the Sydney project until its consent history has been copied or
-archived.
 
 `terraform_data.edge_functions` owns Edge Function deployment. Its replacement
 trigger hashes the complete `supabase/functions` tree, and its apply invokes
@@ -62,7 +59,7 @@ the state and its passphrase requires importing the live resources again.
 
 1. Copy `imports.tf.example` to `imports.auto.tf`.
 2. Replace the AWS account ID and any AWS names that differ from the live
-   resources. Do not add an import for the Sydney Supabase project.
+   resources.
 3. Run `tofu init` and `tofu plan`.
 4. Reconcile configuration until the plan imports resources without replacing
    them.
