@@ -1,9 +1,9 @@
 export function confirmationEmail(confirmUrl: string) {
   const escapedUrl = escapeHtml(confirmUrl);
   return {
-    subject: "Confirm your Archivist early access",
+    subject: "Confirm your Archivist release notifications",
     text: [
-      "Confirm your Archivist early access",
+      "Confirm your Archivist release notifications",
       "",
       "Open this link to confirm your address:",
       confirmUrl,
@@ -14,7 +14,7 @@ export function confirmationEmail(confirmUrl: string) {
       "https://over-yonder.tech/",
     ].join("\n"),
     html: `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="color-scheme" content="dark"><title>Confirm your Archivist early access</title></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="color-scheme" content="dark"><title>Confirm your Archivist release notifications</title></head>
 <body style="margin:0;padding:0;background:#080706;color:#f4eee6;font-family:Arial,sans-serif">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#080706">
     <tr><td align="center" style="padding:32px 16px">
@@ -26,9 +26,9 @@ export function confirmationEmail(confirmUrl: string) {
           </tr></table>
         </td></tr>
         <tr><td style="padding:52px 24px 46px">
-          <p style="margin:0 0 18px;color:#ff8a00;font:700 11px monospace;letter-spacing:2px;text-transform:uppercase">Early access · Address confirmation</p>
+          <p style="margin:0 0 18px;color:#ff8a00;font:700 11px monospace;letter-spacing:2px;text-transform:uppercase">Release notifications · Address confirmation</p>
           <h1 style="margin:0;color:#f4eee6;font:700 36px/1.05 Arial,sans-serif;letter-spacing:-1px">Confirm your address.</h1>
-          <p style="max-width:430px;margin:22px 0 0;color:#a69b90;font:16px/1.6 Arial,sans-serif">Open the link below to finish joining Archivist early access.</p>
+          <p style="max-width:430px;margin:22px 0 0;color:#a69b90;font:16px/1.6 Arial,sans-serif">Open the link below to be notified when paid early access opens and again when Archivist Free is released.</p>
           <p style="margin:34px 0 0"><a href="${escapedUrl}" style="display:inline-block;padding:14px 18px;border:1px solid #ff8a00;background:#ff8a00;color:#130b03;font:700 13px monospace;letter-spacing:1px;text-decoration:none;text-transform:uppercase">Confirm my address&nbsp;&nbsp;→</a></p>
         </td></tr>
         <tr><td style="padding:18px 24px;border-top:1px solid #302820;color:#756d66;font:12px/1.5 Arial,sans-serif">

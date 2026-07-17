@@ -21,7 +21,7 @@ if (form) {
   const challenge = form.querySelector("[data-early-access-challenge]");
   const submit = form.querySelector('button[type="submit"]');
   const status = form.querySelector("[data-early-access-status]");
-  const idleMessage = "We’ll send a confirmation link first. You can leave whenever you like.";
+  const idleMessage = "We’ll notify you when paid early access opens and again when Archivist Free is released. Unsubscribe anytime.";
 
   const setReady = (ready, message = idleMessage) => {
     submit.disabled = !ready;
@@ -44,7 +44,7 @@ if (form) {
 
   form.addEventListener("submit", () => {
     submit.disabled = true;
-    submit.textContent = "Joining…";
+    submit.textContent = "Subscribing…";
     status.textContent = "Sending your confirmation email…";
   });
 }

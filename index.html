@@ -45,6 +45,10 @@
     .signup button:disabled { opacity: .52; cursor: wait; }
     .signup button:disabled:hover { background: var(--accent); }
     .signup small { display: block; max-width: none; margin-top: 9px; }
+    .early-access-benefit { max-width: 470px; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .early-access-benefit strong { color: var(--text); }
+    .pro-preview-link { display: inline-block; margin-top: 10px; color: var(--accent); font: 700 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+    .pro-preview-link:hover { text-decoration: underline; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
     .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
@@ -143,12 +147,15 @@
       <details class="mobile-nav">
         <summary aria-label="Open site navigation">☰</summary>
         <nav aria-label="Mobile site navigation">
+          <a href="pro">Free &amp; Pro</a>
           <a href="launching">Ready to Launch</a>
           <a href="retool">Reviving Retool</a>
           <a href="performance">Performance deep dive</a>
         </nav>
       </details>
-      <span class="status"><i></i> Early access paused</span>
+      <a class="header-link" href="pro">Free &amp; Pro</a>
+      <span class="header-separator" aria-hidden="true">|</span>
+      <span class="status"><i></i> Notifications paused</span>
       <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
         <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
         <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
@@ -169,10 +176,12 @@
           <div class="signup-fields">
             <label class="sr-only" for="early-access-email">Email address</label>
             <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" disabled>
-            <button type="button" disabled>Early access paused</button>
+            <button type="button" disabled>Get notified</button>
           </div>
-          <small data-early-access-status aria-live="polite">Email delivery is being enabled. Early access will reopen shortly.</small>
+          <small data-early-access-status aria-live="polite">Email delivery is being enabled. Notifications will reopen shortly.</small>
         </form>
+        <p class="early-access-benefit"><strong>Archivist Free remains free.</strong> We’re also preparing a discounted Founding Pro offer for people who want the curated Canon and historical Atlas from the beginning.</p>
+        <a class="pro-preview-link" href="pro">Preview Free &amp; Pro →</a>
       </div>
       <ul class="facts" aria-label="Product highlights">
         <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>
@@ -220,7 +229,7 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the early-access form from abuse. This site also stores your theme preference in your browser. If you join early access, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email and Archivist development or release updates. We won’t sell your address or add it to another list, and you can leave at any time.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. This site also stores your theme preference in your browser. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
