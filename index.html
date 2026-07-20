@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="styles.css?site=archivist">
   <style>
     body.landing-page > header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; }
+    .intro h1 { font-size: clamp(40px, 4.25vw, 64px); line-height: .98; }
     .article-links { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font: 600 10px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
     .article-links a { color: var(--muted); text-decoration: none; }
     .article-links a:hover { color: var(--accent); }
@@ -130,7 +131,7 @@
     @media (max-width: 560px) {
       header { padding-inline: 16px; }
       body.landing-page > header { grid-template-columns: auto 1fr; gap: 12px; }
-      h1 { font-size: clamp(38px, 12vw, 48px); line-height: .91; }
+      .intro h1 { font-size: clamp(36px, 10vw, 42px); line-height: .96; }
       .lede { font-size: 14px; line-height: 1.45; }
       .article-links { display: none; }
       .header-separator { display: none; }
@@ -181,8 +182,8 @@
     <section class="intro">
       <h1>Video game history,<br>made playable.</h1>
       <div class="lede">
-        <p>Archivist is a game launcher, 1G1R curator, and ROM manager, all-in-one.</p>
-        <p>On top of that, it’s a window into video game history.</p>
+        <p>Archivist is a game launcher, 1G1R curator, and ROM manager, <u>all-in-one</u>.</p>
+        <p>It focuses on three things: making it effortless to play, simplifying folders full of duplicates, and following the threads of the canon to show you the bigger picture.</p>
       </div>
       <div class="signup" id="early-access">
         <form class="signup-form">
