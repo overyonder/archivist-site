@@ -1,71 +1,90 @@
-/* Archivist — "Reading Room" theme tokens.
-   Light is the day archive (paper, ink, vermillion stamps).
-   Dark is the night reading room (lamplight on the same paper). */
-
 :root {
-  color-scheme: light;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, ui-serif, Georgia, serif;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Consolas, monospace;
-
-  --bg: #f4eee0;
-  --bg-deep: #ece3cf;
-  --panel: #fbf7ec;
-  --panel-2: #f1e9d6;
-  --surface-0: #ebe2cc;
-  --surface-1: #f8f3e5;
-  --surface-2: #efe6d2;
-  --surface-3: #faf5e9;
-  --line: #d9cdb0;
-  --line-strong: #b0a07c;
-  --text: #28231a;
-  --muted: #665d4b;
-  --dim: #8b7f66;
-  --accent: #b23a1a;
-  --accent-bright: #c8481f;
-  --accent-ink: #8c2c10;
-  --contrast: #fdf8ec;
-  --brass: #85703a;
-  --brass-bg: #efe5c6;
-  --win: #2f6b3e;
-  --warn: #9a6a14;
-  --code: #7c3a12;
-  --shadow: #4a3a1c22;
-  --shadow-heavy: #4a3a1c3d;
-  --mark-glow: #b23a1a2e;
-  --glass: #f4eee0ec;
-}
-
-:root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #171410;
-  --bg-deep: #100e0a;
-  --panel: #201c14;
-  --panel-2: #262117;
-  --surface-0: #12100b;
-  --surface-1: #1b1811;
-  --surface-2: #221e15;
-  --surface-3: #252118;
-  --line: #3b3424;
-  --line-strong: #5b5138;
-  --text: #ece3cb;
-  --muted: #a89a7e;
-  --dim: #7f7355;
-  --accent: #e0562a;
-  --accent-bright: #ee6a3d;
-  --accent-ink: #f07b4f;
-  --contrast: #22130b;
-  --brass: #c2a256;
-  --brass-bg: #2b2415;
-  --win: #8ac698;
-  --warn: #d3ab60;
-  --code: #e0a06a;
-  --shadow: #00000059;
-  --shadow-heavy: #0000008c;
-  --mark-glow: #e0562a40;
-  --glass: #171410ec;
+  --page-end: #090807;
+  --page-glow: #351c09;
+  --line-bright: #554536;
+  --dim: #8f8478;
+  --control-bg: #171513;
+  --surface-0: #080706;
+  --surface-1: #0e0c0b;
+  --surface-2: #0f0d0b;
+  --surface-3: #11100e;
+  --surface-glass: #0b0a09e8;
+  --warm-panel: #151108;
+  --warm-pullquote: #1d1209;
+  --chart-glow: #261507;
+  --chart-bar: #6d5643;
+  --chart-bar-alt: #9c6a35;
+  --control-contrast: #130b03;
+  --shadow: #0009;
+  --shadow-heavy: #000c;
 }
 
-/* Day/night toggle */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5efe7;
+  --panel: #fffaf3;
+  --panel-2: #eee3d7;
+  --line: #d7c7b7;
+  --line-bright: #b79d84;
+  --text: #211b17;
+  --muted: #665b52;
+  --dim: #6f6154;
+  --accent: #ad4c00;
+  --accent-soft: #7d481d;
+  --win: #277149;
+  --warn: #8b5f20;
+  --control-bg: #f8f0e8;
+  --page-end: #ece2d7;
+  --page-glow: #ffd7af;
+  --surface-0: #eee4da;
+  --surface-1: #faf5ef;
+  --surface-2: #f1e8de;
+  --surface-3: #fffaf3;
+  --surface-glass: #f5efe7ed;
+  --warm-panel: #f8ead7;
+  --warm-pullquote: #f7dfc5;
+  --chart-glow: #ffe2c4;
+  --chart-bar: #a98e76;
+  --chart-bar-alt: #876446;
+  --control-contrast: #fffaf3;
+  --shadow: #6d4b2b2b;
+  --shadow-heavy: #5b3c2452;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f5efe7;
+    --panel: #fffaf3;
+    --panel-2: #eee3d7;
+    --line: #d7c7b7;
+    --line-bright: #b79d84;
+    --text: #211b17;
+    --muted: #665b52;
+    --dim: #6f6154;
+    --accent: #ad4c00;
+    --accent-soft: #7d481d;
+    --win: #277149;
+    --warn: #8b5f20;
+    --control-bg: #f8f0e8;
+    --page-end: #ece2d7;
+    --page-glow: #ffd7af;
+    --surface-0: #eee4da;
+    --surface-1: #faf5ef;
+    --surface-2: #f1e8de;
+    --surface-3: #fffaf3;
+    --surface-glass: #f5efe7ed;
+    --warm-panel: #f8ead7;
+    --warm-pullquote: #f7dfc5;
+    --chart-glow: #ffe2c4;
+    --chart-bar: #a98e76;
+    --chart-bar-alt: #876446;
+    --control-contrast: #fffaf3;
+    --shadow: #6d4b2b2b;
+    --shadow-heavy: #5b3c2452;
+  }
+}
 
 .theme-toggle {
   position: relative;
@@ -75,8 +94,8 @@
   grid-template-columns: repeat(2, 30px);
   height: 30px;
   overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: 2px;
+  border: 1px solid var(--line-bright);
+  border-radius: 999px;
   background: var(--surface-1);
 }
 
@@ -90,6 +109,10 @@
   height: 18px;
   content: "";
   background: var(--line);
+}
+
+.theme-toggle[data-theme-mode="system"] {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .theme-choice {
@@ -107,61 +130,60 @@
 }
 
 .theme-choice:hover { color: var(--accent); }
-.theme-choice[aria-pressed="true"] { color: var(--contrast); background: var(--accent); }
+.theme-choice[aria-pressed="true"] { color: var(--control-contrast); background: var(--accent); }
 .theme-choice:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
 .theme-choice svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
 
-/* Page grounds */
-
 body.landing-page {
   background:
-    radial-gradient(ellipse 70% 46% at 78% 6%, var(--mark-glow) 0, transparent 62%),
-    linear-gradient(180deg, var(--bg), var(--bg-deep) 78%, var(--bg));
+    radial-gradient(circle at 72% 42%, var(--page-glow) 0, transparent 34%),
+    var(--bg);
 }
 
 body.performance-page {
   background:
-    radial-gradient(ellipse 64% 30% at 76% 0%, var(--mark-glow) 0, transparent 66%),
-    linear-gradient(180deg, var(--bg), var(--bg-deep) 60%, var(--bg));
+    radial-gradient(circle at 74% 8%, var(--page-glow) 0, transparent 24rem),
+    linear-gradient(180deg, var(--bg), var(--page-end) 55%, var(--bg));
 }
 
-body.utility-page {
-  background:
-    radial-gradient(ellipse 62% 38% at 74% 12%, var(--mark-glow) 0, transparent 60%),
-    linear-gradient(160deg, var(--bg), var(--bg-deep));
-}
+.site-header { background: var(--surface-glass); }
 
-/* Shared theme-dependent surfaces */
-
-.masthead { background: var(--glass); }
-
-.duty-card,
-.essay-card,
+.facts li,
 .metric,
-.gallery-frame,
-.ticket,
+.tabs button { background: var(--surface-1); }
+.frame,
+.article-footer { background: var(--surface-0); }
+.caption,
+.chart { background: var(--surface-3); }
+.controls button,
 .card,
 .architecture div,
 .waterfall { background: var(--panel); }
-
-.plaque,
-.chart { background: var(--surface-3); }
-
 th { background: var(--surface-2); }
-tr.shipped td { background: var(--brass-bg); }
-.pullquote { background: linear-gradient(90deg, var(--brass-bg), var(--panel)); }
+tr.shipped td { background: var(--warm-panel); }
+.pullquote { background: linear-gradient(90deg, var(--warm-pullquote), var(--panel)); }
 .waterfall-track { background: var(--surface-0); }
-.chart { background: radial-gradient(circle at 82% 18%, var(--brass-bg), var(--surface-3) 58%); }
+.chart { background: radial-gradient(circle at 80% 20%, var(--chart-glow), var(--surface-3) 55%); }
 .article-footer { background: var(--surface-0); }
-.legal-footer { background: var(--bg-deep); }
+.footer-links a:hover,
+.signup button { color: var(--control-contrast); }
 
-.chart .axis { stroke: var(--line-strong); }
+.performance { color: var(--dim); }
+.fact-info { border-color: var(--line-bright); }
+.historian-callout { background: var(--panel); border-color: var(--line-bright); box-shadow: 0 18px 60px var(--shadow-heavy); }
+.historian-callout::after { background: var(--panel); border-color: var(--line-bright); }
+.planned { background: linear-gradient(135deg, var(--panel), var(--surface-0)); }
+.planned::before { border-color: var(--line-bright); }
+.benchmark-slide { background: radial-gradient(circle at 50% 20%, var(--chart-glow), var(--surface-0) 62%); }
+
+.chart .axis { stroke: var(--line-bright); }
 .chart .grid { stroke: var(--line); }
 .chart .label { fill: var(--muted); }
 .chart .value { fill: var(--text); }
 .chart .minor { fill: var(--dim); }
 
 @media (max-width: 560px) {
-  .masthead-tools { gap: 8px !important; }
-  .masthead-tools .status { display: none; }
+  .header-actions { gap: 8px !important; }
+  .header-actions .header-link { display: none; }
+  .header-actions .legal-link { display: grid; }
 }

@@ -3,67 +3,188 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Archivist turns a folder of game files into a working library: emulators detected and configured, every file verified against the preservation record, and the best release of each game chosen for you.">
-  <title>Archivist — Your game collection, catalogued and playable</title>
+  <meta name="description" content="Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.">
+  <title>Archivist — Video game archive management and launching</title>
   <link rel="canonical" href="https://archivist.over-yonder.tech/">
-  <meta property="og:title" content="Archivist — Your game collection, catalogued and playable">
-  <meta property="og:description" content="Archivist turns a folder of game files into a working library: emulators detected and configured, every file verified against the preservation record, and the best release of each game chosen for you.">
+  <meta property="og:title" content="Archivist — Video game archive management and launching">
+  <meta property="og:description" content="Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.">
   <meta property="og:url" content="https://archivist.over-yonder.tech/">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://archivist.over-yonder.tech/assets/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Archivist","url":"https://archivist.over-yonder.tech/","description":"Archivist turns a folder of game files into a working library: emulators detected and configured, every file verified against the preservation record, and the best release of each game chosen for you.","creator":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
-  <link rel="icon" href="mark.svg?v=rr1" type="image/svg+xml">
-  <script src="theme.js?v=rr1"></script>
-  <link rel="stylesheet" href="styles.css?v=rr1">
-  <link rel="stylesheet" href="theme.css?v=rr1">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Archivist","url":"https://archivist.over-yonder.tech/","description":"Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.","creator":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
+  <link rel="icon" href="mark.svg?site=archivist" type="image/svg+xml">
+  <script src="theme.js?v=2"></script>
+  <link rel="stylesheet" href="styles.css?site=archivist">
+  <style>
+    body.landing-page > header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; }
+    .article-links { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font: 600 10px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .article-links a { color: var(--muted); text-decoration: none; }
+    .article-links a:hover { color: var(--accent); }
+    .article-links i { color: var(--line); font-style: normal; }
+    .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .header-separator { color: var(--line); font: 10px ui-monospace, monospace; }
+    .header-link { color: var(--muted); font: 600 10px ui-monospace, monospace; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
+    .header-link:hover { color: var(--accent); }
+    .mobile-nav { position: relative; display: none; }
+    .mobile-nav summary { width: 32px; height: 32px; display: grid; place-items: center; color: var(--muted); border: 1px solid var(--line); cursor: pointer; font: 700 13px ui-monospace, monospace; list-style: none; }
+    .mobile-nav summary::-webkit-details-marker { display: none; }
+    .mobile-nav[open] summary { color: var(--accent); border-color: var(--accent); }
+    .mobile-nav nav { position: absolute; top: calc(100% + 10px); right: 0; z-index: 50; width: max-content; min-width: 190px; display: grid; padding: 5px; background: var(--panel); border: 1px solid var(--line-bright); box-shadow: 0 16px 50px #000c; }
+    .mobile-nav a { padding: 11px 12px; color: var(--muted); font: 600 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+    .mobile-nav a:hover { color: var(--accent); background: var(--control-bg); }
+    .eyebrow u { text-underline-offset: .22em; text-decoration-thickness: 1px; }
+    .lede p { margin: 0; }
+    .lede p + p { margin-top: .65em; }
+    .signup { display: block; text-align: left; }
+    .signup-form { width: min(100%, 470px); }
+    .signup-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+    .signup input { min-width: 0; padding: 12px 13px; color: var(--text); background: var(--control-bg); border: 1px solid var(--line-bright); border-right: 0; border-radius: 0; font: 13px ui-monospace, monospace; outline: none; }
+    .signup input::placeholder { color: var(--muted); }
+    .signup input:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+    .signup button:disabled { opacity: .52; cursor: wait; }
+    .signup button:disabled:hover { background: var(--accent); }
+    .signup small { display: block; max-width: none; margin-top: 9px; }
+    .early-access-benefit { max-width: 470px; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .early-access-benefit strong { color: var(--text); }
+    .pro-preview-link { display: inline-block; margin-top: 10px; color: var(--accent); font: 700 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+    .pro-preview-link:hover { text-decoration: underline; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
+    .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
+    .legal-dialog div { padding: 28px; }
+    .legal-dialog h2 { margin: 0 0 14px; font-size: 22px; }
+    .legal-dialog p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .legal-dialog.ownership-dialog { width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; }
+    .ownership-dialog h3 { margin: 0 0 10px; color: var(--text); font-size: 14px; }
+    .ownership-dialog ol { margin: 0 0 22px; padding-left: 22px; color: var(--muted); line-height: 1.55; }
+    .ownership-dialog li + li { margin-top: 9px; }
+    .legal-dialog button { padding: 10px 14px; color: var(--control-contrast); background: var(--accent); border: 0; font: 700 11px ui-monospace, monospace; text-transform: uppercase; cursor: pointer; }
+    .planned { position: relative; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg,#120e0b,#080706); color: var(--muted); text-align: center; }
+    .planned::before { position: absolute; inset: 15px; content: ""; border: 1px dashed #4a392b; }
+    .planned div { position: relative; max-width: 440px; }
+    .planned span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .planned strong { display: block; margin: 10px 0 6px; color: var(--text); font-size: 18px; }
+    .planned p { margin: 0; font-size: 12px; line-height: 1.5; }
+    .tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .tabs button { min-width: 0; overflow: hidden; }
+    .slide.active { pointer-events: auto; }
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
+    }
+    .app-demo { width: 125%; height: 125%; display: block; border: 0; background: #080706; transform: scale(.8); transform-origin: top left; }
+    .facts { grid-template-columns: .92fr 1.14fr .94fr; overflow: visible; }
+    .facts li { min-width: 0; }
+    .facts span, .fact-link { overflow-wrap: anywhere; word-break: normal; }
+    .fact-link { display: inline-block !important; margin-top: 8px !important; color: var(--accent) !important; font: 700 9px ui-monospace, monospace; letter-spacing: .04em; text-decoration: none; }
+    .fact-link:hover { text-decoration: underline; }
+    .benchmark-slide { position: relative; display: grid; place-items: center; padding: 30px; background: radial-gradient(circle at 50% 20%,#24180f,#090706 62%); text-align: center; }
+    .benchmark-slide div { max-width: 570px; }
+    .benchmark-slide span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .benchmark-slide strong { display: block; margin: 12px 0 9px; font-size: clamp(23px, 3vw, 38px); line-height: 1; }
+    .benchmark-slide p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .site-footer { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 clamp(24px, 4vw, 70px); color: var(--muted); border-top: 1px solid var(--line); font: 600 9px ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .site-footer a, .site-footer button { color: inherit; }
+    .site-footer a { text-decoration: none; }
+    .site-footer a:hover, .site-footer button:hover { color: var(--accent); }
+    .footer-policies { display: flex; align-items: center; gap: 12px; }
+    .footer-policies button { padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+    .footer-policies i { color: var(--line-bright); font-style: normal; }
+    .piracy-mark { width: 14px; height: 14px; margin-left: 4px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+    .piracy-mark .icon-fill { fill: currentColor; stroke: none; }
+    .piracy-mark .icon-cut { fill: var(--bg); stroke: none; }
+    .piracy-modal-mark { width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
+    @media (min-width: 901px) {
+      body.landing-page main {
+        height: max-content;
+        min-height: calc(100vh - 98px);
+        min-height: calc(100svh - 98px);
+        grid-template-rows: max-content;
+        align-content: center;
+        padding-top: 15px;
+      }
+      .slides { aspect-ratio: 1.77; }
+    }
+    @media (max-height: 800px) and (min-width: 901px) {
+      main { min-height: 0; padding-top: 15px; padding-bottom: 18px; }
+      .eyebrow { margin-bottom: 14px; }
+      .lede { margin: 18px 0; }
+      .facts { margin-top: 24px; }
+    }
+    @media (max-width: 1100px) and (min-width: 901px) {
+      header { padding-inline: 22px; }
+      body.landing-page > header { gap: 16px; }
+      .article-links { gap: 7px; font-size: 9px; letter-spacing: .06em; }
+      .header-actions { gap: 8px; }
+      .header-link, .status { font-size: 9px; letter-spacing: .08em; }
+      main { grid-template-columns: minmax(280px, 35%) minmax(0, 65%); padding-inline: 30px; gap: 28px; }
+      h1 { font-size: 48px; }
+    }
+    @media (max-width: 900px) {
+      body.landing-page main { min-height: calc(100vh - 92px); gap: 24px; padding-top: 24px; }
+      .intro { align-self: start; }
+      .eyebrow { margin-bottom: 13px; }
+      .lede { margin: 17px 0 10px; }
+      .facts { display: none; }
+    }
+    @media (max-width: 560px) {
+      header { padding-inline: 16px; }
+      body.landing-page > header { grid-template-columns: auto 1fr; gap: 12px; }
+      h1 { font-size: clamp(38px, 12vw, 48px); line-height: .91; }
+      .lede { font-size: 14px; line-height: 1.45; }
+      .article-links { display: none; }
+      .header-separator { display: none; }
+      .mobile-nav { display: block; }
+      .signup-fields { grid-template-columns: 1fr; gap: 8px; }
+      .signup input { border-right: 1px solid var(--line-bright); }
+      .signup button { width: 100%; }
+      .site-footer { padding-inline: 16px; }
+    }
+  </style>
+  <link rel="stylesheet" href="theme.css?site=archivist-v3">
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;7462f5834b4745449f0f5e46d98a53ab&quot;}"></script>
   <!-- End Cloudflare Web Analytics -->
 </head>
 <body class="landing-page">
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="masthead">
-    <a class="brand" href="/"><img src="mark.svg?v=rr1" alt="" width="26" height="26"><span>Archivist</span></a>
-    <nav class="masthead-nav" aria-label="Site navigation">
-      <a href="/" aria-current="page">Product</a>
-      <a href="pro">Free &amp; Pro</a>
+  <header>
+    <a class="brand" href="#top"><img src="mark.svg?site=archivist" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="article-links" aria-label="Articles">
+      <span>Articles:</span>
       <a href="launching">Ready to Launch</a>
+      <i aria-hidden="true">|</i>
       <a href="retool">Reviving Retool</a>
-      <a href="performance">Performance</a>
+      <i aria-hidden="true">|</i>
+      <a href="performance">Performance deep dive</a>
     </nav>
-    <div class="masthead-tools">
-      <span class="status"><i></i> Notifications paused</span>
-      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme">
-        <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
-        <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
-      </span>
+    <div class="header-actions">
       <details class="mobile-nav">
         <summary aria-label="Open site navigation">☰</summary>
         <nav aria-label="Mobile site navigation">
-          <a href="/" aria-current="page">Product</a>
           <a href="pro">Free &amp; Pro</a>
           <a href="launching">Ready to Launch</a>
           <a href="retool">Reviving Retool</a>
-          <a href="performance">Performance</a>
+          <a href="performance">Performance deep dive</a>
         </nav>
       </details>
+      <a class="header-link" href="pro">Free &amp; Pro</a>
+      <span class="header-separator" aria-hidden="true">|</span>
+      <span class="status"><i></i> Notifications paused</span>
+      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
+        <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
+        <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
+      </span>
     </div>
   </header>
 
-  <main id="main">
-    <section class="hero">
-      <svg class="hero-stamp" viewBox="0 0 160 160" aria-hidden="true">
-        <defs><path id="stamp-circle" d="M80 24a56 56 0 1 1 0 112 56 56 0 0 1 0-112"/></defs>
-        <circle cx="80" cy="80" r="74" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <circle cx="80" cy="80" r="46" fill="none" stroke="currentColor" stroke-width="1.5"/>
-        <text font-family="ui-monospace, monospace" font-size="12" letter-spacing="3.4" fill="currentColor"><textPath href="#stamp-circle">Catalogued · Verified · Playable&#160;&#160;</textPath></text>
-        <path d="M60 104 80 56l20 48" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <p class="kicker kicker-centered">A preservation studio for the games you already own</p>
-      <h1 class="hero-title">Your collection,<br><span class="swash">catalogued <span class="amp">&amp;</span> ready to play.</span></h1>
-      <p class="hero-lede">Archivist is a desktop application that turns a folder of game files into a working library. It finds and configures the emulators on your system, checks every file against the preservation record, and chooses the best release of each game — so the history you’ve collected stays <strong>one click from play</strong>.</p>
-
+  <main id="top">
+    <section class="intro">
+      <p class="eyebrow">Emulator frontend + 1G1R curator + game-image manager = <u>finally!</u></p>
+      <h1>Video game history,<br>made playable.</h1>
+      <div class="lede">
+        <p>Archivist detects and configures supported emulators, checks every file in your collection, and shows you exactly what’s ready to play — the goal is a verified one-click launch.</p>
+        <p>It picks the best releases, traces the connections between games and platforms, and turns a folder of game images into a curated history of the medium.</p>
+      </div>
       <div class="signup" id="early-access">
         <form class="signup-form">
           <div class="signup-fields">
@@ -73,153 +194,40 @@
           </div>
           <small data-early-access-status aria-live="polite">Email delivery is being enabled. Notifications will reopen shortly.</small>
         </form>
-        <p class="hero-note"><strong>Archivist Free remains free.</strong> A discounted Founding Pro offer is being prepared for players who want the curated Canon and historical Atlas from day one. &nbsp;<a href="pro">Preview Free &amp; Pro →</a></p>
+        <p class="early-access-benefit"><strong>Archivist Free remains free.</strong> We’re also preparing a discounted Founding Pro offer for people who want the curated Canon and historical Atlas from the beginning.</p>
+        <a class="pro-preview-link" href="pro">Preview Free &amp; Pro →</a>
       </div>
-
-      <ol class="ledger" aria-label="The accession ledger">
-        <li><strong>82</strong><span>emulators detected and configured automatically</span></li>
-        <li><strong>1,800+</strong><span>launch mappings, from historical systems to playable builds</span></li>
-        <li><strong>1,477</strong><span>hand-reviewed rules choose the best release of each game</span></li>
-        <li><strong>0.42 s</strong><span>to apply a 222,242-file collection snapshot</span></li>
-      </ol>
+      <ul class="facts" aria-label="Product highlights">
+        <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>
+        <li><strong>1,477</strong><span>rules select the best version of each game</span><a class="fact-link" href="retool">Why we’re reviving Retool →</a></li>
+        <li><strong>222,242</strong><span>files and folders applied to the live interface in 0.42 seconds</span><a class="fact-link" href="performance">Read the tech deep dive →</a></li>
+      </ul>
     </section>
 
-    <section class="section" id="collection">
-      <header class="section-head reveal">
-        <p class="kicker">The archivist’s duties</p>
-        <h2>Three jobs, <em>done properly.</em></h2>
-        <p>Most frontends stop at a list of files. Archivist accepts the whole job of keeping a historical collection playable: catalogue it, prove it, and have it ready to run.</p>
-      </header>
-      <ol class="duty-grid">
-        <li class="duty-card registered reveal">
-          <span class="accession">Duty Nº 1</span>
-          <h3>Catalogue</h3>
-          <p>Every title is identified across the preservation catalogues — <strong>No-Intro, Redump, TOSEC, MAME</strong> and specialist lists — then reviewed selection rules choose the one best release to shelve. One game, one ROM.</p>
-          <span class="duty-foot"><b>1,477</b> selection rules &amp; overrides</span>
-        </li>
-        <li class="duty-card registered reveal">
-          <span class="accession">Duty Nº 2</span>
-          <h3>Verify</h3>
-          <p>Every file is hashed and checked against the preservation record, so you can see exactly <strong>what’s present, what’s missing and what’s ready to play</strong> — down to the last byte.</p>
-          <span class="duty-foot"><b>222,242</b> files applied to the interface in <b>0.42 s</b></span>
-        </li>
-        <li class="duty-card registered reveal">
-          <span class="accession">Duty Nº 3</span>
-          <h3>Prepare</h3>
-          <p>Archivist detects the emulators already on your system and arrives with <strong>more than 1,800 pre-written launch plans</strong>, from cassette-era computers to arcade boards. The launch knowledge comes with the product.</p>
-          <span class="duty-foot"><b>82</b> emulators · <b>1,800+</b> mappings</span>
-        </li>
-      </ol>
-    </section>
-
-    <div class="gallery-wall" id="gallery">
-      <section class="section" style="padding-top: 0; padding-bottom: 0;">
-        <header class="section-head reveal">
-          <p class="kicker kicker-centered">The gallery</p>
-          <h2>Walk the <em>collection.</em></h2>
-          <p>Six rooms from the working application: the timeline, the emulator registry, the reading room, the verification desk, the controller wing and the stacks.</p>
-        </header>
-        <div class="gallery-frame reveal">
-          <div class="slides">
-            <figure class="slide active" data-slide="0"><img src="assets/screenshots/history.png?v=rr1" alt="Archivist system history showing the Apple II selected in the computer timeline" width="1104" height="624"></figure>
-            <figure class="slide" data-slide="1"><iframe class="app-demo" src="app-demo/index.html?view=emulators&amp;v=65" title="Archivist emulator configuration table"></iframe></figure>
-            <figure class="slide" data-slide="2"><iframe class="app-demo" src="app-demo/index.html?view=themes&amp;v=60" title="Interactive Archivist theme and contrast settings"></iframe></figure>
-            <figure class="slide" data-slide="3"><img src="assets/screenshots/verify.png?v=rr1" alt="Archivist collection verification view" width="1368" height="912"></figure>
-            <figure class="slide slide-card" data-slide="4"><div><span>Acquisition pending</span><strong>The Controller Wing</strong><p>Browse the catalogue and launch games without leaving the controller. In development.</p></div></figure>
-            <figure class="slide slide-card" data-slide="5"><div><span>503 manifests accepted by all three tools · release builds</span><strong>2,151,769 rows · 1.31 s</strong><p>Archivist’s purpose-built resident digest compiler processed the shared corpus in 1.31 seconds. Igir produced its report in 125.76 seconds, while OxyROMon imported relational records in 200.34 seconds; the performance essay defines those different outputs before comparing them.</p></div></figure>
-          </div>
+    <section class="showcase" aria-label="Archivist features">
+      <div class="frame">
+        <div class="slides">
+          <figure class="slide active" data-slide="0"><img src="assets/screenshots/history.png?site=archivist-v55" alt="Archivist system history showing the Apple II selected in the computer timeline" width="1104" height="624"></figure>
+          <figure class="slide" data-slide="1"><iframe class="app-demo" src="app-demo/index.html?view=emulators&amp;v=65" title="Archivist emulator configuration table"></iframe></figure>
+          <figure class="slide" data-slide="2"><iframe class="app-demo" src="app-demo/index.html?view=themes&amp;v=60" title="Interactive Archivist theme and contrast settings"></iframe></figure>
+          <figure class="slide" data-slide="3"><img src="assets/screenshots/verify.png" alt="Archivist collection verification view" width="1368" height="912"></figure>
+          <figure class="slide planned" data-slide="4"><div><span>In development</span><strong>Gamepad interface</strong><p>Browse the catalogue and launch games without leaving the controller.</p></div></figure>
+          <figure class="slide benchmark-slide" data-slide="5"><div><span>503 manifests accepted by all three tools · release builds</span><strong>2,151,769 rows · 1.31 s</strong><p>Archivist’s purpose-built resident digest compiler processed the shared corpus in 1.31 seconds. Igir produced its report in 125.76 seconds, while OxyROMon imported relational records in 200.34 seconds; the performance article defines those different outputs before comparing them.</p></div></figure>
         </div>
-        <div class="plaque reveal" aria-live="polite">
-          <div class="controls"><button type="button" data-prev aria-label="Previous exhibit">←</button></div>
-          <div class="plaque-body">
-            <span class="plaque-index">Exhibit 1 of 6</span>
-            <h3>The Timeline</h3>
-            <p>Systems from the 1950s to today, arranged as a living family tree of platforms and genres.</p>
-          </div>
-          <div class="controls"><button type="button" data-next aria-label="Next exhibit">→</button></div>
+        <div class="caption" aria-live="polite">
+          <span class="index">01 / 06</span>
+          <div><h2>A curated history.</h2><p>View games in context through genre family trees and platform timelines spanning the 1950s to today.</p></div>
+          <div class="controls"><button type="button" data-prev aria-label="Previous feature">←</button><button type="button" data-next aria-label="Next feature">→</button></div>
         </div>
-        <ul class="rooms" role="tablist" aria-label="Gallery rooms">
-          <li><button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>Timeline</button></li>
-          <li><button role="tab" aria-selected="false" data-tab="1"><span>02</span>Registry</button></li>
-          <li><button role="tab" aria-selected="false" data-tab="2"><span>03</span>Reading Room</button></li>
-          <li><button role="tab" aria-selected="false" data-tab="3"><span>04</span>Verification</button></li>
-          <li><button role="tab" aria-selected="false" data-tab="4"><span>05</span>Controller</button></li>
-          <li><button role="tab" aria-selected="false" data-tab="5"><span>06</span>The Stacks</button></li>
-        </ul>
-      </section>
-    </div>
-
-    <section class="section" id="charter">
-      <div class="charter">
-        <header class="section-head reveal">
-          <p class="kicker">The collector’s charter</p>
-          <h2>Buy it once. <em>Keep it forever.</em></h2>
-          <p>Archivist is sold the way a museum sells a book, not the way a landlord collects rent. The licence is perpetual, the software works offline, and the continuity pledge is published before anyone is asked to pay.</p>
-          <div class="charter-actions">
-            <button class="primary" type="button" data-dialog-open="ownershipDialog">Read the ownership pledge</button>
-            <a href="pro">See Free &amp; Pro</a>
-          </div>
-        </header>
-        <ul class="charter-list reveal">
-          <li><strong>Works offline forever.</strong> Free and purchased Pro capabilities run without activation counts, hardware locking or a remote kill switch.</li>
-          <li><strong>Every future software version</strong> remains included with a Pro licence.</li>
-          <li><strong>Content updates are optional.</strong> Declining a renewal never disables the software or curated content you already own.</li>
-          <li><strong>A published shutdown pledge.</strong> If Archivist ever closes, customers receive an ownership archive and an inspectable continuity build.</li>
-          <li><strong>No games are included or sold.</strong> Archivist manages the collection you legally obtain — <button type="button" data-dialog-open="piracyDialog" style="padding:0;color:var(--accent);background:none;border:0;font:inherit;text-decoration:underline;cursor:pointer;">read our position</button>.</li>
-        </ul>
       </div>
-    </section>
-
-    <section class="section" id="essays">
-      <header class="section-head reveal">
-        <p class="kicker">From the reading room</p>
-        <h2>Essays on the <em>craft.</em></h2>
-        <p>The engineering and curation journals behind the product, written as the work happened.</p>
-      </header>
-      <div class="essay-grid">
-        <a class="essay-card reveal" href="launching">
-          <span class="essay-no">Essay № 1 · Emulator launching</span>
-          <h3>Ready to Launch</h3>
-          <p>Why a historical launch is more than a command line: generated configuration, firmware dependency graphs, and the schema behind 1,800 pre-written launch plans.</p>
-          <span class="essay-link">Read the essay →</span>
-        </a>
-        <a class="essay-card reveal" href="retool">
-          <span class="essay-no">Essay № 2 · Catalogue curation</span>
-          <h3>Reviving Retool</h3>
-          <p>One Game, One ROM needed human policy. Archivist extends Retool’s reviewed selection tables across every preservation catalogue — including MAME.</p>
-          <span class="essay-link">Read the essay →</span>
-        </a>
-        <a class="essay-card reveal" href="performance">
-          <span class="essay-no">Essay № 3 · Performance engineering</span>
-          <h2>222,242 entries in 420 ms</h2>
-          <p>From network storage to a ready interface in under half a second: the measurements, the snapshot formats, and the approaches that were rejected.</p>
-          <span class="essay-link">Read the essay →</span>
-        </a>
+      <div class="tabs" role="tablist" aria-label="Key features">
+        <button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>Curated</button>
+        <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Pre-configured</button>
+        <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Themeable</button>
+        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Validated</button>
+        <button role="tab" aria-selected="false" data-tab="4"><span>05</span>Ergonomic</button>
+        <button role="tab" aria-selected="false" data-tab="5"><span>06</span>Fast</button>
       </div>
-    </section>
-
-    <section class="section" id="admission">
-      <header class="section-head reveal" style="margin-inline: auto; text-align: center;">
-        <p class="kicker kicker-centered">Admission</p>
-        <h2>The reading room is <em>free.</em></h2>
-        <p style="margin-inline: auto;">Play and manage your collection for nothing. Add the curated Canon and historical Atlas when you want the research collection.</p>
-      </header>
-      <div class="admission-grid">
-        <article class="ticket registered reveal">
-          <span class="ticket-label">Archivist Free</span>
-          <div class="ticket-price"><strong>$0</strong><span>Forever</span></div>
-          <p>Configure, verify, organise and launch your whole collection, and explore the <strong>reviewed history of game systems</strong>. A sincere, complete product.</p>
-          <a class="ticket-link" href="pro">See what Free includes →</a>
-        </article>
-        <article class="ticket ticket-pro registered reveal">
-          <span class="stamp">Founding offer planned</span>
-          <span class="ticket-label">Archivist Pro</span>
-          <div class="ticket-price"><strong>$40</strong><span>US · Once</span></div>
-          <p>Adds <strong>the Canon</strong> — authoritative cross-provider title selection — and <strong>the Atlas</strong> — ports, families and cultural genealogies — plus every future software version and twelve months of content updates.</p>
-          <a class="ticket-link" href="pro">Compare the plans →</a>
-        </article>
-      </div>
-      <p class="admission-note reveal">Checkout is deliberately disconnected until the founding offer is operationally ready. The notification list will hear first.</p>
     </section>
   </main>
 
@@ -248,7 +256,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=rr1"></script>
-  <script src="policies.js?v=rr1"></script>
+  <script src="main.js?site=archivist-v7"></script>
+  <script src="policies.js?site=archivist-v2"></script>
 </body>
 </html>

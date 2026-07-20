@@ -3,12 +3,12 @@
   const choices = new Set(["light", "dark"]);
   const saved = localStorage.getItem(storageKey);
 
-  document.documentElement.dataset.theme = choices.has(saved) ? saved : "light";
+  document.documentElement.dataset.theme = choices.has(saved) ? saved : "dark";
 
   const syncControls = () => {
     const selected = choices.has(document.documentElement.dataset.theme)
       ? document.documentElement.dataset.theme
-      : "light";
+      : "dark";
 
     document.querySelectorAll("[data-theme-choice]").forEach((button) => {
       const choice = button.dataset.themeChoice;
