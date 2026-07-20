@@ -55,6 +55,10 @@
     .legal-dialog div { padding: 28px; }
     .legal-dialog h2 { margin: 0 0 14px; font-size: 22px; }
     .legal-dialog p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .legal-dialog.ownership-dialog { width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; }
+    .ownership-dialog h3 { margin: 0 0 10px; color: var(--text); font-size: 14px; }
+    .ownership-dialog ol { margin: 0 0 22px; padding-left: 22px; color: var(--muted); line-height: 1.55; }
+    .ownership-dialog li + li { margin-top: 9px; }
     .legal-dialog button { padding: 10px 14px; color: var(--control-contrast); background: var(--accent); border: 0; font: 700 11px ui-monospace, monospace; text-transform: uppercase; cursor: pointer; }
     .planned { position: relative; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg,#120e0b,#080706); color: var(--muted); text-align: center; }
     .planned::before { position: absolute; inset: 15px; content: ""; border: 1px dashed #4a392b; }
@@ -88,7 +92,14 @@
     .piracy-mark .icon-cut { fill: var(--bg); stroke: none; }
     .piracy-modal-mark { width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
     @media (min-width: 901px) {
-      body.landing-page main { height: calc(100vh - 98px); padding-top: 15px; }
+      body.landing-page main {
+        height: max-content;
+        min-height: calc(100vh - 98px);
+        min-height: calc(100svh - 98px);
+        grid-template-rows: max-content;
+        align-content: center;
+        padding-top: 15px;
+      }
       .slides { aspect-ratio: 1.77; }
     }
     @media (max-height: 800px) and (min-width: 901px) {
@@ -243,6 +254,6 @@
   </dialog>
 
   <script src="main.js?site=archivist-v6"></script>
-  <script src="policies.js?site=archivist-v1"></script>
+  <script src="policies.js?site=archivist-v2"></script>
 </body>
 </html>
