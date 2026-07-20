@@ -13,40 +13,54 @@
   <meta property="og:image" content="https://archivist.over-yonder.tech/assets/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Archivist performance — 222,242 entries applied in 420 ms","description":"How Archivist compiles, transfers and applies a 222,242-entry catalogue from network storage to a ready frontend in 420 milliseconds.","url":"https://archivist.over-yonder.tech/performance","image":"https://archivist.over-yonder.tech/assets/social-card.png","author":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
-  <link rel="icon" href="mark.svg" type="image/svg+xml">
-  <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="performance.css?site=archivist-v5">
-  <link rel="stylesheet" href="theme.css">
+  <link rel="icon" href="mark.svg?v=rr1" type="image/svg+xml">
+  <script src="theme.js?v=rr1"></script>
+  <link rel="stylesheet" href="performance.css?v=rr1">
+  <link rel="stylesheet" href="theme.css?v=rr1">
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;7462f5834b4745449f0f5e46d98a53ab&quot;}"></script>
   <!-- End Cloudflare Web Analytics -->
 </head>
 <body class="performance-page">
-  <header class="site-header">
-    <a class="brand" href="/"><img src="mark.svg" alt="" width="26" height="26"><span>Archivist</span></a>
-    <nav class="nav" aria-label="Site navigation">
-      <a href="/">Product</a><i aria-hidden="true">|</i><span>Articles:</span>
-      <a href="launching">Ready to Launch</a><i aria-hidden="true">|</i>
-      <a href="retool">Reviving Retool</a><i aria-hidden="true">|</i>
+  <a class="skip-link" href="#essay">Skip to the essay</a>
+  <header class="masthead">
+    <a class="brand" href="/"><img src="mark.svg?v=rr1" alt="" width="26" height="26"><span>Archivist</span></a>
+    <nav class="masthead-nav" aria-label="Site navigation">
+      <a href="/">Product</a>
+      <a href="pro">Free &amp; Pro</a>
+      <a href="launching">Ready to Launch</a>
+      <a href="retool">Reviving Retool</a>
       <a href="performance" aria-current="page">Performance</a>
-      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
+    </nav>
+    <div class="masthead-tools">
+      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme">
         <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
         <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
       </span>
-    </nav>
+      <details class="mobile-nav">
+        <summary aria-label="Open site navigation">☰</summary>
+        <nav aria-label="Mobile site navigation">
+          <a href="/">Product</a>
+          <a href="pro">Free &amp; Pro</a>
+          <a href="launching">Ready to Launch</a>
+          <a href="retool">Reviving Retool</a>
+          <a href="performance" aria-current="page">Performance</a>
+        </nav>
+      </details>
+    </div>
   </header>
 
-  <main>
+  <main id="essay">
     <header class="article-hero">
-      <p class="eyebrow">Performance engineering · measured implementation · July 2026</p>
-      <h1>How fast can Archivist load a large collection?</h1>
+      <p class="kicker">Essay № 3 · Performance engineering · July 2026</p>
+      <h1>How <em>fast</em> can Archivist load a large collection?</h1>
       <p class="hero-result"><strong>222,242 filesystem entries applied in 420&nbsp;ms.</strong></p>
       <p class="hero-lede">Archivist is a desktop frontend for curating, verifying and launching large video game collections. Its catalogue compiler, storage-side Historian service, hashing pipeline and desktop backend are native Rust. Tauri provides the current embedded-browser interface, while collection processing remains in native code. The measured snapshot contained 210,840 files and 11,402 directories.</p>
     </header>
 
     <div class="article-layout">
       <aside class="toc" aria-label="Article contents">
-        <p>Contents</p>
+        <p>In this essay</p>
         <a href="#landscape">The familiar desktop model</a>
         <a href="#principle">Archivist’s starting point</a>
         <a href="#architecture">Historian architecture</a>
@@ -375,8 +389,8 @@
 
   <footer class="article-footer">
     <div class="footer-inner">
-      <p class="eyebrow">Over Yonder</p>
-      <h2>When software hits the limit, we move the limit.</h2>
+      <p class="kicker">Over Yonder</p>
+      <h2>When software hits the limit, <em>we move the limit.</em></h2>
       <p>over|yonder works from application code down to custom silicon, changing whichever layer is holding the system back.</p>
       <div class="footer-links">
         <a href="https://over-yonder.tech/">Visit over|yonder</a>
@@ -411,6 +425,6 @@
     </div>
   </dialog>
 
-  <script src="policies.js?site=archivist-v2"></script>
+  <script src="policies.js?v=rr1"></script>
 </body>
 </html>
