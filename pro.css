@@ -57,6 +57,8 @@
 .pro-footer-cta { max-width: 900px; margin: 50px auto 0; padding: 30px; background: var(--warm-panel); border: 1px solid var(--line-bright); text-align: center; }
 .pro-footer-cta strong { display: block; margin-bottom: 9px; font-size: 20px; }
 .pro-footer-cta p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.pro-notify-link { display: inline-block; margin-top: 14px; color: var(--accent); font: 700 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+.pro-notify-link:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .offer-grid, .pillars, .ownership-grid { grid-template-columns: 1fr; }
   .founding { grid-template-columns: 1fr; gap: 8px; }

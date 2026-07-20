@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Archivist is a desktop game frontend with 1G1R selection, ROM management, verification, emulator configuration, and launching.">
+  <meta name="description" content="Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.">
   <title>Archivist — Video game archive management and launching</title>
   <link rel="canonical" href="https://archivist.over-yonder.tech/">
   <meta property="og:title" content="Archivist — Video game archive management and launching">
-  <meta property="og:description" content="Archivist is a desktop game frontend with 1G1R selection, ROM management, verification, emulator configuration, and launching.">
+  <meta property="og:description" content="Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.">
   <meta property="og:url" content="https://archivist.over-yonder.tech/">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://archivist.over-yonder.tech/assets/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Archivist","url":"https://archivist.over-yonder.tech/","description":"Archivist is a desktop game frontend with 1G1R selection, ROM management, verification, emulator configuration, and launching.","creator":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Archivist","url":"https://archivist.over-yonder.tech/","description":"Archivist detects and configures supported emulators, verifies your ROM collection, and curates the best release of each game — video game history, made playable.","creator":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
   <link rel="icon" href="mark.svg?site=archivist" type="image/svg+xml">
   <script src="theme.js?v=2"></script>
   <link rel="stylesheet" href="styles.css?site=archivist">
   <style>
     body.landing-page > header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; }
-    .article-links { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--line-bright); font: 600 10px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .article-links { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--dim); font: 600 10px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
     .article-links a { color: var(--muted); text-decoration: none; }
     .article-links a:hover { color: var(--accent); }
     .article-links i { color: var(--line); font-style: normal; }
@@ -69,6 +69,9 @@
     .tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     .tabs button { min-width: 0; overflow: hidden; }
     .slide.active { pointer-events: auto; }
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
+    }
     .app-demo { width: 125%; height: 125%; display: block; border: 0; background: #080706; transform: scale(.8); transform-origin: top left; }
     .facts { grid-template-columns: .92fr 1.14fr .94fr; overflow: visible; }
     .facts li { min-width: 0; }
@@ -176,18 +179,18 @@
 
   <main id="top">
     <section class="intro">
-      <p class="eyebrow">Emulator frontend + one-game-one-release curator + game-image manager = <u>finally!</u></p>
+      <p class="eyebrow">Emulator frontend + 1G1R curator + game-image manager = <u>finally!</u></p>
       <h1>Video game history,<br>made playable.</h1>
       <div class="lede">
-        <p>Archivist turns your collection of game images into a curated history of the medium.</p>
-        <p>It picks the best releases, traces the connections between games and platforms, and gives you one place to explore and play.</p>
+        <p>Archivist detects and configures supported emulators, checks every file in your collection, and shows you exactly what’s ready to play — the goal is a verified one-click launch.</p>
+        <p>It picks the best releases, traces the connections between games and platforms, and turns a folder of game images into a curated history of the medium.</p>
       </div>
       <div class="signup" id="early-access">
-        <form class="signup-form" aria-disabled="true">
+        <form class="signup-form">
           <div class="signup-fields">
             <label class="sr-only" for="early-access-email">Email address</label>
             <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" disabled>
-            <button type="button" disabled>Get notified</button>
+            <button type="button" disabled>Get notified for early access</button>
           </div>
           <small data-early-access-status aria-live="polite">Email delivery is being enabled. Notifications will reopen shortly.</small>
         </form>
@@ -253,7 +256,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?site=archivist-v6"></script>
+  <script src="main.js?site=archivist-v7"></script>
   <script src="policies.js?site=archivist-v2"></script>
 </body>
 </html>

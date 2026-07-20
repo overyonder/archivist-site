@@ -1,9 +1,9 @@
 const features = [
   ["A curated history.", "View games in context through genre family trees and platform timelines spanning the 1950s to today."],
-  ["Works out of the box.", "Archivist includes more than 1,800 launch configurations and detects installed emulators."],
+  ["Pre-configured to play.", "Archivist includes more than 1,800 launch configurations and detects installed emulators."],
   ["Suits your needs—and your taste.", "Archivist supports a selectable tint colour, system light and dark modes, and an 8:1 high-contrast option."],
   ["Checks every byte.", "Review preservation catalogues, emulators, system firmware, selected releases, and collection state."],
-  ["Suits however you play.", "Use every primary Archivist screen and launch games entirely with a controller."],
+  ["Suits however you play.", "In development: browse the catalogue and launch games without leaving the controller."],
   ["Runs like lightning.", "Archivist compiles 2,151,769 catalogue-manifest rows in 1.314 seconds. A 222,242-entry snapshot from network-attached storage is applied to the frontend in 420 milliseconds."],
 ];
 

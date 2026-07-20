@@ -41,7 +41,7 @@
       <p class="eyebrow">Performance engineering · measured implementation · July 2026</p>
       <h1>How fast can Archivist load a large collection?</h1>
       <p class="hero-result"><strong>222,242 filesystem entries applied in 420&nbsp;ms.</strong></p>
-      <p class="hero-lede">Archivist is a desktop frontend for curating, verifying and launching large video-game collections. Its catalogue compiler, storage-side Historian service, hashing pipeline and desktop backend are native Rust. Tauri provides the current embedded-browser interface, while collection processing remains in native code. The measured snapshot contained 210,840 files and 11,402 directories.</p>
+      <p class="hero-lede">Archivist is a desktop frontend for curating, verifying and launching large video game collections. Its catalogue compiler, storage-side Historian service, hashing pipeline and desktop backend are native Rust. Tauri provides the current embedded-browser interface, while collection processing remains in native code. The measured snapshot contained 210,840 files and 11,402 directories.</p>
     </header>
 
     <div class="article-layout">
@@ -74,7 +74,7 @@
         <section id="principle">
           <span class="section-no">02 / Archivist’s starting point</span>
           <h2>Archivist starts with native Rust.</h2>
-          <p>Archivist's catalogue compiler builds the playable catalogue and verification index. Its Historian service inventories storage, hashes files and matches them to catalogue evidence. The snapshot encoder and Tauri desktop backend are also native Rust, giving Archivist direct control over allocation, memory layout, concurrency and filesystem access. The remaining gains come from deciding where the data lives and how each consumer reads it.</p>
+          <p>Archivist’s catalogue compiler builds the playable catalogue and verification index. Its Historian service inventories storage, hashes files and matches them to catalogue evidence. The snapshot encoder and Tauri desktop backend are also native Rust, giving Archivist direct control over allocation, memory layout, concurrency and filesystem access. The remaining gains come from deciding where the data lives and how each consumer reads it.</p>
           <p>A player can move from a platform timeline to a genre family tree, inspect release evidence, browse cover art and launch a game. Delayed searches or stuttering lists make a large collection feel cumbersome, however quickly the underlying query completed.</p>
           <p><strong>Our target is 144 frames per second on every screen.</strong> Each rendered frame gets 6.94 milliseconds. Process creation may exceed that budget during startup, but every interaction after startup must fit within it.</p>
           <p>Archivist keeps the selected catalogue native and resident, and it loads the storage snapshot before browsing begins. The renderer creates only the rows currently on screen while every catalogue record remains immediately addressable.</p>
@@ -93,7 +93,7 @@
           </div>
           <div class="cards">
             <div class="card"><span>Appliance deployment</span><h3>One static musl binary</h3><p>The storage service is a statically linked x86-64 executable that can be copied onto Linux NAS appliances such as TrueNAS SCALE.</p></div>
-            <div class="card"><span>Protocol split</span><h3>HTTP bulk, WebSocket propagation</h3><p>Bulk snapshots use one authenticated compressed response. A persistent Rust-to-Rust WebSocket carries status and generation notices without exposing historian credentials to JavaScript.</p></div>
+            <div class="card"><span>Protocol split</span><h3>HTTP bulk, WebSocket propagation</h3><p>Bulk snapshots use one authenticated compressed response. A persistent Rust-to-Rust WebSocket carries status and generation notices without exposing Historian credentials to JavaScript.</p></div>
             <div class="card"><span>Mutable evidence</span><h3>Restartable SQLite journal</h3><p>A SQLite write-ahead log stores restartable digest records for each file. Hashing happens outside short batched transactions. Immutable interface snapshots are cached separately.</p></div>
             <div class="card"><span>Snapshot semantics</span><h3>The scan time is explicit</h3><p>The UI reports when storage was last scanned. Changes made while the filesystem was offline appear after the next scan.</p></div>
           </div>
@@ -102,7 +102,7 @@
         <section id="hydration">
           <span class="section-no">04 / frontend loading</span>
           <h2>Reducing frontend loading from 4.9 seconds to 420 milliseconds.</h2>
-          <p>The earliest measured Historian snapshot reproduced the JavaScript frontend's object graph in MessagePack, including a full path in every entry. That representation repeated strings throughout the graph and spent 3.0 seconds in JavaScript decoding. We replaced named maps with tuples, full paths with parent indices and row objects with aligned field columns. The Rust backend then compressed the complete snapshot with gzip. Together, those changes cut the interval from HTTP request to completed frontend application from 4,911 to 420 milliseconds.</p>
+          <p>The earliest measured Historian snapshot reproduced the JavaScript frontend’s object graph in MessagePack, including a full path in every entry. That representation repeated strings throughout the graph and spent 3.0 seconds in JavaScript decoding. We replaced named maps with tuples, full paths with parent indices and row objects with aligned field columns. The Rust backend then compressed the complete snapshot with gzip. Together, those changes cut the interval from HTTP request to completed frontend application from 4,911 to 420 milliseconds.</p>
           <div class="table-wrap">
             <table>
               <caption>The optimisation sequence</caption>
@@ -116,7 +116,7 @@
               </tbody>
             </table>
           </div>
-          <p>The current request spent 51 milliseconds fetching the snapshot and 28 milliseconds crossing the Tauri boundary. Browser decoding and path reconstruction took 227 milliseconds, and the frontend finished applying the snapshot 420 milliseconds after the request began. Without restarting Archivist, that measured process reached the same applied state 1.167 seconds after process launch. A parallel Rust thread produced the backend's resident copy in 174 milliseconds without delaying the interface.</p>
+          <p>The current request spent 51 milliseconds fetching the snapshot and 28 milliseconds crossing the Tauri boundary. Browser decoding and path reconstruction took 227 milliseconds, and the frontend finished applying the snapshot 420 milliseconds after the request began. Without restarting Archivist, that measured process reached the same applied state 1.167 seconds after process launch. A parallel Rust thread produced the backend’s resident copy in 174 milliseconds without delaying the interface.</p>
         </section>
 
         <section id="compiler">
@@ -157,7 +157,7 @@
         <section id="formats">
           <span class="section-no">06 / format tournament</span>
           <h2>Choosing the snapshot format.</h2>
-          <p>Archivist uses MessagePack for the snapshot's small, irregular header. The repetitive rows use a <strong>custom binary, padded structure-of-arrays (SoA) layout</strong>. Each field occupies a contiguous column, and the encoder pads each column boundary to its required alignment. A single zero-terminated UTF-8 blob holds the file basenames. JavaScript can create typed-array views over the numeric columns directly without allocating millions of row objects.</p>
+          <p>Archivist uses MessagePack for the snapshot’s small, irregular header. The repetitive rows use a <strong>custom binary, padded structure-of-arrays (SoA) layout</strong>. Each field occupies a contiguous column, and the encoder pads each column boundary to its required alignment. A single zero-terminated UTF-8 blob holds the file basenames. JavaScript can create typed-array views over the numeric columns directly without allocating millions of row objects.</p>
           <p>The format gives us control over where every bit lands. A pass reads only the columns it needs, and the next value is already beside the current one in memory. There are no per-row object headers or pointers to chase through the heap. That layout maximises cache locality and keeps the decoder in the same tight loop for every row.</p>
           <p>The regular loop is also friendly to branch prediction. Tagged object fields, optional values and lexical token streams introduce data-dependent decisions. Fixed columns keep the hot path predictable. Our benchmark measures total decode time, so we don’t assign a separate number to branch prediction, but it is one reason we prefer the simpler layout when two formats compress to a similar size.</p>
           <div class="table-wrap">
@@ -292,7 +292,7 @@
         <section id="hardware">
           <span class="section-no">10 / CPU feature audit</span>
           <h2>The TrueNAS virtual machine hides useful CPU instructions.</h2>
-          <p>The physical Intel N100 processor exposes vector, carry-less multiplication and hash acceleration through instruction-set extensions including AVX2, PCLMULQDQ and SHA-NI. The TrueNAS virtual machine presents an <code>x86-64-v2-AES</code> virtual CPU that hides those extensions. Archivist's portable static binary already contains runtime-selected assembly implementations, but software inside a virtual machine can't select instructions that its virtual CPU doesn't advertise.</p>
+          <p>The physical Intel N100 processor exposes vector, carry-less multiplication and hash acceleration through instruction-set extensions including AVX2, PCLMULQDQ and SHA-NI. The TrueNAS virtual machine presents an <code>x86-64-v2-AES</code> virtual CPU that hides those extensions. Archivist’s portable static binary already contains runtime-selected assembly implementations, but software inside a virtual machine can’t select instructions that its virtual CPU doesn’t advertise.</p>
           <div class="table-wrap">
             <table>
               <caption>One-run CPU-feature experiment · same static binary · hot 1 GiB sparse file</caption>
@@ -303,7 +303,7 @@
               </tbody>
             </table>
           </div>
-          <p class="note">The one-run host-versus-guest comparison identifies a likely opportunity, but it doesn't support a production claim. The host and virtual machine are different execution environments, and each result comes from one run. The 3.8× SHA-1 difference is consistent with SHA-NI becoming available; the 52% combined-digest difference is more representative of Archivist's workload. The next test is to expose the host CPU to the TrueNAS virtual machine during a maintenance window and rerun the controlled benchmark.</p>
+          <p class="note">The one-run host-versus-guest comparison identifies a likely opportunity, but it doesn’t support a production claim. The host and virtual machine are different execution environments, and each result comes from one run. The 3.8× SHA-1 difference is consistent with SHA-NI becoming available; the 52% combined-digest difference is more representative of Archivist’s workload. The next test is to expose the host CPU to the TrueNAS virtual machine during a maintenance window and rerun the controlled benchmark.</p>
           <div class="table-wrap">
             <table>
               <caption>Acceleration opportunities</caption>
@@ -344,7 +344,7 @@
           <h2>What a native renderer would change.</h2>
           <p>The embedded-browser path now applies the live snapshot in 420 milliseconds. Its remaining costs include Tauri interprocess communication, JavaScript decoding and object materialisation, garbage collection, document styling and layout, and a second catalogue representation.</p>
           <p>A native renderer would keep the compressed snapshot and presentation models in one Rust process. Storage and network costs would remain the same, but Archivist would gain direct control over allocation, layout, text shaping, GPU uploads, draw submission, input latency and frame pacing.</p>
-          <p>A native-renderer experiment should begin with one vertical slice of Archivist's largest timeline or verification tree, using the existing interface as its visual contract.</p>
+          <p>A native-renderer experiment should begin with one vertical slice of Archivist’s largest timeline or verification tree, using the existing interface as its visual contract.</p>
           <ol class="roadmap">
             <li><strong>Freeze the visual contract.</strong><span>Extract colours, type scale, spacing, borders, shadows, animation curves and responsive rules into shared design tokens. Capture reference screenshots for every state and viewport.</span></li>
             <li><strong>Separate presentation models from DOM models.</strong><span>Move sorting, grouping, selection and row projection into Rust read models backed by the existing resident SoA catalogue. Keep full data resident and virtualise only visual nodes.</span></li>
@@ -362,8 +362,8 @@
           <h2>How the measurements were taken.</h2>
           <p>All results in this article are development measurements from the copied corpora and hardware described beside each table. Comparative runs used release binaries. The 2.15 million figure counts manifest media rows; the 222,242 figure counts files and directories in the Historian snapshot. Neither figure counts playable games.</p>
           <div class="cards">
-            <div class="card"><span>Benchmark mirror</span><h3>12,297 catalogue files · 1.77 GB copied locally</h3><p>Archivist's selected catalogue policy contains 1,221 manifests. The exact subset accepted by Archivist, OxyROMon and Igir contains 503 files and 487,201,103 bytes.</p></div>
-            <div class="card"><span>Live storage corpus</span><h3>222,242 filesystem entries</h3><p>210,840 files and 11,402 directories in the measured historian snapshot. These entries aren’t all distinct playable games.</p></div>
+            <div class="card"><span>Benchmark mirror</span><h3>12,297 catalogue files · 1.77 GB copied locally</h3><p>Archivist’s selected catalogue policy contains 1,221 manifests. The exact subset accepted by Archivist, OxyROMon and Igir contains 503 files and 487,201,103 bytes.</p></div>
+            <div class="card"><span>Live storage corpus</span><h3>222,242 filesystem entries</h3><p>210,840 files and 11,402 directories in the measured Historian snapshot. These entries aren’t all distinct playable games.</p></div>
             <div class="card"><span>Output semantics</span><h3>Purpose-built compiler output</h3><p>Archivist builds the resident strongest-digest evidence it needs. Other tools may perform additional relational, reporting or repair work.</p></div>
             <div class="card"><span>Cache effects</span><h3>Reported with each result</h3><p>ZFS ARC, Linux page cache and run order materially affect disk tests. Cold, warm and one-run figures are labelled where known.</p></div>
           </div>
@@ -398,7 +398,7 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. This site also stores your theme preference in your browser. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>

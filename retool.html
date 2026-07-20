@@ -29,6 +29,10 @@
       <a href="launching">Ready to Launch</a><i aria-hidden="true">|</i>
       <a href="retool" aria-current="page">Reviving Retool</a><i aria-hidden="true">|</i>
       <a href="performance">Performance</a>
+      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
+        <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
+        <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
+      </span>
     </nav>
   </header>
   <main>
@@ -56,7 +60,7 @@
           <span class="section-no">01 / what Retool solved</span>
           <h2>One Game, One ROM needed more than a region filter.</h2>
           <p>A preservation catalogue file, commonly called a DAT, can contain dozens of releases of the same game. Regions, languages, revisions, budget rereleases, compilations and prototypes all sit beside one another. Traditional One Game, One ROM selection relies heavily on parent-and-clone links and region order. That can select a French release because Canada ranked first, or an older revision because it happened to appear earlier in the file.</p>
-          <p><a href="https://unexpectedpanda.github.io/retool/retool-1g1r/">Retool, created by unexpectedpanda, tackled the harder question</a>. It ignored the parent-and-clone assignments inherited from the input catalogue, derived relationships from normalized title names, and supplemented them with human-maintained lists of equivalent releases. Region, language, version, release status and edition all became ordered policy rather than a single score.</p>
+          <p><a href="https://unexpectedpanda.github.io/retool/retool-1g1r/">Retool, created by unexpectedpanda, tackled the harder question</a>. It ignored the parent-and-clone assignments inherited from the input catalogue, derived relationships from normalised title names, and supplemented them with human-maintained lists of equivalent releases. Region, language, version, release status and edition all became ordered policy rather than a single score.</p>
           <p>It also understood that some decisions require research. A compilation may supersede several separate releases. A regional title may be the same game under another name. A cosmetic reskin may belong to the same family, while a release with new levels deserves its own identity. Retool recorded that knowledge instead of asking every user to rediscover it.</p>
           <p class="pullquote">Retool’s great contribution was treating curation as a body of knowledge that software could apply repeatedly.</p>
           <p><a href="https://github.com/unexpectedpanda/retool/issues/337">Retool is no longer maintained</a>, but its idea and carefully assembled tables still form part of Archivist’s selection policy.</p>
@@ -102,7 +106,7 @@
           <div class="cards">
             <div class="card"><span>Acceptance boundary</span><h3>Choose the source</h3><p>A manifest contributes playable titles only after review shows that it adds in-scope games or game hardware to the system.</p></div>
             <div class="card"><span>Shared policy</span><h3>Handle familiar signals</h3><p>Retool-derived tables rank regions, languages, revisions, video standards and editions, while filtering demos, prototypes, bad dumps and other known tags.</p></div>
-            <div class="card"><span>Clone knowledge</span><h3>Join title families</h3><p>Built-in clone lists connect regional names, compilations, supersets and awkward families that normalization can’t discover mechanically.</p></div>
+            <div class="card"><span>Clone knowledge</span><h3>Join title families</h3><p>Built-in clone lists connect regional names, compilations, supersets and awkward families that normalisation can’t discover mechanically.</p></div>
             <div class="card"><span>Manual adjudication</span><h3>Record the exception</h3><p>Exact includes, excludes and fully curated source projections preserve decisions that require research into the release itself.</p></div>
           </div>
           <p>A broad rule can reject entries marked <code>(Unl)</code>, but some original-era commercial unlicensed games belong in the canon. A <code>Games</code> category can still contain a sewing-machine controller. A title with <code>Collection</code> in its name may be a redundant package or the only surviving release of unique material. Those cases become source-owned decisions with an explicit action and a stable canonical identity.</p>
@@ -161,7 +165,7 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. This site also stores your theme preference in your browser. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>

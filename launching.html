@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How Archivist replaces emulator profiles and platform associations with composable, system-parameterized launch plans for everything from VAPF to MAME.">
+  <meta name="description" content="How Archivist replaces emulator profiles and platform associations with composable, system-parameterised launch plans for everything from VAPF to MAME.">
   <title>Ready to Launch — Archivist</title>
   <link rel="canonical" href="https://archivist.over-yonder.tech/launching">
   <meta property="og:title" content="Ready to Launch — Archivist">
-  <meta property="og:description" content="How Archivist replaces emulator profiles and platform associations with composable, system-parameterized launch plans for everything from VAPF to MAME.">
+  <meta property="og:description" content="How Archivist replaces emulator profiles and platform associations with composable, system-parameterised launch plans for everything from VAPF to MAME.">
   <meta property="og:url" content="https://archivist.over-yonder.tech/launching">
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://archivist.over-yonder.tech/assets/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Ready to Launch","description":"How Archivist replaces emulator profiles and platform associations with composable, system-parameterized launch plans for everything from VAPF to MAME.","url":"https://archivist.over-yonder.tech/launching","image":"https://archivist.over-yonder.tech/assets/social-card.png","author":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Ready to Launch","description":"How Archivist replaces emulator profiles and platform associations with composable, system-parameterised launch plans for everything from VAPF to MAME.","url":"https://archivist.over-yonder.tech/launching","image":"https://archivist.over-yonder.tech/assets/social-card.png","author":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <script src="theme.js?v=2"></script>
   <link rel="stylesheet" href="performance.css?site=archivist-v5">
@@ -29,6 +29,10 @@
       <a href="launching" aria-current="page">Ready to Launch</a><i aria-hidden="true">|</i>
       <a href="retool">Reviving Retool</a><i aria-hidden="true">|</i>
       <a href="performance">Performance</a>
+      <span class="theme-toggle" data-theme-toggle role="group" aria-label="Colour theme: following system">
+        <button class="theme-choice" data-theme-choice="light" type="button" aria-label="Use light theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16"/></svg></button>
+        <button class="theme-choice" data-theme-choice="dark" type="button" aria-label="Use dark theme" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.8A7 7 0 0 1 7.2 3.2 7 7 0 1 0 16.8 12.8Z"/></svg></button>
+      </span>
     </nav>
   </header>
 
@@ -78,8 +82,8 @@
         </section>
 
         <section id="model">
-          <span class="section-no">03 / Archivist's model</span>
-          <h2>Parameterize what differs. Share what doesn’t.</h2>
+          <span class="section-no">03 / Archivist’s model</span>
+          <h2>Parameterise what differs. Share what doesn’t.</h2>
           <p>Archivist gives every property that genuinely varies a typed place in the launch schema: the executable, core or machine target, media slots, BIOS choice, search paths, generated configuration and lifecycle hooks. Behaviour that doesn’t vary is federated into reusable modules instead of being copied into every system.</p>
           <p>The schema documents the interdependencies too. It knows which firmware belongs to a machine, which media a slot accepts, which files may be written, and which resources must exist before launch. A system definition supplies only its concrete values and genuine exceptions.</p>
           <p>The result is a minimum-surface-area launch definition that Archivist can inspect, validate and invoke from any interface. A thousand system associations don’t imply a thousand copies of slightly different RetroArch commands that the user has to do as homework. You’re here to explore video game history, so the tool shouldn’t make you feel like you have to research and write a specification yourself just to get things running.</p>
@@ -96,7 +100,7 @@
           <p>Archivist’s launch layer can bridge the remaining filesystem assumptions with low-level operating-system facilities such as named pipes, bind mounts or mapped drives, and process substitution. Each gives an emulator the path or file-like handle it expects while the underlying save or configuration remains in the player’s chosen archive.</p>
           <figure class="save-layout">
             <div>
-              <figcaption>Organized by emulator</figcaption>
+              <figcaption>Organised by emulator</figcaption>
               <pre><code>LaunchBox/
 └── Emulators/
     ├── MAME/
@@ -108,7 +112,7 @@
     └── Standalone/</code></pre>
             </div>
             <div class="save-layout-player">
-              <figcaption>Organized for the player</figcaption>
+              <figcaption>Organised for the player</figcaption>
               <pre><code>Saves/
 ├── Ultima 7/
 ├── Mass Effect 2/
@@ -117,7 +121,7 @@
               <small>Each game can keep its saves, states and settings together.</small>
             </div>
           </figure>
-          <p>Archivist lets you choose the archival structure instead. You might point it at a network-attached storage folder that’s backed up regularly, with one recognizable directory per game and everything worth keeping inside it. It doesn’t matter whether the game ran through MAME, RetroArch, a standalone emulator or Steam. Your saves are in one place: easy to find, easy to browse, easy to protect—and easy to reminisce over later.</p>
+          <p>Archivist lets you choose the archival structure instead. You might point it at a network-attached storage folder that’s backed up regularly, with one recognisable directory per game and everything worth keeping inside it. It doesn’t matter whether the game ran through MAME, RetroArch, a standalone emulator or Steam. Your saves are in one place: easy to find, easy to browse, easy to protect—and easy to reminisce over later.</p>
         </section>
 
         <section id="vapf">
@@ -131,7 +135,7 @@
 GAMEfilename = "{vault_game}"</code></pre>
             <div><span>Prepared launch</span><code>VAPF.exe</code><small>Starts with launch-owned configuration in the required directory.</small></div>
           </div>
-          <p>In Archivist, those steps are the VAPF module's pre-flight stage. They remain visible to the system launch definition, use the same resource vocabulary as every other emulator, and don’t require the user to discover and maintain a separate wrapper.</p>
+          <p>In Archivist, those steps are the VAPF module’s pre-flight stage. They remain visible to the system launch definition, use the same resource vocabulary as every other emulator, and don’t require the user to discover and maintain a separate wrapper.</p>
         </section>
 
         <section id="mame">
@@ -148,7 +152,7 @@ GAMEfilename = "{vault_game}"</code></pre>
             <p>…an arcade cabinet can add a coin hopper</p>
             <p>…and a pinball machine adds a tilt switch. Press <kbd>T</kbd> in MAME to bump the table and see how it punished players who tried to cheat.</p>
           </blockquote>
-          <p>Archivist's MAME module records those relationships directly. A simple arcade board supplies only a few values. A computer backed by a MAME software list can add its host, slot, software identity and dependency roots without forking the launcher or pretending every required archive belongs to the game.</p>
+          <p>Archivist’s MAME module records those relationships directly. A simple arcade board supplies only a few values. A computer backed by a MAME software list can add its host, slot, software identity and dependency roots without forking the launcher or pretending every required archive belongs to the game.</p>
           <p>The direction of travel is encouraging. DOSBox once presented frontends with a similar pile of mounts, working directories, configuration and startup commands for every game. <a href="https://www.dosbox-staging.org/0.83/manual/using-dosbox-staging/command-line/">DOSBox Staging</a> can now accept a game directory or executable directly and layer per-game configuration over shared defaults. The <a href="https://docs.libretro.com/library/dosbox_pure/">libretro DOSBox Pure core</a> that Archivist uses goes further towards a console-like contract, with the game loaded as content through libretro’s shared interface. Progress in emulator projects and the libretro ecosystem keeps shrinking the special-case surface that a frontend has to own.</p>
           <div class="cards">
             <div class="card"><span>Machine</span><h3>The emulated host</h3><p>The system selects the MAME machine target and any machine-specific switches.</p></div>
@@ -162,7 +166,7 @@ GAMEfilename = "{vault_game}"</code></pre>
         <section id="payoff">
           <span class="section-no">07 / the payoff</span>
           <h2>Pre-configured should mean complete.</h2>
-          <p>Archivist's approach is better for its particular promise: making an unusually broad historical collection playable without turning every unusual machine into a research exercise. The product owns the launch knowledge, so a system definition can say what it needs and the shared modules can say how to provide it.</p>
+          <p>Archivist’s approach is better for its particular promise: making an unusually broad historical collection playable without turning every unusual machine into a research exercise. The product owns the launch knowledge, so a system definition can say what it needs and the shared modules can say how to provide it.</p>
           <div class="table-wrap">
             <table>
               <caption>Where each abstraction places launch knowledge</caption>
@@ -183,7 +187,7 @@ GAMEfilename = "{vault_game}"</code></pre>
   <footer class="article-footer">
     <div class="footer-inner">
       <h2>Video game history, made playable.</h2>
-      <p>Archivist curates the collection, verifies the media, resolves the dependencies and builds the launch plan. Even unusual hardware arrives as part of the library, with its configuration already handled.</p>
+      <p>Archivist curates the collection, verifies the media, resolves the dependencies and builds the launch plan. Even unusual hardware arrives as part of the collection, with its configuration already handled.</p>
       <div class="footer-links">
         <a href="https://over-yonder.tech/">Visit over|yonder</a>
         <a href="retool">Read Reviving Retool</a>
@@ -204,7 +208,7 @@ GAMEfilename = "{vault_game}"</code></pre>
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>This site uses no analytics, advertising trackers, or cookies. It stores only your theme preference in your browser. The early-access button is currently inactive, so this site collects no contact details. When signups open, we’ll use supplied addresses only to send one email when Archivist is ready to accept early-access signups. We won’t add you to any other marketing list.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. This site also stores your theme preference in your browser. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
