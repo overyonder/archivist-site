@@ -48,8 +48,6 @@
     .signup small { display: block; max-width: none; margin-top: 9px; }
     .early-access-benefit { max-width: 470px; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
     .early-access-benefit strong { color: var(--text); }
-    .pro-preview-link { display: inline-block; margin-top: 10px; color: var(--accent); font: 700 10px ui-monospace, monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
-    .pro-preview-link:hover { text-decoration: underline; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
     .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
@@ -89,12 +87,12 @@
     .site-footer a { text-decoration: none; }
     .site-footer a:hover, .site-footer button:hover { color: var(--accent); }
     .footer-policies { display: flex; align-items: center; gap: 12px; }
-    .footer-policies button { padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+    .footer-policies button { display: inline-flex; align-items: center; padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
     .footer-policies i { color: var(--line-bright); font-style: normal; }
-    .piracy-mark { width: 14px; height: 14px; margin-left: 4px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+    .piracy-mark { display: block; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
     .piracy-mark .icon-fill { fill: currentColor; stroke: none; }
     .piracy-mark .icon-cut { fill: var(--bg); stroke: none; }
-    .piracy-modal-mark { width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
+    .piracy-modal-mark { display: inline-block; width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
     @media (min-width: 901px) {
       body.landing-page main {
         height: max-content;
@@ -193,7 +191,6 @@
             <button type="button" disabled>Get notified for early access</button>
           </div>
         </form>
-        <a class="pro-preview-link" href="pro">Preview Free &amp; Pro →</a>
       </div>
       <ul class="facts" aria-label="Product highlights">
         <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>

@@ -181,12 +181,12 @@ tr.shipped td { color: var(--text); background: #151108; }
 .legal-footer a { text-decoration: none; }
 .legal-footer a:hover, .legal-footer button:hover { color: var(--accent); }
 .legal-links { display: flex; align-items: center; gap: 12px; }
-.legal-links button { padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.legal-links button { display: inline-flex; align-items: center; padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
 .legal-links i { color: var(--line-bright); font-style: normal; }
-.piracy-mark { width: 14px; height: 14px; margin-left: 4px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.piracy-mark { display: block; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 .piracy-mark .icon-fill { fill: currentColor; stroke: none; }
 .piracy-mark .icon-cut { fill: var(--bg); stroke: none; }
-.piracy-modal-mark { width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
+.piracy-modal-mark { display: inline-block; width: 22px; height: 22px; margin-left: 8px; vertical-align: -4px; }
 .legal-dialog { width: min(520px, calc(100vw - 32px)); padding: 0; color: var(--text); background: var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 90px #000b; }
 .legal-dialog::backdrop { background: #000a; backdrop-filter: blur(3px); }
 .legal-dialog div { padding: 28px; }
