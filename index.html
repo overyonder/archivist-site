@@ -73,7 +73,7 @@
       .slide { transition: none; }
     }
     .app-demo { width: 125%; height: 125%; display: block; border: 0; background: #080706; transform: scale(.8); transform-origin: top left; }
-    .facts { grid-template-columns: .92fr 1.14fr .94fr; overflow: visible; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
     .facts li { min-width: 0; }
     .facts span, .fact-link { overflow-wrap: anywhere; word-break: normal; }
     .fact-link { display: inline-block !important; margin-top: 8px !important; color: var(--accent) !important; font: 700 9px ui-monospace, monospace; letter-spacing: .04em; text-decoration: none; }
@@ -152,8 +152,6 @@
       <a href="launching">Ready to Launch</a>
       <i aria-hidden="true">|</i>
       <a href="retool">Reviving Retool</a>
-      <i aria-hidden="true">|</i>
-      <a href="performance">Performance deep dive</a>
     </nav>
     <div class="header-actions">
       <details class="mobile-nav">
@@ -162,7 +160,6 @@
           <a href="pro">Free &amp; Pro</a>
           <a href="launching">Ready to Launch</a>
           <a href="retool">Reviving Retool</a>
-          <a href="performance">Performance deep dive</a>
         </nav>
       </details>
       <a class="header-link" href="pro">Free &amp; Pro</a>
@@ -194,9 +191,8 @@
         </form>
       </div>
       <ul class="facts" aria-label="Product highlights">
-        <li><strong>82</strong><span>distinct emulators across 1,800+ mappings from historical systems to launch configurations</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>
-        <li><strong>1,477</strong><span>rules select the best version of each game</span><a class="fact-link" href="retool">Why we’re reviving Retool →</a></li>
-        <li><strong>222,242</strong><span>files and folders applied to the live interface in 0.42 seconds</span><a class="fact-link" href="performance">Read the tech deep dive →</a></li>
+        <li><strong>190</strong><span>emulator definitions map 840 gaming systems through 976 emulator-to-system relationships</span><a class="fact-link" href="launching">Read Ready to Launch →</a></li>
+        <li><strong>29,567+</strong><span>human-reviewed system and title records—16,111 more than the original Retool relationship table</span><a class="fact-link" href="retool">Why we’re reviving Retool →</a></li>
       </ul>
     </section>
 
