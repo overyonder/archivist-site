@@ -40,6 +40,13 @@ jobs:
             theme.css \
             theme.js \
             public/
+          if rg -n \
+            'static\.cloudflareinsights\.com/beacon\.min\.js|data-cf-beacon' \
+            public --glob '*.html'
+          then
+            echo "::error::Cloudflare Web Analytics is injected automatically; remove manual beacon snippets."
+            exit 1
+          fi
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
