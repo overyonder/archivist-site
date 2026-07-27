@@ -16,6 +16,10 @@ import_map = "./functions/deno.json"
 verify_jwt = false
 import_map = "./functions/deno.json"
 
+[functions.resend-events]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
 [functions.reconcile-early-access]
 verify_jwt = false
 import_map = "./functions/deno.json"

@@ -19,7 +19,7 @@ export async function markPreferenceSynchronized(
   status: "OPT_IN" | "OPT_OUT",
 ): Promise<void> {
   const now = new Date().toISOString();
-  const { error } = await db.from("ses_contact_preferences").update({
+  const { error } = await db.from("email_contact_preferences").update({
     observed_status: status,
     sync_status: "synced",
     last_attempted_at: now,
@@ -34,13 +34,13 @@ export async function markPreferenceFailed(
   contactId: string,
   reason: unknown,
 ): Promise<void> {
-  const { error } = await db.from("ses_contact_preferences").update({
+  const { error } = await db.from("email_contact_preferences").update({
     sync_status: "failed",
     last_attempted_at: new Date().toISOString(),
     synchronized_at: null,
     failure_reason: errorMessage(reason),
   }).eq("contact_id", contactId).eq("topic_name", "archivist-early-access");
-  if (error) console.error("Could not record SES preference failure", error);
+  if (error) console.error("Could not record email preference failure", error);
 }
 
 export function errorMessage(error: unknown): string {

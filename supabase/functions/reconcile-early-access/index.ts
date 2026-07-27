@@ -6,7 +6,11 @@ import {
   markPreferenceSynchronized,
 } from "../_shared/database.ts";
 import { authorizedInternalRequest } from "../_shared/internal.ts";
-import { sendConfirmation, synchronizePreference } from "../_shared/ses.ts";
+import {
+  sendConfirmation,
+  sendsProviderPreferences,
+  synchronizePreference,
+} from "../_shared/email.ts";
 import { actionToken } from "../_shared/token.ts";
 
 Deno.serve(async (request) => {
@@ -21,12 +25,15 @@ Deno.serve(async (request) => {
   let preferencesSynchronized = 0;
   let confirmationsSent = 0;
 
-  const { data: preferences, error: preferenceQueryError } = await db
-    .from("ses_contact_preferences")
-    .select("contact_id, desired_status")
-    .in("sync_status", ["pending", "failed"])
-    .order("updated_at")
-    .limit(25);
+  const { data: preferences, error: preferenceQueryError } =
+    sendsProviderPreferences()
+      ? await db
+        .from("email_contact_preferences")
+        .select("contact_id, desired_status")
+        .in("sync_status", ["pending", "failed"])
+        .order("updated_at")
+        .limit(25)
+      : { data: [], error: null };
   if (preferenceQueryError) throw preferenceQueryError;
 
   for (const preference of preferences ?? []) {
@@ -49,7 +56,7 @@ Deno.serve(async (request) => {
       );
       preferencesSynchronized++;
     } catch (error) {
-      console.error("SES preference reconciliation failed", error);
+      console.error("Email preference reconciliation failed", error);
       await markPreferenceFailed(db, preference.contact_id, error);
     }
   }
@@ -86,21 +93,22 @@ Deno.serve(async (request) => {
         `/functions/v1/confirm-early-access?t=${encodeURIComponent(token)}`,
         requiredEnv("SUPABASE_URL"),
       ).toString();
-      const sesMessageId = await sendConfirmation(
+      const providerMessageId = await sendConfirmation(
         contact.email,
         confirmationUrl,
         delivery.id,
+        idempotencyKey,
       );
       const now = new Date().toISOString();
       const results = await Promise.all([
         db.from("delivery_attempts").update({
           completed_at: now,
           outcome: "accepted",
-          ses_message_id: sesMessageId,
+          provider_message_id: providerMessageId,
         }).eq("idempotency_key", idempotencyKey),
         db.from("deliveries").update({
           status: "accepted",
-          ses_message_id: sesMessageId,
+          provider_message_id: providerMessageId,
           accepted_at: now,
           claimed_at: null,
           claim_expires_at: null,

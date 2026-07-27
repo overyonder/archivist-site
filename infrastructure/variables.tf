@@ -34,6 +34,18 @@ variable "notification_email" {
   default = "hello@over-yonder.tech"
 }
 
+variable "resend_api_key" {
+  description = "Send-only Resend API key restricted to over-yonder.tech."
+  type        = string
+  sensitive   = true
+}
+
+variable "resend_webhook_secret" {
+  description = "Signing secret for the Resend delivery-event webhook."
+  type        = string
+  sensitive   = true
+}
+
 locals {
   domain                 = "over-yonder.tech"
   site_domain            = "archivist.over-yonder.tech"

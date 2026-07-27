@@ -5,7 +5,7 @@ import {
   markPreferenceSynchronized,
 } from "../_shared/database.ts";
 import { redirect } from "../_shared/http.ts";
-import { synchronizePreference } from "../_shared/ses.ts";
+import { synchronizePreference } from "../_shared/email.ts";
 import { tokenHash } from "../_shared/token.ts";
 
 Deno.serve(async (request) => {
@@ -34,7 +34,7 @@ Deno.serve(async (request) => {
     await synchronizePreference(data.email, "OPT_IN");
     await markPreferenceSynchronized(db, data.contact_id, "OPT_IN");
   } catch (syncError) {
-    console.error("SES opt-in synchronization failed", syncError);
+    console.error("Email opt-in synchronization failed", syncError);
     await markPreferenceFailed(db, data.contact_id, syncError);
   }
 

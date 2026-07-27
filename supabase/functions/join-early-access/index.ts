@@ -7,7 +7,7 @@ import {
   redirect,
   requestField,
 } from "../_shared/http.ts";
-import { sendConfirmation } from "../_shared/ses.ts";
+import { sendConfirmation } from "../_shared/email.ts";
 import {
   actionToken,
   requestFingerprint,
@@ -130,21 +130,22 @@ Deno.serve(async (request) => {
         ).toString();
 
         try {
-          const sesMessageId = await sendConfirmation(
+          const providerMessageId = await sendConfirmation(
             normalizedEmail,
             confirmationUrl,
             delivery.id,
+            idempotencyKey,
           );
           const now = new Date().toISOString();
           await Promise.all([
             db.from("delivery_attempts").update({
               completed_at: now,
               outcome: "accepted",
-              ses_message_id: sesMessageId,
+              provider_message_id: providerMessageId,
             }).eq("idempotency_key", idempotencyKey),
             db.from("deliveries").update({
               status: "accepted",
-              ses_message_id: sesMessageId,
+              provider_message_id: providerMessageId,
               accepted_at: now,
               attempted_at: now,
               attempt_count: 1,
@@ -154,13 +155,13 @@ Deno.serve(async (request) => {
             }).eq("id", delivery.id),
           ]);
         } catch (sendError) {
-          console.error("SES confirmation failed", sendError);
+          console.error("Confirmation email failed", sendError);
           const now = new Date().toISOString();
           await Promise.all([
             db.from("delivery_attempts").update({
               completed_at: now,
               outcome: "transient_failure",
-              failure_code: "ses_send",
+              failure_code: "email_send",
               failure_reason: errorMessage(sendError),
               claimed_at: null,
               claim_expires_at: null,
@@ -173,7 +174,7 @@ Deno.serve(async (request) => {
               next_attempt_at: new Date(Date.now() + 15 * 60 * 1_000)
                 .toISOString(),
               failure_class: "transient",
-              failure_code: "ses_send",
+              failure_code: "email_send",
               failure_reason: errorMessage(sendError),
             }).eq("id", delivery.id),
           ]);

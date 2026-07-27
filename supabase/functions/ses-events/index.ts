@@ -4,7 +4,7 @@ import {
   markPreferenceSynchronized,
 } from "../_shared/database.ts";
 import { earlyAccessTopic } from "../_shared/config.ts";
-import { synchronizePreference } from "../_shared/ses.ts";
+import { synchronizePreference } from "../_shared/email.ts";
 import {
   confirmSnsSubscription,
   type SnsEnvelope,
@@ -88,7 +88,7 @@ Deno.serve(async (request) => {
     event.bounce?.bounceType === "Permanent";
   const { data: recorded, error } = await db.rpc("record_delivery_event", {
     p_provider_event_id: envelope.MessageId,
-    p_ses_message_id: sesMessageId,
+    p_provider_message_id: sesMessageId,
     p_delivery_id: event.mail?.tags?.["delivery-id"]?.[0] || null,
     p_kind: kind,
     p_payload: event,
@@ -132,7 +132,8 @@ Deno.serve(async (request) => {
 
   if (recorded && (kind === "complaint" || hardBounce)) {
     const { data: delivery } = await db.from("deliveries")
-      .select("contact_id").eq("ses_message_id", sesMessageId).maybeSingle();
+      .select("contact_id").eq("provider_message_id", sesMessageId)
+      .maybeSingle();
     if (delivery?.contact_id) {
       const { data: contact } = await db.from("contacts")
         .select("email").eq("id", delivery.contact_id).single();

@@ -20,7 +20,7 @@ function client(): SESv2Client {
   });
 }
 
-export async function sendConfirmation(
+export async function sendSesConfirmation(
   email: string,
   confirmationUrl: string,
   deliveryId: string,
@@ -53,7 +53,7 @@ export async function sendConfirmation(
   return result.MessageId;
 }
 
-export async function synchronizePreference(
+export async function synchronizeSesPreference(
   email: string,
   status: "OPT_IN" | "OPT_OUT",
 ): Promise<void> {
