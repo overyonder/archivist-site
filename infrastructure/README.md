@@ -76,6 +76,13 @@ Provider credentials use their standard environment variables:
 - `RESEND_API_KEY` containing the full-access `archivist-opentofu` key;
 - `SUPABASE_ACCESS_TOKEN` for the Management API.
 
+Run production applies through `scripts/apply.sh`, not a bare `tofu apply`.
+The wrapper copies the already-encrypted state to
+`/mnt/archive/backups/archivist/opentofu/` only after a successful apply,
+records its SHA-256 checksum and source commit, and fails visibly if the
+TrueNAS archive is unavailable. A dirty source tree is rejected so the backup
+metadata always identifies the applied configuration.
+
 The Supabase Management API token and the full-scope AWS provisioning access-key
 pair are stored in SOPS. The provisioning user has no console password and is
 deliberately retained with `AdministratorAccess`, matching the policy of keeping
@@ -125,6 +132,15 @@ repository is public, and encrypted state still contains credential-bearing
 ciphertext and infrastructure metadata that must not be published. Back up the
 encrypted state to private storage with versioning and snapshots. Losing both
 the state and its passphrase requires importing the live resources again.
+
+Jarvis runs `archivist-supabase-backup.service` nightly. It connects through
+Supabase's TLS session pooler, streams PostgreSQL custom-format output directly
+through age encryption to `/mnt/archive/backups/archivist/supabase/`, and never
+writes a plaintext dump. Each completed backup has a checksum and JSON metadata
+recording the database version, `pg_dump` version, migration commit and UTC
+timestamp. Both registered recovery YubiKeys can decrypt the dump. TrueNAS's
+recursive `tank` snapshot tasks cover the archive with 14 daily, approximately
+13 weekly and 24 monthly restore points.
 
 Manual controls that cannot safely or usefully be represented as provider
 resources are tracked in [OPERATIONS.md](OPERATIONS.md). A control may be marked
