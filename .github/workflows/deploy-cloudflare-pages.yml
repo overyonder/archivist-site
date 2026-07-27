@@ -22,6 +22,7 @@ jobs:
             assets \
             early-access \
             early-access-form.js \
+            early-access-leave.js \
             early-access.css \
             index.html \
             launching.html \

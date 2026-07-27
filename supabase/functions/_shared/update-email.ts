@@ -9,14 +9,22 @@ export function updateEmail(
   slug: string,
   unsubscribeUrl: string,
 ): UpdateEmail {
-  if (slug !== "unsubscribe-test") {
+  if (
+    slug !== "unsubscribe-test" &&
+    slug !== "unsubscribe-rendering-test"
+  ) {
     throw new Error(`Unsupported early-access update: ${slug}`);
   }
 
+  const replacement = slug === "unsubscribe-rendering-test";
   const escapedUrl = escapeHtml(unsubscribeUrl);
   return {
-    subject: "Test: Archivist release-notification unsubscribe",
-    contentDigest: "unsubscribe-test-v1",
+    subject: replacement
+      ? "Test 2: Archivist unsubscribe confirmation"
+      : "Test: Archivist release-notification unsubscribe",
+    contentDigest: replacement
+      ? "unsubscribe-rendering-test-v1"
+      : "unsubscribe-test-v1",
     text: [
       "Archivist release-notification test",
       "",
