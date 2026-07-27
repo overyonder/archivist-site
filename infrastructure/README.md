@@ -27,6 +27,31 @@ Supabase's official CLI bundler from the toolchain pinned by `flake.lock`. The
 provider's native Edge Function resource uploads entrypoints without preserving
 the `../_shared` module layout, so it cannot deploy this source tree correctly.
 
+## Release notifications
+
+Release-update content is code-owned in
+`supabase/functions/_shared/update-email.ts`. Each template has an immutable
+slug, subject and content digest. Queue the matching metadata through
+`public.queue_early_access_update`; a repeated slug is idempotent and different
+metadata for an existing slug is rejected.
+
+The queue selects only confirmed, locally opted-in, synchronized and
+unsuppressed contacts. `reconcile-early-access` claims those deliveries,
+creates a per-recipient removal token, and sends the update. Every update has a
+visible removal link plus RFC 8058 `List-Unsubscribe` and
+`List-Unsubscribe-Post` headers. A normal `GET` asks for confirmation, while an
+email client's one-click `POST` removes the recipient immediately. Both paths
+update the membership, consent audit log and provider-neutral preference state
+before any later delivery can be claimed.
+
+Before queueing a new production update:
+
+1. add and review its code-owned template;
+2. deploy the template and its content digest;
+3. call `queue_early_access_update` with the deployed source revision;
+4. invoke the internal reconciler until no queued delivery remains;
+5. verify accepted, delivered, bounced and unsubscribe outcomes in Supabase.
+
 ## Credentials and state
 
 OpenTofu state and saved plans are AES-GCM encrypted. Supply the encryption

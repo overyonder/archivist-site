@@ -1,8 +1,10 @@
 import {
   sendSesConfirmation,
+  sendSesUpdate,
   synchronizeSesPreference,
 } from "./ses.ts";
-import { sendResendConfirmation } from "./resend.ts";
+import { sendResendConfirmation, sendResendUpdate } from "./resend.ts";
+import type { UpdateEmail } from "./update-email.ts";
 
 type PreferenceStatus = "OPT_IN" | "OPT_OUT";
 
@@ -39,4 +41,30 @@ export function synchronizePreference(
   return provider() === "ses"
     ? synchronizeSesPreference(email, status)
     : Promise.resolve();
+}
+
+export function sendUpdate(
+  email: string,
+  content: UpdateEmail,
+  unsubscribeUrl: string,
+  deliveryId: string,
+  messageSlug: string,
+  idempotencyKey: string,
+): Promise<string> {
+  return provider() === "resend"
+    ? sendResendUpdate(
+      email,
+      content,
+      unsubscribeUrl,
+      deliveryId,
+      messageSlug,
+      idempotencyKey,
+    )
+    : sendSesUpdate(
+      email,
+      content,
+      unsubscribeUrl,
+      deliveryId,
+      messageSlug,
+    );
 }

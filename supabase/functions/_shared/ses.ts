@@ -7,6 +7,7 @@ import {
 } from "@aws-sdk/client-sesv2";
 import { confirmationEmail } from "./confirmation-email.ts";
 import { earlyAccessTopic, requiredEnv } from "./config.ts";
+import type { UpdateEmail } from "./update-email.ts";
 
 let cachedClient: SESv2Client | undefined;
 
@@ -85,4 +86,46 @@ export async function synchronizeSesPreference(
       }),
     );
   }
+}
+
+export async function sendSesUpdate(
+  email: string,
+  content: UpdateEmail,
+  unsubscribeUrl: string,
+  deliveryId: string,
+  messageSlug: string,
+): Promise<string> {
+  const result = await client().send(
+    new SendEmailCommand({
+      FromEmailAddress: requiredEnv("SES_FROM_EMAIL"),
+      Destination: { ToAddresses: [email] },
+      ConfigurationSetName: requiredEnv("SES_CONFIGURATION_SET"),
+      Content: {
+        Simple: {
+          Subject: { Data: content.subject, Charset: "UTF-8" },
+          Body: {
+            Html: { Data: content.html, Charset: "UTF-8" },
+            Text: { Data: content.text, Charset: "UTF-8" },
+          },
+          Headers: [
+            { Name: "List-Unsubscribe", Value: `<${unsubscribeUrl}>` },
+            {
+              Name: "List-Unsubscribe-Post",
+              Value: "List-Unsubscribe=One-Click",
+            },
+          ],
+        },
+      },
+      EmailTags: [
+        { Name: "message-kind", Value: "early-access-update" },
+        { Name: "message-slug", Value: messageSlug },
+        { Name: "delivery-id", Value: deliveryId },
+      ],
+    }),
+  );
+
+  if (!result.MessageId) {
+    throw new Error("SES accepted mail without a message ID");
+  }
+  return result.MessageId;
 }
