@@ -19,7 +19,13 @@
       };
 
       devShells.x86_64-linux.supabase = pkgs.mkShellNoCC {
-        packages = [ pkgs.supabase-cli ];
+        packages = [
+          pkgs.bash
+          pkgs.coreutils
+          pkgs.curl
+          pkgs.jq
+          pkgs.supabase-cli
+        ];
       };
     };
 }

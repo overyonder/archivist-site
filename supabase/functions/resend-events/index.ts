@@ -17,15 +17,21 @@ interface ResendEvent {
     bounce?: {
       type?: string;
     };
+    suppressed?: {
+      message?: string;
+      type?: string;
+    };
   };
 }
 
 const eventKinds = new Map([
   ["email.sent", "send"],
   ["email.delivered", "delivery"],
+  ["email.delivery_delayed", "delivery_delayed"],
   ["email.bounced", "bounce"],
   ["email.complained", "complaint"],
   ["email.failed", "reject"],
+  ["email.suppressed", "suppression"],
   ["email.opened", "open"],
   ["email.clicked", "click"],
 ]);
@@ -71,7 +77,10 @@ Deno.serve(async (request) => {
     return new Response(null, { status: 500 });
   }
 
-  if (recorded && (kind === "complaint" || hardBounce)) {
+  if (
+    recorded &&
+    (kind === "complaint" || kind === "suppression" || hardBounce)
+  ) {
     const { data: delivery } = await db.from("deliveries")
       .select("contact_id").eq("provider_message_id", providerMessageId)
       .maybeSingle();

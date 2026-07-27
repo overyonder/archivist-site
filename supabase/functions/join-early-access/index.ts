@@ -142,7 +142,7 @@ Deno.serve(async (request) => {
             idempotencyKey,
           );
           const now = new Date().toISOString();
-          await Promise.all([
+          const results = await Promise.all([
             db.from("delivery_attempts").update({
               completed_at: now,
               outcome: "accepted",
@@ -159,18 +159,23 @@ Deno.serve(async (request) => {
               claim_token: null,
             }).eq("id", delivery.id),
           ]);
+          const persistenceError = results.find((result) => result.error)
+            ?.error;
+          if (persistenceError) {
+            console.error(
+              "Could not persist accepted confirmation",
+              persistenceError,
+            );
+          }
         } catch (sendError) {
           console.error("Confirmation email failed", sendError);
           const now = new Date().toISOString();
-          await Promise.all([
+          const results = await Promise.all([
             db.from("delivery_attempts").update({
               completed_at: now,
               outcome: "transient_failure",
               failure_code: "email_send",
               failure_reason: errorMessage(sendError),
-              claimed_at: null,
-              claim_expires_at: null,
-              claim_token: null,
             }).eq("idempotency_key", idempotencyKey),
             db.from("deliveries").update({
               status: "failed",
@@ -183,6 +188,14 @@ Deno.serve(async (request) => {
               failure_reason: errorMessage(sendError),
             }).eq("id", delivery.id),
           ]);
+          const persistenceError = results.find((result) => result.error)
+            ?.error;
+          if (persistenceError) {
+            console.error(
+              "Could not persist failed confirmation",
+              persistenceError,
+            );
+          }
         }
       }
     }

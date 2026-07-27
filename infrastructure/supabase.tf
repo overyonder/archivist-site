@@ -59,6 +59,27 @@ resource "terraform_data" "database_migrations" {
   }
 }
 
+resource "terraform_data" "reconciler_vault_secret" {
+  triggers_replace = [
+    local.migration_checksum,
+    sha256(random_password.internal_function_secret.result),
+    filesha256("${path.module}/scripts/supabase-vault.sh"),
+    filesha256("${path.module}/flake.lock"),
+  ]
+
+  provisioner "local-exec" {
+    working_dir = "${path.module}/.."
+    command     = "nix develop ./infrastructure#supabase --command bash infrastructure/scripts/supabase-vault.sh"
+
+    environment = {
+      INTERNAL_FUNCTION_SECRET = random_password.internal_function_secret.result
+      SUPABASE_PROJECT_REF     = supabase_project.archivist.id
+    }
+  }
+
+  depends_on = [terraform_data.database_migrations]
+}
+
 resource "terraform_data" "edge_functions" {
   triggers_replace = [
     local.edge_function_checksum,
