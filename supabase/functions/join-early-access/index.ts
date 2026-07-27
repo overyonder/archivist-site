@@ -95,6 +95,11 @@ Deno.serve(async (request) => {
       ? redirect("/early-access/full/")
       : json({ accepted: false, status: "full" }, 409, cors);
   }
+  if (result?.outcome === "already_confirmed") {
+    return acceptsHtml(request)
+      ? redirect("/early-access/already-joined/")
+      : json(genericBody, 202, cors);
+  }
   if (result?.outcome === "confirmation_required") {
     const { data: delivery, error: deliveryError } = await db.from("deliveries")
       .insert({
