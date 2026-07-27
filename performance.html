@@ -65,7 +65,7 @@
           <h2>Most game-collection managers are conventional desktop applications.</h2>
           <p>Some are built with <a href="https://www.electronjs.org/docs/latest/tutorial/process-model">Electron</a>, which combines a Node.js main process with Chromium renderers. Others are C# applications running as <a href="https://learn.microsoft.com/en-us/dotnet/standard/managed-code">managed code on .NET</a>. These runtimes provide mature interface libraries, broad platform support and a productive way to build a frontend.</p>
           <p>A conventional game-collection manager usually reads its collection through ordinary filesystem interfaces and stores the result in a general-purpose database or in-memory object model. That works well for a collection on a local disk. As the library grows, every search, list and filter has more records to traverse, while box art, screenshots and videos add thousands of files to the media cache.</p>
-          <p>Degradation arrives gradually. Startup takes longer, scrolling becomes less consistent and searches lose their snap. A network filesystem adds latency to every cache miss and small-file access. Running an entire collection and its media cache from network-attached storage over a file share is aspirational, to put it lightly.</p>
+          <p>Degradation arrives gradually. Startup takes longer, scrolling becomes less consistent and searches lose their snap. A network filesystem adds latency to every cache miss and small-file access. A large collection and its media cache can make a conventional file-share design impractically slow.</p>
         </section>
 
         <section id="principle">
@@ -80,7 +80,7 @@
         <section id="architecture">
           <span class="section-no">03 / architecture</span>
           <h2>The Historian service runs beside the storage.</h2>
-          <p>Archivist moves collection discovery from the desktop to the network-attached storage. The Historian service reads file metadata, hashes logical members inside archives and matches those digests to preservation manifests beside the storage pool. The desktop receives one compact, immutable snapshot instead of pulling every game image across the network share.</p>
+          <p>Archivist moves collection discovery from the desktop to the network-attached storage. The Historian service reads file metadata, hashes logical members inside archives and matches those digests to preservation manifests beside the storage pool. The desktop receives one compact, immutable snapshot while game images remain beside the storage pool.</p>
           <div class="architecture" aria-label="Historian data flow">
             <div><span>01 / storage</span><strong>Vault + Intake</strong><small>Local reads, archive members and server-side renames.</small></div>
             <div><span>02 / historian</span><strong>Native Rust</strong><small>Combined hashes, matching, watchers and WAL state.</small></div>
@@ -155,8 +155,8 @@
           <span class="section-no">06 / format tournament</span>
           <h2>Choosing the snapshot format.</h2>
           <p>Archivist uses MessagePack for the snapshot’s small, irregular header. The repetitive rows use a <strong>custom binary, padded structure-of-arrays (SoA) layout</strong>. Each field occupies a contiguous column, and the encoder pads each column boundary to its required alignment. A single zero-terminated UTF-8 blob holds the file basenames. JavaScript can create typed-array views over the numeric columns directly without allocating millions of row objects.</p>
-          <p>The format gives us control over where every bit lands. A pass reads only the columns it needs, and the next value is already beside the current one in memory. There are no per-row object headers or pointers to chase through the heap. That layout maximises cache locality and keeps the decoder in the same tight loop for every row.</p>
-          <p>The regular loop is also friendly to branch prediction. Tagged object fields, optional values and lexical token streams introduce data-dependent decisions. Fixed columns keep the hot path predictable. Our benchmark measures total decode time, so we don’t assign a separate number to branch prediction, but it is one reason we prefer the simpler layout when two formats compress to a similar size.</p>
+          <p>The format gives us control over where every bit lands. A pass reads only the columns it needs, and the next value is already beside the current one in memory. Contiguous columns remove per-row object headers and heap pointers. The layout maximises cache locality and keeps the decoder in the same tight loop for every row.</p>
+          <p>The regular loop is also friendly to branch prediction. Tagged object fields, optional values and lexical token streams introduce data-dependent decisions. Fixed columns keep the hot path predictable. The benchmark reports total decode time, including any branch-prediction effect. This favours the simpler layout when two formats compress to a similar size.</p>
           <div class="table-wrap">
             <table>
               <caption>Isolated catalogue encoding experiment</caption>
@@ -230,7 +230,7 @@
         <section id="competition">
           <span class="section-no">08 / comparison</span>
           <h2>Comparing different jobs.</h2>
-          <p>Our friends behind OxyROMon and Igir have built mature, capable tools, and OxyROMon is the existing state of the art for this work. The shared-corpus timings measure different outputs. Archivist builds a deduplicated resident digest index, Igir writes a report, and OxyROMon imports normalised relational records.</p>
+          <p>OxyROMon and Igir are mature, capable tools, and OxyROMon is the existing state of the art for this work. The shared-corpus timings measure different outputs. Archivist builds a deduplicated resident digest index, Igir writes a report, and OxyROMon imports normalised relational records.</p>
           <div class="table-wrap">
             <table>
               <caption>Exact 503-manifest shared corpus</caption>
@@ -252,7 +252,7 @@
                 <tr><td>RomVault 3.7.6</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td></tr>
                 <tr><td>Igir 5.3.1</td><td class="win">✓</td><td class="warn">△ metadata failure</td><td class="win">✓</td></tr>
                 <tr><td>OxyROMon 0.21.0</td><td class="win">✓</td><td class="dim">— native XML rejected</td><td class="warn">△ duplicate-entry failure</td></tr>
-                <tr><td>clrmame 0.7.1</td><td class="dim">— not batch-verified</td><td class="win">✓ documented</td><td class="dim">— not batch-verified</td></tr>
+                <tr><td>clrmame 0.7.1</td><td class="dim">— unverified in batch</td><td class="win">✓ documented</td><td class="dim">— unverified in batch</td></tr>
               </tbody>
             </table>
           </div>
@@ -351,20 +351,20 @@
             <li><strong>Preserve desktop quality.</strong><span>Add AccessKit accessibility, IME and clipboard support, keyboard/gamepad focus, high-DPI scaling and platform window semantics before replacing the corresponding WebView screen.</span></li>
             <li><strong>Gate on measurable parity.</strong><span>Require perceptual screenshot parity, 144 Hz frame pacing on target hardware, bounded allocations and equal-or-better accessibility. Migrate screen by screen and keep the proven web implementation until each replacement wins.</span></li>
           </ol>
-          <p>egui is excellent, although its immediate-mode model differs from the retained renderer we want to test. Slint and Iced are credible candidates, with Slint preserving declarative layout. A custom <code>wgpu</code> layer offers the most direct control over Archivist’s data-heavy interface. The vertical slice must justify that additional work before we commit the whole product.</p>
+          <p>egui uses an immediate-mode model, while this experiment calls for a retained renderer. Slint and Iced are credible candidates, with Slint preserving declarative layout. A custom <code>wgpu</code> layer offers the most direct control over Archivist’s data-heavy interface. The vertical slice must justify that additional work before we commit the whole product.</p>
         </section>
 
         <section id="method">
           <span class="section-no">13 / measurement method</span>
           <h2>How the measurements were taken.</h2>
-          <p>All results in this article are development measurements from the copied corpora and hardware described beside each table. Comparative runs used release binaries. The 2.15 million figure counts manifest media rows; the 222,242 figure counts files and directories in the Historian snapshot. Neither figure counts playable games.</p>
+          <p>These development measurements use the copied corpora and hardware described beside each table. Comparative runs used release binaries. The 2.15 million figure counts manifest media rows. The 222,242 figure counts files and directories in the Historian snapshot. Playable games use a separate catalogue unit.</p>
           <div class="cards">
             <div class="card"><span>Benchmark mirror</span><h3>12,297 catalogue files · 1.77 GB copied locally</h3><p>Archivist’s selected catalogue policy contains 1,221 manifests. The exact subset accepted by Archivist, OxyROMon and Igir contains 503 files and 487,201,103 bytes.</p></div>
-            <div class="card"><span>Live storage corpus</span><h3>222,242 filesystem entries</h3><p>210,840 files and 11,402 directories in the measured Historian snapshot. These entries aren’t all distinct playable games.</p></div>
+            <div class="card"><span>Live storage corpus</span><h3>222,242 filesystem entries</h3><p>The measured Historian snapshot contains 210,840 files and 11,402 directories.</p></div>
             <div class="card"><span>Output semantics</span><h3>Purpose-built compiler output</h3><p>Archivist builds the resident strongest-digest evidence it needs. Other tools may perform additional relational, reporting or repair work.</p></div>
             <div class="card"><span>Cache effects</span><h3>Reported with each result</h3><p>ZFS ARC, Linux page cache and run order materially affect disk tests. Cold, warm and one-run figures are labelled where known.</p></div>
           </div>
-          <p>The benchmark tools live with Archivist so future changes can use the same inventory, combined-hash, matching and catalogue workloads. We’ll update this page when a later implementation changes the result.</p>
+          <p>The benchmark tools live with Archivist, preserving the inventory, combined-hash, matching and catalogue workloads for future measurements.</p>
         </section>
       </article>
     </div>
@@ -395,7 +395,7 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. This site also stores your theme preference in your browser. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
+      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. Your browser stores your theme preference. If you ask to be notified, we’ll keep your address in Supabase and use Amazon SES to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
@@ -403,7 +403,7 @@
   <dialog class="legal-dialog" id="piracyDialog">
     <div>
       <h2>Your collection, your software.<svg class="piracy-mark piracy-modal-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="icon-fill" d="M14.5 3C8.5 3 4 7.5 4 13.3c0 3.8 1.9 6.8 5 8.3V27h11v-5.4c3.1-1.5 5-4.5 5-8.3C25 7.5 20.5 3 14.5 3Z"/><ellipse class="icon-cut" cx="10.5" cy="13.5" rx="2.5" ry="2.9"/><ellipse class="icon-cut" cx="18.5" cy="13.5" rx="2.5" ry="2.9"/><path class="icon-cut" d="m14.5 16-2 3.2h4z"/><path d="M11.2 22.4v4M14.5 22v4.4M17.8 22.4v4" stroke="var(--panel)" stroke-width="1.7"/><circle cx="24" cy="24" r="6.5" fill="var(--panel)"/><path d="m19.5 19.5 9 9" stroke-width="3"/></svg></h2>
-      <p>Archivist doesn’t provide copyrighted material. It’s strictly a collection manager for users to sort, verify, view, and launch their own legally obtained game software.</p>
+      <p>You supply your own legally obtained game software. Archivist sorts, verifies, displays and launches it.</p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
