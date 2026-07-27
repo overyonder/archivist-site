@@ -10,6 +10,12 @@ resource "cloudflare_turnstile_widget" "early_access" {
   offlabel        = false
 }
 
+resource "cloudflare_zone_setting" "minimum_tls" {
+  zone_id    = var.cloudflare_zone_id
+  setting_id = "min_tls_version"
+  value      = "1.2"
+}
+
 # The Pages deployment deliberately publishes only the public site directory.
 # Keep a second boundary at the edge so repository internals can never be
 # served from the production hostname, including from a stale Pages cache.
@@ -72,16 +78,4 @@ resource "cloudflare_dns_record" "mail_from_spf" {
   type    = "TXT"
   content = "v=spf1 include:amazonses.com ~all"
   ttl     = 1
-}
-
-resource "cloudflare_dns_record" "tracking" {
-  zone_id = var.cloudflare_zone_id
-  name    = local.tracking_domain
-  type    = "CNAME"
-  content = "r.${var.aws_region}.awstrack.me"
-  ttl     = 1
-  # Cloudflare terminates HTTPS for the branded tracking hostname before
-  # proxying to SES; exposing the AWS target directly would not present a
-  # certificate for links.over-yonder.tech.
-  proxied = true
 }

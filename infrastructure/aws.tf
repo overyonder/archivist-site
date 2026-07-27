@@ -13,10 +13,6 @@ resource "aws_sesv2_configuration_set" "early_access" {
     sending_enabled = true
   }
 
-  tracking_options {
-    custom_redirect_domain = local.tracking_domain
-    https_policy           = "REQUIRE"
-  }
 }
 
 resource "aws_sesv2_email_identity" "sending" {
@@ -65,11 +61,9 @@ resource "aws_sesv2_configuration_set_event_destination" "sns" {
     enabled = true
     matching_event_types = [
       "BOUNCE",
-      "CLICK",
       "COMPLAINT",
       "DELIVERY",
       "DELIVERY_DELAY",
-      "OPEN",
       "REJECT",
       "RENDERING_FAILURE",
       "SEND",

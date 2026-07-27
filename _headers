@@ -1,0 +1,7 @@
+/*
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'self'; base-uri 'none'; connect-src 'self' https://xbwhevdunxftierqlpsr.supabase.co https://cloudflareinsights.com https://challenges.cloudflare.com; font-src 'self'; form-action 'self' https://xbwhevdunxftierqlpsr.supabase.co; frame-ancestors 'none'; frame-src 'self' https://challenges.cloudflare.com; img-src 'self' data: blob:; object-src 'none'; script-src 'self' 'sha256-TM6G3yVK0XYGuSUtXrC8yuz+EVk+TTbDVtBsIcsxKhc=' 'sha256-8lRr5Dn6Jnl1gO2/+EnF4grRDklWsisPbZ3jClmK3vU=' 'sha256-0fGtKzfmToBbSyDFUBruDPtjI82SXU7kV+zfJuNuHP8=' 'sha256-z5yxfWWrPtynlkeTd/w0Tahs6MIfgRkso5IaLA5l+U8=' 'sha256-YHdYNCC5W8I1k8NvjcojNl6TbT9aW+GhnyUhSwOb5Hw=' https://static.cloudflareinsights.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests; worker-src 'self' blob:
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY

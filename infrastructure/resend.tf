@@ -24,7 +24,7 @@ locals {
     domain = {
       name           = local.domain
       region         = "us-east-1"
-      tls            = "opportunistic"
+      tls            = "enforced"
       open_tracking  = false
       click_tracking = false
       capabilities = {

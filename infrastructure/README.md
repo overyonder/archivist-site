@@ -2,12 +2,14 @@
 
 OpenTofu owns the hosted infrastructure around Archivist early access:
 
-- Cloudflare Turnstile and email-provider DNS records;
+- Cloudflare Turnstile, minimum TLS policy and email-provider DNS records;
 - Amazon SES identity, MAIL FROM, configuration set, contact list and events;
 - Amazon SNS delivery-event transport;
 - Resend delivery and event-webhook integration;
 - the full-scope IAM administration identity used by OpenTofu;
 - the least-privilege IAM runtime identity used by Supabase;
+- a multi-region CloudTrail management trail with validated logs retained in a
+  private, encrypted and versioned S3 bucket for one year;
 - the monthly AWS cost budget;
 - the Supabase project settings, database migrations, Edge Functions and
   function secrets.
@@ -88,7 +90,8 @@ returns a token when the key is created, so rotation remains an explicit
 bootstrap operation: create a replacement sending-only key, update SOPS and
 the declared key ID together, then apply.
 
-The Resend domain, tracking settings, webhook and runtime-key identity are
+The Resend domain, privacy-preserving tracking settings, enforced TLS, webhook
+and runtime-key identity are
 reconciled through Resend's REST API by `scripts/resend.sh`; the corresponding
 mail DNS records are native Cloudflare resources. The full-access
 `archivist-opentofu` API token is stored in SOPS as

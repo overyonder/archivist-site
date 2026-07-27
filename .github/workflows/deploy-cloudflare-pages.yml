@@ -17,10 +17,12 @@ jobs:
         run: |
           mkdir public
           cp -R \
+            _headers \
             404.html \
             app-demo \
             assets \
             early-access \
+            early-access-confirmation-retry.js \
             early-access-form.js \
             early-access-leave.js \
             early-access.css \

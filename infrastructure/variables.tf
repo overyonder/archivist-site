@@ -47,7 +47,6 @@ locals {
   contact_list_name      = "archivist-early-access"
   contact_topic_name     = "archivist-early-access"
   mail_from_domain       = "bounce.over-yonder.tech"
-  tracking_domain        = "links.over-yonder.tech"
   sns_topic_name         = "archivist-early-access-events"
   provisioner_user_name  = "archivist-provisioner"
   edge_user_name         = "archivist-early-access-edge"
