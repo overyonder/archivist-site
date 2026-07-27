@@ -1,8 +1,8 @@
 const features = [
   ["A curated history.", "View games in context through genre family trees and platform timelines spanning the 1950s to today."],
   ["Ready to play.", "See installed emulators and every runtime dependency required by the collection."],
-  ["Verify your collection.", "Review preservation manifests and check selected files against the catalogue."],
-  ["Built for a controller.", "Browse the catalogue from a gamepad with the control guide at hand."],
+  ["Checks every byte.", "Review preservation catalogues, emulators, system firmware, selected releases, and collection state."],
+  ["Suits your needs—and your taste.", "Archivist supports a selectable tint colour, system light and dark modes, and an 8:1 high-contrast option."],
 ];
 
 const slides = [...document.querySelectorAll(".slide")];

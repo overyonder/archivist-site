@@ -66,7 +66,12 @@
     .slide .theme-shot-light { display: none; }
     :root[data-theme="light"] .slide .theme-shot-dark { display: none; }
     :root[data-theme="light"] .slide .theme-shot-light { display: block; }
-    .slide.controller-slide img { object-fit: contain; background: var(--surface-0); }
+    .customization-pair { position: absolute; inset: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); }
+    .customization-pair img { object-fit: contain; background: var(--surface-0); }
+    .customization-slide .customization-pair.theme-shot-dark { display: grid; }
+    .customization-slide .customization-pair.theme-shot-light { display: none; }
+    :root[data-theme="light"] .customization-slide .customization-pair.theme-shot-dark { display: none; }
+    :root[data-theme="light"] .customization-slide .customization-pair.theme-shot-light { display: grid; }
     @media (prefers-reduced-motion: reduce) {
       .slide { transition: none; }
     }
@@ -203,9 +208,15 @@
             <img class="theme-shot-dark" src="assets/screenshots/verify-dark.png" alt="Archivist Verify Collection showing preservation manifests selected for the collection" width="1920" height="1061" decoding="async">
             <img class="theme-shot-light" src="assets/screenshots/verify-light.png" alt="Archivist Verify Collection showing preservation manifests selected for the collection" width="1920" height="1061" decoding="async">
           </figure>
-          <figure class="slide controller-slide" data-slide="3">
-            <img class="theme-shot-dark" src="assets/screenshots/controller-dark.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1058" height="644" decoding="async">
-            <img class="theme-shot-light" src="assets/screenshots/controller-light.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1057" height="642" decoding="async">
+          <figure class="slide customization-slide" data-slide="3">
+            <div class="customization-pair theme-shot-dark">
+              <img src="assets/screenshots/controller-dark.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1058" height="644" decoding="async">
+              <img src="assets/screenshots/appearance-dark.png" alt="Archivist Appearance settings showing dark-mode theme and contrast controls" width="958" height="1052" decoding="async">
+            </div>
+            <div class="customization-pair theme-shot-light">
+              <img src="assets/screenshots/controller-light.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1057" height="642" decoding="async">
+              <img src="assets/screenshots/appearance-light.png" alt="Archivist Appearance settings showing light-mode theme and contrast controls" width="956" height="1053" decoding="async">
+            </div>
           </figure>
         </div>
         <div class="caption" aria-live="polite">
@@ -218,7 +229,7 @@
         <button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>Curated</button>
         <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Pre-configured</button>
         <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Validated</button>
-        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Controller</button>
+        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Customisable</button>
       </div>
     </section>
   </main>
