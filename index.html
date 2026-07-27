@@ -60,19 +60,16 @@
     .ownership-dialog ol { margin: 0 0 22px; padding-left: 22px; color: var(--muted); line-height: 1.55; }
     .ownership-dialog li + li { margin-top: 9px; }
     .legal-dialog button { padding: 10px 14px; color: var(--control-contrast); background: var(--accent); border: 0; font: 700 11px ui-monospace, monospace; text-transform: uppercase; cursor: pointer; }
-    .planned { position: relative; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg,#120e0b,#080706); color: var(--muted); text-align: center; }
-    .planned::before { position: absolute; inset: 15px; content: ""; border: 1px dashed #4a392b; }
-    .planned div { position: relative; max-width: 440px; }
-    .planned span { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
-    .planned strong { display: block; margin: 10px 0 6px; color: var(--text); font-size: 18px; }
-    .planned p { margin: 0; font-size: 12px; line-height: 1.5; }
-    .tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .tabs button { min-width: 0; overflow: hidden; }
     .slide.active { pointer-events: auto; }
+    .slide .theme-shot-light { display: none; }
+    :root[data-theme="light"] .slide .theme-shot-dark { display: none; }
+    :root[data-theme="light"] .slide .theme-shot-light { display: block; }
+    .slide.controller-slide img { object-fit: contain; background: var(--surface-0); }
     @media (prefers-reduced-motion: reduce) {
       .slide { transition: none; }
     }
-    .app-demo { width: 125%; height: 125%; display: block; border: 0; background: #080706; transform: scale(.8); transform-origin: top left; }
     .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
     .facts li { min-width: 0; }
     .facts span, .fact-link { overflow-wrap: anywhere; word-break: normal; }
@@ -194,14 +191,25 @@
     <section class="showcase" aria-label="Archivist features">
       <div class="frame">
         <div class="slides">
-          <figure class="slide active" data-slide="0"><img src="assets/screenshots/history.png?site=archivist-v55" alt="Archivist system history showing the Apple II selected in the computer timeline" width="1104" height="624"></figure>
-          <figure class="slide" data-slide="1"><iframe class="app-demo" src="app-demo/index.html?view=emulators&amp;v=65" title="Archivist emulator configuration table"></iframe></figure>
-          <figure class="slide" data-slide="2"><iframe class="app-demo" src="app-demo/index.html?view=themes&amp;v=60" title="Interactive Archivist theme and contrast settings"></iframe></figure>
-          <figure class="slide" data-slide="3"><img src="assets/screenshots/verify.png" alt="Archivist collection verification view" width="1368" height="912"></figure>
-          <figure class="slide planned" data-slide="4"><div><span>In development</span><strong>Gamepad interface</strong><p>Browse the catalogue and launch games entirely from a controller.</p></div></figure>
+          <figure class="slide active" data-slide="0">
+            <img class="theme-shot-dark" src="assets/screenshots/history-dark.png" alt="Archivist System History showing the timeline of arcade, computer, console, handheld and hybrid families" width="1920" height="1060" decoding="async">
+            <img class="theme-shot-light" src="assets/screenshots/history-light.png" alt="Archivist System History showing the timeline of arcade, computer, console, handheld and hybrid families" width="1920" height="1061" decoding="async">
+          </figure>
+          <figure class="slide" data-slide="1">
+            <img class="theme-shot-dark" src="assets/screenshots/setup-dark.png" alt="Archivist Setup showing detected emulators and their runtime dependencies" width="1920" height="1061" decoding="async">
+            <img class="theme-shot-light" src="assets/screenshots/setup-light.png" alt="Archivist Setup showing detected emulators and their runtime dependencies" width="1920" height="1062" decoding="async">
+          </figure>
+          <figure class="slide" data-slide="2">
+            <img class="theme-shot-dark" src="assets/screenshots/verify-dark.png" alt="Archivist Verify Collection showing preservation manifests selected for the collection" width="1920" height="1061" decoding="async">
+            <img class="theme-shot-light" src="assets/screenshots/verify-light.png" alt="Archivist Verify Collection showing preservation manifests selected for the collection" width="1920" height="1061" decoding="async">
+          </figure>
+          <figure class="slide controller-slide" data-slide="3">
+            <img class="theme-shot-dark" src="assets/screenshots/controller-dark.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1058" height="644" decoding="async">
+            <img class="theme-shot-light" src="assets/screenshots/controller-light.png" alt="Archivist Controller Guide showing gamepad controls for navigating the interface" width="1057" height="642" decoding="async">
+          </figure>
         </div>
         <div class="caption" aria-live="polite">
-          <span class="index">01 / 05</span>
+          <span class="index">01 / 04</span>
           <div><h2>A curated history.</h2><p>View games in context through genre family trees and platform timelines spanning the 1950s to today.</p></div>
           <div class="controls"><button type="button" data-prev aria-label="Previous feature">←</button><button type="button" data-next aria-label="Next feature">→</button></div>
         </div>
@@ -209,9 +217,8 @@
       <div class="tabs" role="tablist" aria-label="Key features">
         <button class="active" role="tab" aria-selected="true" data-tab="0"><span>01</span>Curated</button>
         <button role="tab" aria-selected="false" data-tab="1"><span>02</span>Pre-configured</button>
-        <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Themeable</button>
-        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Validated</button>
-        <button role="tab" aria-selected="false" data-tab="4"><span>05</span>Ergonomic</button>
+        <button role="tab" aria-selected="false" data-tab="2"><span>03</span>Validated</button>
+        <button role="tab" aria-selected="false" data-tab="3"><span>04</span>Controller</button>
       </div>
     </section>
   </main>

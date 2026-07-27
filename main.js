@@ -1,9 +1,8 @@
 const features = [
   ["A curated history.", "View games in context through genre family trees and platform timelines spanning the 1950s to today."],
-  ["Ready to play.", "Archivist maps 190 emulator definitions to 840 gaming systems and detects installed emulators."],
-  ["Your colours.", "Choose a tint, follow the system light or dark mode, or use the 8:1 high-contrast option."],
-  ["Verify your collection.", "Check preservation catalogues, emulators, system firmware, selected releases and collection state."],
-  ["Built for a controller.", "In development: browse the catalogue and launch games from the gamepad interface."],
+  ["Ready to play.", "See installed emulators and every runtime dependency required by the collection."],
+  ["Verify your collection.", "Review preservation manifests and check selected files against the catalogue."],
+  ["Built for a controller.", "Browse the catalogue from a gamepad with the control guide at hand."],
 ];
 
 const slides = [...document.querySelectorAll(".slide")];

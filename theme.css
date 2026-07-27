@@ -172,8 +172,6 @@ tr.shipped td { background: var(--warm-panel); }
 .fact-info { border-color: var(--line-bright); }
 .historian-callout { background: var(--panel); border-color: var(--line-bright); box-shadow: 0 18px 60px var(--shadow-heavy); }
 .historian-callout::after { background: var(--panel); border-color: var(--line-bright); }
-.planned { background: linear-gradient(135deg, var(--panel), var(--surface-0)); }
-.planned::before { border-color: var(--line-bright); }
 .benchmark-slide { background: radial-gradient(circle at 50% 20%, var(--chart-glow), var(--surface-0) 62%); }
 
 .chart .axis { stroke: var(--line-bright); }
