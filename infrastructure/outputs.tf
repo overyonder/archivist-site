@@ -13,3 +13,11 @@ output "ses_dns_records" {
     tracking  = local.tracking_domain
   }
 }
+
+output "resend_resources" {
+  value = {
+    domain_id      = data.external.resend_effective.result.domain_id
+    runtime_key_id = data.external.resend_effective.result.runtime_key_id
+    webhook_id     = data.external.resend_effective.result.webhook_id
+  }
+}

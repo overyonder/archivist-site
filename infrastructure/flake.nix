@@ -3,13 +3,23 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { nixpkgs, ... }: {
-    devShells.x86_64-linux.supabase =
-      let
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      in
-      pkgs.mkShellNoCC {
+  outputs =
+    { nixpkgs, ... }:
+    let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in
+    {
+      devShells.x86_64-linux.resend = pkgs.mkShellNoCC {
+        packages = [
+          pkgs.bash
+          pkgs.coreutils
+          pkgs.curl
+          pkgs.jq
+        ];
+      };
+
+      devShells.x86_64-linux.supabase = pkgs.mkShellNoCC {
         packages = [ pkgs.supabase-cli ];
       };
-  };
+    };
 }

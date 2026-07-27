@@ -90,7 +90,10 @@ resource "supabase_edge_function_secrets" "archivist" {
     { name = "EARLY_ACCESS_POLICY_VERSION", value = "2026-07-16" },
     { name = "INTERNAL_FUNCTION_SECRET", value = random_password.internal_function_secret.result },
     { name = "RESEND_API_KEY", value = var.resend_api_key },
-    { name = "RESEND_WEBHOOK_SECRET", value = var.resend_webhook_secret },
+    {
+      name  = "RESEND_WEBHOOK_SECRET"
+      value = sensitive(data.external.resend_effective.result.webhook_signing_secret)
+    },
     { name = "SES_CONFIGURATION_SET", value = aws_sesv2_configuration_set.early_access.configuration_set_name },
     { name = "SES_CONTACT_LIST_NAME", value = aws_sesv2_contact_list.early_access.contact_list_name },
     { name = "SES_FROM_EMAIL", value = "hello@${local.domain}" },

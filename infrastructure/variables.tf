@@ -40,12 +40,6 @@ variable "resend_api_key" {
   sensitive   = true
 }
 
-variable "resend_webhook_secret" {
-  description = "Signing secret for the Resend delivery-event webhook."
-  type        = string
-  sensitive   = true
-}
-
 locals {
   domain                 = "over-yonder.tech"
   site_domain            = "archivist.over-yonder.tech"
