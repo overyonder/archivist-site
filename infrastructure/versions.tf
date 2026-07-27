@@ -14,6 +14,10 @@ terraform {
       source  = "hashicorp/external"
       version = "~> 2.3"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.13"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.7"
@@ -59,5 +63,9 @@ provider "aws" {
 }
 
 provider "cloudflare" {}
+
+provider "github" {
+  owner = "overyonder"
+}
 
 provider "supabase" {}

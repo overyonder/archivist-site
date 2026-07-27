@@ -2,7 +2,10 @@
 
 OpenTofu owns the hosted infrastructure around Archivist early access:
 
-- Cloudflare Turnstile, minimum TLS policy and email-provider DNS records;
+- the Cloudflare Pages project, custom domain, site DNS, Turnstile, minimum TLS
+  policy and email-provider DNS records;
+- GitHub repository security features, Actions policy and production-branch
+  history protection;
 - Amazon SES identity, MAIL FROM, configuration set, contact list and events;
 - Amazon SNS delivery-event transport;
 - Resend delivery and event-webhook integration;
@@ -122,6 +125,10 @@ repository is public, and encrypted state still contains credential-bearing
 ciphertext and infrastructure metadata that must not be published. Back up the
 encrypted state to private storage with versioning and snapshots. Losing both
 the state and its passphrase requires importing the live resources again.
+
+Manual controls that cannot safely or usefully be represented as provider
+resources are tracked in [OPERATIONS.md](OPERATIONS.md). A control may be marked
+complete only after its evidence has been independently checked.
 
 ## First adoption of existing resources
 

@@ -16,6 +16,28 @@ resource "cloudflare_zone_setting" "minimum_tls" {
   value      = "1.2"
 }
 
+resource "cloudflare_pages_project" "archivist" {
+  account_id        = var.cloudflare_account_id
+  name              = "archivist"
+  production_branch = "main"
+}
+
+resource "cloudflare_pages_domain" "archivist" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.archivist.name
+  name         = local.site_domain
+}
+
+resource "cloudflare_dns_record" "site" {
+  zone_id = var.cloudflare_zone_id
+  name    = local.site_domain
+  type    = "CNAME"
+  content = cloudflare_pages_project.archivist.subdomain
+  ttl     = 1
+  proxied = true
+  comment = "Archivist production site; managed by OpenTofu."
+}
+
 # The Pages deployment deliberately publishes only the public site directory.
 # Keep a second boundary at the edge so repository internals can never be
 # served from the production hostname, including from a stale Pages cache.
