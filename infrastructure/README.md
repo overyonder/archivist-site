@@ -102,6 +102,10 @@ directly into Supabase. It has no second canonical copy in SOPS.
 
 Changes to the desired Resend configuration or detected API drift replace the
 local reconciliation marker and safely re-run the idempotent API updates.
+Resend's domain-update API accepts the declared TLS policy, but its domain-read
+API currently omits that field. OpenTofu can therefore enforce TLS during
+reconciliation but cannot independently detect later dashboard-only TLS drift;
+the Resend dashboard remains the verification surface for that one setting.
 OpenTofu does not implicitly delete Resend resources during marker replacement
 or `tofu destroy`, because it cannot distinguish a normal reconciliation from
 an intentional provider teardown. Destructive teardown is therefore explicit:
