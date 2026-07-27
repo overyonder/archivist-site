@@ -62,6 +62,11 @@ code, .mono { color: var(--accent-soft); font-family: ui-monospace, SFMono-Regul
 .hero-lede { max-width: 800px; margin: 24px 0 0; color: var(--muted); font-size: clamp(16px, 1.7vw, 21px); line-height: 1.65; }
 .hero-aside { max-width: 800px; margin: 18px 0 0; color: var(--dim); font-size: 12px; line-height: 1.55; }
 .metric-aside { box-sizing: content-box; margin: 14px auto 0; padding: 0 clamp(20px, 5vw, 70px); }
+.research-figure { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 70px); }
+.research-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line-bright); }
+.research-figure figcaption { max-width: 800px; padding: 18px 20px 0; border-left: 3px solid var(--accent); }
+.research-figure strong { display: block; color: var(--text); font-size: 15px; line-height: 1.5; }
+.research-figure span { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.65; }
 
 .metric-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; max-width: 1180px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 70px); background: var(--line); }
 .metric { min-height: 118px; padding: 22px; background: #0e0c0b; }
