@@ -76,7 +76,8 @@ Provider credentials use their standard environment variables:
 - `RESEND_API_KEY` containing the full-access `archivist-opentofu` key;
 - `SUPABASE_ACCESS_TOKEN` for the Management API.
 
-Run production applies through `scripts/apply.sh`, not a bare `tofu apply`.
+On Jarvis, run production applies through `scripts/apply.sh`, not a bare
+`tofu apply`.
 The wrapper copies the already-encrypted state to
 `/mnt/archive/backups/archivist/opentofu/` only after a successful apply,
 records its SHA-256 checksum and source commit, and fails visibly if the
@@ -141,6 +142,12 @@ recording the database version, `pg_dump` version, migration commit and UTC
 timestamp. Both registered recovery YubiKeys can decrypt the dump. TrueNAS's
 recursive `tank` snapshot tasks cover the archive with 14 daily, approximately
 13 weekly and 24 monthly restore points.
+
+Validate decryptability without writing plaintext by piping a chosen backup
+through `age --decrypt` and `pg_restore --list`. A full recovery drill must pipe
+the decrypted stream into `pg_restore` against an isolated PostgreSQL database,
+then verify application invariants before that restore procedure is considered
+proven.
 
 Manual controls that cannot safely or usefully be represented as provider
 resources are tracked in [OPERATIONS.md](OPERATIONS.md). A control may be marked

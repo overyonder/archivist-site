@@ -13,8 +13,8 @@ reference.
 | AWS root MFA | Verified enabled | 2026-07-27 | IAM account summary reported `AccountMFAEnabled = 1`. Review the physical recovery path separately. |
 | SES production access | **Open: sandboxed** | 2026-07-27 | Continue the AWS Support production-access case. Domain, DKIM, MAIL FROM and event transport are healthy. |
 | Home Pi-hole analytics allowlist | Verified | 2026-07-27 | Both Cloudflare Insights hostnames are exact-allowlisted and resolve through `shrike`; the Pi-hole installation itself is not currently declaratively managed. |
-| OpenTofu state recovery | **Open** | 2026-07-27 | State is encrypted but intentionally ignored by this public repository. Select a private versioned remote backend before moving account-level resources. |
-| Supabase database recovery | **Open** | 2026-07-27 | Establish a scheduled encrypted logical export and prove a restore into an isolated project, or enable and test paid PITR. |
+| OpenTofu state recovery | NAS copy verified; remote backend open | 2026-07-27 | A checksum-verified encrypted state copy exists under `/mnt/archive/backups/archivist/opentofu/`. Continue using the apply wrapper; select a private remote backend before moving account-level resources. |
+| Supabase database recovery | Encrypted export verified; restore drill open | 2026-07-27 | The nightly timer and first age-encrypted custom-format dump completed with a valid checksum. Complete a YubiKey decryption and isolated restore drill before treating recovery as fully demonstrated. |
 
 ## Provider ownership and recovery
 
