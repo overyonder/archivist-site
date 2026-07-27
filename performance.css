@@ -82,11 +82,11 @@ code, .mono { color: var(--accent-soft); font-family: ui-monospace, SFMono-Regul
 .article p { max-width: 800px; margin: 0 0 18px; color: var(--muted); font-size: 15px; line-height: 1.72; }
 .article p strong { color: var(--text); }
 .pullquote { margin: 34px 0; padding: 22px 26px; color: var(--text) !important; background: linear-gradient(90deg, #1d1209, #12100e); border-left: 3px solid var(--accent); font-size: clamp(19px, 2.3vw, 27px) !important; line-height: 1.35 !important; letter-spacing: -.02em; }
-.author-note { max-width: 800px; margin: 32px 0; padding: 25px 28px 8px; background: linear-gradient(135deg, #18130f, #100e0c); border: 1px solid var(--line-bright); border-left: 3px solid var(--accent); }
+.author-note { max-width: 800px; margin: 32px 0; padding: 25px 28px 8px; background: linear-gradient(135deg, var(--warm-panel), var(--surface-1)); border: 1px solid var(--line-bright); border-left: 3px solid var(--accent); }
 .author-note p { font-size: 14px; }
 .author-note .author-label { margin-bottom: 16px; color: var(--accent); font: 700 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
 .author-note cite { color: var(--text); }
-.author-note kbd { padding: 1px 5px; color: var(--text); background: #080706; border: 1px solid var(--line-bright); font: 11px ui-monospace, monospace; }
+.author-note kbd { padding: 1px 5px; color: var(--text); background: var(--surface-0); border: 1px solid var(--line-bright); font: 11px ui-monospace, monospace; }
 .dependency-aside { max-width: 720px; margin: 25px 0; padding: 18px 22px; background: var(--panel); border-left: 2px solid var(--accent); }
 .dependency-aside p { margin: 0 0 6px; font-size: 13px; line-height: 1.55; }
 .dependency-aside p:first-child { margin-bottom: 10px; color: var(--text); font-weight: 700; }
