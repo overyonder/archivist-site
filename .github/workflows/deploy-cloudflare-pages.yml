@@ -28,6 +28,7 @@ jobs:
             assets \
             early-access \
             early-access-confirmation-retry.js \
+            early-access-dialog.js \
             early-access-form.js \
             early-access-leave.js \
             early-access.css \
@@ -45,6 +46,7 @@ jobs:
             retool.html \
             robots.txt \
             sitemap.xml \
+            signup-dialog.css \
             styles.css \
             theme.css \
             theme.js \
