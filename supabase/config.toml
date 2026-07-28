@@ -4,6 +4,10 @@ project_id = "archivist"
 verify_jwt = false
 import_map = "./functions/deno.json"
 
+[functions.record-feature-emphasis]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
 [functions.confirm-early-access]
 verify_jwt = false
 import_map = "./functions/deno.json"

@@ -80,23 +80,30 @@ Deno.serve(async (request) => {
       ["landing_page", clippedField("landing_page", 200)],
     ].filter((entry): entry is [string, string] => entry[1] !== null),
   );
-  const { data, error } = await db.rpc("request_early_access_v2", {
-    p_email: email,
-    p_token_id: tokenId,
-    p_token_hash: bytea(hash),
-    p_expires_at: expiresAt,
-    p_source: "archivist-site",
-    p_form_version: Deno.env.get("EARLY_ACCESS_FORM_VERSION") || "1",
-    p_policy_version: requiredEnv("EARLY_ACCESS_POLICY_VERSION"),
-    p_request_fingerprint: bytea(
-      await requestFingerprint(`ip:${sourceAddress}`),
-    ),
-    p_email_fingerprint: bytea(
-      await requestFingerprint(`email:${normalizedEmail}`),
-    ),
-    p_product_research: field("product_research") === "yes",
-    p_attribution: attribution,
-  });
+  const emphasisSubjectId = clippedField("emphasis_subject_id", 36);
+  const initialFeature = clippedField("initial_feature", 10);
+  const { data, error } = await db.rpc(
+    "request_early_access_with_preferences",
+    {
+      p_email: email,
+      p_token_id: tokenId,
+      p_token_hash: bytea(hash),
+      p_expires_at: expiresAt,
+      p_source: "archivist-site",
+      p_form_version: Deno.env.get("EARLY_ACCESS_FORM_VERSION") || "1",
+      p_policy_version: requiredEnv("EARLY_ACCESS_POLICY_VERSION"),
+      p_request_fingerprint: bytea(
+        await requestFingerprint(`ip:${sourceAddress}`),
+      ),
+      p_email_fingerprint: bytea(
+        await requestFingerprint(`email:${normalizedEmail}`),
+      ),
+      p_product_research: field("product_research") === "yes",
+      p_attribution: attribution,
+      p_emphasis_subject_id: emphasisSubjectId,
+      p_initial_feature: initialFeature,
+    },
+  );
 
   if (error) {
     console.error("Early-access request failed", error);

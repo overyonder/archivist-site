@@ -53,6 +53,10 @@ change:
 
 ## Production checks
 
+- Compare initial Canon and Atlas emphasis with
+  `select * from public.feature_emphasis_summary order by initial_feature;`
+  using a service-role or direct database session. Treat confirmed signups as
+  the primary result; card selections are supporting evidence.
 - Resend tracking remains disabled and TLS remains enforced. SES tracking must
   remain privacy-equivalent before switching providers.
 - Review failed, suppressed and dead-letter deliveries, oldest queue age,

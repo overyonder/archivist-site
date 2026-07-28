@@ -15,9 +15,10 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Archivist Pro","url":"https://archivist.over-yonder.tech/pro","description":"Compare Archivist Free and Pro, including permanent ownership and optional Curator and Historian content updates.","isPartOf":{"@type":"WebSite","name":"Archivist","url":"https://archivist.over-yonder.tech/"},"creator":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <script src="theme.js?v=2"></script>
+  <script src="feature-emphasis.js?site=archivist-v1"></script>
   <link rel="stylesheet" href="performance.css?site=archivist-v8">
   <link rel="stylesheet" href="theme.css?site=archivist-v3">
-  <link rel="stylesheet" href="pro.css?site=archivist-v1">
+  <link rel="stylesheet" href="pro.css?site=archivist-v2">
 </head>
 <body class="performance-page pro-page">
   <header class="site-header">
@@ -37,7 +38,7 @@
   <main>
     <section class="pro-hero">
       <p class="eyebrow">Free to play · Pro to understand</p>
-      <h1>Your collection works for free.<br>Pro makes it definitive.</h1>
+      <h1>Your collection works for free.<br><span class="feature-copy feature-copy-canon">Pro makes it definitive.</span><span class="feature-copy feature-copy-atlas">Pro reveals its history.</span></h1>
       <p class="hero-lede">Archivist Free configures, checks, organises and launches your collection. Pro adds the hand-curated Canon and historical Atlas—and you own the version you buy forever.</p>
 
       <div class="offer-grid" aria-label="Archivist plans">
@@ -82,7 +83,7 @@
       </div>
 
       <div class="pillars">
-        <article class="pillar">
+        <article class="pillar" data-feature="canon">
           <span class="pillar-no">01 / The Canon</span>
           <h3>One title across five catalogues.</h3>
           <p>No-Intro, Redump, TOSEC, MAME and TDC can each describe valid material while still leaving the same game scattered across providers, systems, revisions and formats. Archivist Pro applies hand-reviewed cross-provider decisions to choose one authoritative identity and its preferred representations.</p>
@@ -91,9 +92,10 @@
             <span class="canon-arrow" aria-hidden="true">→</span>
             <span class="canon-result">One canonical title</span>
           </div>
+          <button class="feature-control" type="button" data-emphasize-feature="canon" aria-pressed="false">Emphasise the Canon</button>
         </article>
 
-        <article class="pillar">
+        <article class="pillar" data-feature="atlas">
           <span class="pillar-no">02 / The Atlas</span>
           <h3>Play the connections.</h3>
           <p>Start from a game and see its releases across computers, consoles and arcade hardware. Follow hand-curated families and genealogies to understand how genres, themes and mechanics branched, recombined and travelled through the medium.</p>
@@ -101,6 +103,7 @@
             <span class="atlas-root">Wizardry</span>
             <div class="atlas-branches"><span>Apple II</span><span>MS-DOS</span><span>NES</span></div>
           </div>
+          <button class="feature-control" type="button" data-emphasize-feature="atlas" aria-pressed="false">Emphasise the Atlas</button>
         </article>
       </div>
     </section>
@@ -141,7 +144,7 @@
     </div>
   </footer>
 
-  <dialog class="legal-dialog" id="privacyDialog"><div><h2>Privacy, plainly.</h2><p>Archivist uses privacy-focused site analytics and stores your theme on your device. If you join the release list, we store your address, choices, delivery status and any campaign label in the link you followed. We don’t sell personal information or use advertising pixels.</p><p><a href="privacy">Read the full privacy policy</a></p><button type="button" data-dialog-close>Understood</button></div></dialog>
+  <dialog class="legal-dialog" id="privacyDialog"><div><h2>Privacy, plainly.</h2><p>Archivist uses privacy-focused site analytics and stores your theme and Pro feature emphasis on your device. If you join the release list, we store your address, choices, delivery status, feature emphasis and any campaign label in the link you followed. We don’t sell personal information or use advertising pixels.</p><p><a href="privacy">Read the full privacy policy</a></p><button type="button" data-dialog-close>Understood</button></div></dialog>
   <dialog class="legal-dialog" id="piracyDialog"><div><h2>Your collection, your software.</h2><p>You supply your own legally obtained game software. Archivist sorts, verifies, displays and launches it.</p><button type="button" data-dialog-close>Understood</button></div></dialog>
   <script src="policies.js?site=archivist-v3"></script>
 </body>
