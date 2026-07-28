@@ -21,7 +21,21 @@ if (form) {
   const challenge = form.querySelector("[data-early-access-challenge]");
   const submit = form.querySelector('button[type="submit"]');
   const status = form.querySelector("[data-early-access-status]");
-  const idleMessage = "We’ll notify you when paid early access opens and again when Archivist Free is released. Unsubscribe anytime.";
+  const idleMessage = "Release emails cover paid early access, major availability changes and the Archivist Free release. Unsubscribe anytime.";
+
+  const attribution = new URLSearchParams(window.location.search);
+  const campaignFields = {
+    campaign_source: "utm_source",
+    campaign_medium: "utm_medium",
+    campaign_name: "utm_campaign",
+    campaign_content: "utm_content",
+  };
+  Object.entries(campaignFields).forEach(([fieldName, parameterName]) => {
+    const field = form.elements.namedItem(fieldName);
+    if (field) field.value = (attribution.get(parameterName) ?? "").slice(0, 100);
+  });
+  const landingPage = form.elements.namedItem("landing_page");
+  if (landingPage) landingPage.value = window.location.pathname.slice(0, 200);
 
   const setReady = (ready, message = idleMessage) => {
     submit.disabled = !ready;

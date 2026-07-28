@@ -197,6 +197,7 @@ tr.shipped td { color: var(--text); background: #151108; }
 .legal-dialog div { padding: 28px; }
 .legal-dialog h2 { margin: 0 0 14px; font-size: 22px; }
 .legal-dialog p { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+.legal-dialog a { color: var(--accent); }
 .legal-dialog.ownership-dialog { width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; }
 .ownership-dialog h3 { margin: 0 0 10px; color: var(--text); font-size: 14px; }
 .ownership-dialog ol { margin: 0 0 22px; padding-left: 22px; color: var(--muted); line-height: 1.55; }

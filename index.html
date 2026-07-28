@@ -40,12 +40,17 @@
     .signup { display: block; text-align: left; }
     .signup-form { width: min(100%, 470px); }
     .signup-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
-    .signup input { min-width: 0; padding: 12px 13px; color: var(--text); background: var(--control-bg); border: 1px solid var(--line-bright); border-right: 0; border-radius: 0; font: 13px ui-monospace, monospace; outline: none; }
-    .signup input::placeholder { color: var(--muted); }
-    .signup input:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+    .signup input[type="email"] { min-width: 0; padding: 12px 13px; color: var(--text); background: var(--control-bg); border: 1px solid var(--line-bright); border-right: 0; border-radius: 0; font: 13px ui-monospace, monospace; outline: none; }
+    .signup input[type="email"]::placeholder { color: var(--muted); }
+    .signup input[type="email"]:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+    .signup-choice { display: flex; align-items: flex-start; gap: 9px; margin-top: 10px; color: var(--muted); font-size: 11px; line-height: 1.45; cursor: pointer; }
+    .signup-choice input { flex: 0 0 auto; width: 15px; height: 15px; margin: 1px 0 0; accent-color: var(--accent); }
+    .signup-choice a { color: var(--accent); }
     .signup button:disabled { opacity: .52; cursor: wait; }
     .signup button:disabled:hover { background: var(--accent); }
     .signup small { display: block; max-width: none; margin-top: 9px; }
+    .signup small + small { margin-top: 4px; }
+    .signup a { color: var(--accent); }
     .turnstile-challenge { min-height: 0; margin-top: 9px; }
     .early-access-benefit { max-width: 470px; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
     .early-access-benefit strong { color: var(--text); }
@@ -133,7 +138,7 @@
       .header-separator { display: none; }
       .mobile-nav { display: block; }
       .signup-fields { grid-template-columns: 1fr; gap: 8px; }
-      .signup input { border-right: 1px solid var(--line-bright); }
+      .signup input[type="email"] { border-right: 1px solid var(--line-bright); }
       .signup button { width: 100%; }
       .site-footer { padding-inline: 16px; }
     }
@@ -183,8 +188,18 @@
             <input id="early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
             <button type="submit" disabled>Get notified for early access</button>
           </div>
+          <label class="signup-choice">
+            <input name="product_research" type="checkbox" value="yes">
+            <span>Also send occasional product notes and invitations to surveys or early testing. Optional; you can unsubscribe anytime.</span>
+          </label>
+          <input name="campaign_source" type="hidden">
+          <input name="campaign_medium" type="hidden">
+          <input name="campaign_name" type="hidden">
+          <input name="campaign_content" type="hidden">
+          <input name="landing_page" type="hidden">
           <div class="turnstile-challenge" data-early-access-challenge></div>
-          <small data-early-access-status aria-live="polite">We’ll notify you when paid early access opens and again when Archivist Free is released. Unsubscribe anytime.</small>
+          <small data-early-access-status aria-live="polite">Release emails cover paid early access, major availability changes and the Archivist Free release. Unsubscribe anytime.</small>
+          <small>See how we handle your information in our <a href="privacy">privacy policy</a>.</small>
         </form>
       </div>
       <ul class="facts" aria-label="Product highlights">
@@ -246,7 +261,8 @@
   <dialog class="legal-dialog" id="privacyDialog">
     <div>
       <h2>Privacy, plainly.</h2>
-      <p>Cloudflare provides aggregate site analytics and uses Turnstile to protect the notification form from abuse. Your browser stores your theme preference. If you ask to be notified, we’ll keep your address in Supabase and use Resend to send the confirmation email, notify you when paid early access opens, and notify you again when Archivist Free is released. We won’t sell your address or add it to another list, and you can unsubscribe at any time.</p>
+      <p>Archivist uses privacy-focused site analytics and stores your theme on your device. If you join the release list, we store your address, choices, delivery status and any campaign label in the link you followed. We don’t sell personal information or use advertising pixels.</p>
+      <p><a href="privacy">Read the full privacy policy</a></p>
       <button type="button" data-dialog-close>Understood</button>
     </div>
   </dialog>
@@ -260,7 +276,7 @@
   </dialog>
 
   <script src="main.js?site=archivist-v8"></script>
-  <script src="policies.js?site=archivist-v2"></script>
-  <script type="module" src="early-access-form.js?site=archivist-v3"></script>
+  <script src="policies.js?site=archivist-v3"></script>
+  <script type="module" src="early-access-form.js?site=archivist-v4"></script>
 </body>
 </html>

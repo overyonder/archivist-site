@@ -1,12 +1,6 @@
 import { bytea, database, errorMessage } from "../_shared/database.ts";
 import { requiredEnv } from "../_shared/config.ts";
-import {
-  acceptsHtml,
-  corsHeaders,
-  json,
-  redirect,
-  requestField,
-} from "../_shared/http.ts";
+import { acceptsHtml, corsHeaders, json, redirect } from "../_shared/http.ts";
 import { sendConfirmation } from "../_shared/email.ts";
 import {
   actionToken,
@@ -26,8 +20,22 @@ Deno.serve(async (request) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const challengeRequest = request.clone();
-  const email = (await requestField(request, "email"))?.trim();
+  const contentType = request.headers.get("content-type") ?? "";
+  const submission = contentType.includes("application/json")
+    ? await request.json().catch(() => null) as Record<string, unknown> | null
+    : await request.formData().then((form) => Object.fromEntries(form)).catch(
+      () => null,
+    );
+  const field = (name: string): string | null => {
+    const value = submission?.[name];
+    return typeof value === "string" ? value : null;
+  };
+  const clippedField = (name: string, maximum: number): string | null => {
+    const value = field(name)?.trim();
+    return value ? value.slice(0, maximum) : null;
+  };
+
+  const email = field("email")?.trim();
   if (!email) {
     return acceptsHtml(request)
       ? redirect("/early-access/error/")
@@ -43,10 +51,7 @@ Deno.serve(async (request) => {
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
   const normalizedEmail = email.toLowerCase();
-  const challengeToken = (await requestField(
-    challengeRequest,
-    "cf-turnstile-response",
-  ))?.trim();
+  const challengeToken = field("cf-turnstile-response")?.trim();
   if (
     !challengeToken ||
     !(await verifyEarlyAccessChallenge(challengeToken).catch(
@@ -66,7 +71,16 @@ Deno.serve(async (request) => {
   const token = await actionToken(tokenId);
   const hash = await tokenHash(token);
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1_000).toISOString();
-  const { data, error } = await db.rpc("request_early_access", {
+  const attribution = Object.fromEntries(
+    [
+      ["source", clippedField("campaign_source", 100)],
+      ["medium", clippedField("campaign_medium", 100)],
+      ["campaign", clippedField("campaign_name", 100)],
+      ["content", clippedField("campaign_content", 100)],
+      ["landing_page", clippedField("landing_page", 200)],
+    ].filter((entry): entry is [string, string] => entry[1] !== null),
+  );
+  const { data, error } = await db.rpc("request_early_access_v2", {
     p_email: email,
     p_token_id: tokenId,
     p_token_hash: bytea(hash),
@@ -80,6 +94,8 @@ Deno.serve(async (request) => {
     p_email_fingerprint: bytea(
       await requestFingerprint(`email:${normalizedEmail}`),
     ),
+    p_product_research: field("product_research") === "yes",
+    p_attribution: attribution,
   });
 
   if (error) {

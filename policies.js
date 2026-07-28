@@ -10,7 +10,7 @@ if (policyLinks) {
     <dialog class="legal-dialog ownership-dialog" id="ownershipDialog">
       <div>
         <h2>Your copy stays yours.</h2>
-        <p>Archivist Free and purchased Pro capabilities will work offline without periodic activation, a remote kill switch, hardware locking, or activation counts. Licences will be verified locally. Losing over|yonder’s servers won’t disable the application or content already issued to you, and the end of a content-update period will only limit access to newer packs.</p>
+        <p>Archivist Free and the Pro capabilities covered by your licence will work offline without periodic activation, a remote kill switch, hardware locking, or activation counts. Licences will be verified locally. Losing over|yonder’s servers won’t disable software or eligible content packs already issued to you. The end of a content-update period will only limit access to later packs.</p>
         <h3>If Archivist shuts down, we will:</h3>
         <ol>
           <li>Give customers reasonable notice and a final opportunity to download a complete ownership archive: installer, licence, eligible content packs, signed manifests, checksums, public verification keys, and recovery instructions.</li>
