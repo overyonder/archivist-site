@@ -121,6 +121,27 @@ code, .mono { color: var(--accent-soft); font-family: ui-monospace, SFMono-Regul
 .architecture strong { display: block; font-size: 13px; }
 .architecture small { display: block; margin-top: 7px; color: var(--dim); font-size: 10px; line-height: 1.45; }
 
+.pipeline-figure {
+  width: calc(100% + clamp(32px, 6vw, 86px));
+  margin: 38px 0 0 calc(clamp(32px, 6vw, 86px) * -1);
+}
+.pipeline-figure-frame {
+  overflow-x: auto;
+  background: var(--surface-0);
+  border: 1px solid var(--line-bright);
+}
+.pipeline-figure-image { display: block; width: 100%; height: auto; }
+.pipeline-figure-image-light { display: none; }
+.pipeline-figure figcaption {
+  max-width: 800px;
+  margin-top: 14px;
+  padding-left: 16px;
+  color: var(--dim);
+  border-left: 2px solid var(--accent);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .table-wrap { margin: 26px 0; overflow-x: auto; border: 1px solid var(--line); }
 table { width: 100%; min-width: 650px; border-collapse: collapse; color: var(--muted); font: 11px/1.45 ui-monospace, monospace; }
 caption { padding: 13px 15px; color: var(--text); background: var(--panel-2); border-bottom: 1px solid var(--line); font-weight: 700; text-align: left; }
@@ -212,6 +233,8 @@ tr.shipped td { color: var(--text); background: #151108; }
   .architecture { grid-template-columns: 1fr; gap: 10px; }
   .architecture div { min-height: auto; }
   .architecture div:not(:last-child)::after { top: calc(100% - 2px); left: 50%; transform: rotate(90deg); }
+  .pipeline-figure { width: 100%; margin-left: 0; }
+  .pipeline-figure-image { width: 720px; max-width: none; }
   .config-example { grid-template-columns: 1fr; }
 }
 

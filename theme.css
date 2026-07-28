@@ -159,6 +159,9 @@ body.performance-page {
 .card,
 .architecture div,
 .waterfall { background: var(--panel); }
+.pipeline-figure-image-light { display: none; }
+:root[data-theme="light"] .pipeline-figure-image-dark { display: none; }
+:root[data-theme="light"] .pipeline-figure-image-light { display: block; }
 th { background: var(--surface-2); }
 tr.shipped td { background: var(--warm-panel); }
 .pullquote { background: linear-gradient(90deg, var(--warm-pullquote), var(--panel)); }
@@ -167,6 +170,11 @@ tr.shipped td { background: var(--warm-panel); }
 .article-footer { background: var(--surface-0); }
 .footer-links a:hover,
 .signup button { color: var(--control-contrast); }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .pipeline-figure-image-dark { display: none; }
+  :root:not([data-theme]) .pipeline-figure-image-light { display: block; }
+}
 
 .performance { color: var(--dim); }
 .fact-info { border-color: var(--line-bright); }
