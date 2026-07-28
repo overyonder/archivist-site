@@ -1,3 +1,27 @@
+-- Moving citext into the extensions schema left stored PL/pgSQL definitions
+-- referring to its former public path. Recreate every affected function from
+-- its current catalogue definition before adding the signup wrapper.
+do $$
+declare
+    v_definition text;
+begin
+    for v_definition in
+        select pg_get_functiondef(procedure.oid)
+        from pg_proc procedure
+        join pg_namespace namespace on namespace.oid = procedure.pronamespace
+        where namespace.nspname = 'public'
+          and procedure.prokind = 'f'
+          and pg_get_functiondef(procedure.oid) like '%public.citext%'
+    loop
+        execute replace(
+            v_definition,
+            'public.citext',
+            'extensions.citext'
+        );
+    end loop;
+end;
+$$;
+
 alter table public.consent_events
     drop constraint consent_events_kind_check;
 
@@ -33,7 +57,7 @@ set search_path = ''
 as $$
 declare
     v_result record;
-    v_email public.citext;
+    v_email public.contacts.email%type;
 begin
     if p_product_research is null
         or p_attribution is null

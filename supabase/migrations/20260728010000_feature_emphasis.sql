@@ -182,7 +182,7 @@ set search_path = ''
 as $$
 declare
     v_result record;
-    v_email public.citext;
+    v_email public.contacts.email%type;
 begin
     if p_product_research is null
         or p_attribution is null
