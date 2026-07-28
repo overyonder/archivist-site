@@ -51,7 +51,6 @@ html[data-pro-first-feature="atlas"] .pillar[data-feature="atlas"] { border-colo
 .research-pledge { max-width: 1040px; margin: 18px 0 0; padding: clamp(26px, 4vw, 42px); background: var(--warm-panel); border: 1px solid var(--line-bright); }
 .research-pledge h3 { max-width: 760px; margin: 15px 0 16px; font-size: clamp(25px, 3vw, 36px); letter-spacing: -.035em; }
 .research-pledge > p:not(.eyebrow) { max-width: 820px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
-.research-pledge > p + p { padding-top: 12px; }
 .ownership { background: var(--surface-1); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .ownership-inner { max-width: 1040px; margin: 0 auto; padding: clamp(64px, 8vw, 100px) clamp(20px, 5vw, 70px); }
 .ownership-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 1px; margin-top: 38px; background: var(--line); border: 1px solid var(--line); }
