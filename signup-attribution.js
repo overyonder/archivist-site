@@ -20,7 +20,11 @@
   const isAttribution = (value) =>
     value &&
     typeof value.subjectId === "string" &&
-    isSlug(value.sourcePage) &&
+    Array.isArray(value.sourcePages) &&
+    value.sourcePages.length > 0 &&
+    value.sourcePages.length <= 16 &&
+    value.sourcePages.every(isSlug) &&
+    new Set(value.sourcePages).size === value.sourcePages.length &&
     (
       value.proFirstFeature === null ||
       isSlug(value.proFirstFeature)
@@ -29,6 +33,14 @@
   const readStoredAttribution = () => {
     try {
       const value = JSON.parse(window.localStorage.getItem(storageKey));
+      if (
+        value &&
+        typeof value.subjectId === "string" &&
+        isSlug(value.sourcePage)
+      ) {
+        value.sourcePages = [value.sourcePage];
+        delete value.sourcePage;
+      }
       return isAttribution(value) ? value : null;
     } catch {
       return null;
@@ -43,11 +55,17 @@
   };
 
   const stored = readStoredAttribution();
+  const meaningfulSource = isSlug(sourcePage) ? sourcePage : null;
+  const previousSources = stored?.sourcePages ?? [];
+  const sourcePages = meaningfulSource
+    ? [
+      ...previousSources.filter((source) => source !== "direct"),
+      ...(previousSources.includes(meaningfulSource) ? [] : [meaningfulSource]),
+    ]
+    : (previousSources.length > 0 ? previousSources : ["direct"]);
   const attribution = {
     subjectId: stored?.subjectId ?? window.crypto.randomUUID(),
-    sourcePage: isSlug(sourcePage)
-      ? sourcePage
-      : (stored?.sourcePage ?? "direct"),
+    sourcePages,
     proFirstFeature: stored?.proFirstFeature ??
       (proFeatures.length > 0 ? chooseFeature() : null),
   };

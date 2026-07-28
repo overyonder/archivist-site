@@ -39,10 +39,12 @@ if (form) {
   const signupAttribution = window.ArchivistSignupAttribution?.value;
   if (signupAttribution) {
     const subjectId = form.elements.namedItem("attribution_subject_id");
-    const signupSource = form.elements.namedItem("signup_source");
+    const signupSources = form.elements.namedItem("signup_sources");
     const proFirstFeature = form.elements.namedItem("pro_first_feature");
     if (subjectId) subjectId.value = signupAttribution.subjectId;
-    if (signupSource) signupSource.value = signupAttribution.sourcePage;
+    if (signupSources) {
+      signupSources.value = JSON.stringify(signupAttribution.sourcePages);
+    }
     if (proFirstFeature) {
       proFirstFeature.value = signupAttribution.proFirstFeature ?? "";
     }

@@ -81,7 +81,19 @@ Deno.serve(async (request) => {
     ].filter((entry): entry is [string, string] => entry[1] !== null),
   );
   const attributionSubjectId = clippedField("attribution_subject_id", 36);
-  const signupSource = clippedField("signup_source", 64);
+  const signupSources = (() => {
+    try {
+      const value = JSON.parse(field("signup_sources") ?? "");
+      return Array.isArray(value) &&
+          value.length > 0 &&
+          value.length <= 16 &&
+          value.every((source) => typeof source === "string")
+        ? value
+        : null;
+    } catch {
+      return null;
+    }
+  })();
   const proFirstFeature = clippedField("pro_first_feature", 64);
   const { data, error } = await db.rpc(
     "request_early_access_with_preferences",
@@ -102,7 +114,7 @@ Deno.serve(async (request) => {
       p_product_research: field("product_research") === "yes",
       p_attribution: attribution,
       p_attribution_subject_id: attributionSubjectId,
-      p_signup_source: signupSource,
+      p_signup_sources: signupSources,
       p_pro_first_feature: proFirstFeature,
     },
   );

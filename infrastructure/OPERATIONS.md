@@ -53,7 +53,7 @@ change:
 
 ## Production checks
 
-- Compare release-list signups by their last meaningful site page with
+- Compare release-list signups by every selected site page seen before signup with
   `select * from public.signup_source_summary order by signup_source;`.
 - Compare the first Pro feature shown with
   `select * from public.pro_feature_summary order by pro_first_feature;`.
