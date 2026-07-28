@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How Archivist extends One Game, One ROM curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.">
+  <meta name="description" content="How Archivist extends 1G1R curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.">
   <title>Reviving Retool — Archivist</title>
   <link rel="canonical" href="https://archivist.over-yonder.tech/retool">
   <meta property="og:title" content="Reviving Retool — Archivist">
-  <meta property="og:description" content="How Archivist extends One Game, One ROM curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.">
+  <meta property="og:description" content="How Archivist extends 1G1R curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.">
   <meta property="og:url" content="https://archivist.over-yonder.tech/retool">
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://archivist.over-yonder.tech/assets/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Reviving Retool","description":"How Archivist extends One Game, One ROM curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.","url":"https://archivist.over-yonder.tech/retool","image":"https://archivist.over-yonder.tech/assets/social-card.png","author":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Reviving Retool","description":"How Archivist extends 1G1R curation across No-Intro, Redump, TOSEC, MAME and other preservation catalogues.","url":"https://archivist.over-yonder.tech/retool","image":"https://archivist.over-yonder.tech/assets/social-card.png","author":{"@type":"Organization","name":"over|yonder","url":"https://over-yonder.tech/"}}</script>
   <link rel="icon" href="mark.svg" type="image/svg+xml">
   <script src="theme.js?v=2"></script>
   <script src="signup-attribution.js?site=archivist-v4"></script>
@@ -43,8 +43,8 @@
     <figure class="research-figure">
       <img src="assets/articles/retool-research-desk.jpg" alt="A research desk with handwritten notes, game controllers and historical game research open on a monitor" width="1280" height="964" decoding="async">
       <figcaption>
-        <strong>Archivist is made by a real person, not an algorithm, because good research still needs one.</strong>
-        <span>AI, at least for now, can’t log into CYBER1 through pterm and browse the pbnotes to find which games remain preserved in secret lecture files from 1975. It can’t test CX41 controller support in 7800. Perhaps one day we’ll get there. For now, Archivist needs a human.</span>
+        <strong>Archivist’s catalogue depends on manual research.</strong>
+        <span>Some checks require direct access to unusual systems and archives: browsing the CYBER1 pbnotes through pterm to identify games preserved in lecture files from 1975, or testing CX41 controller support in 7800. Automated classification helps find the work; a person still has to do it.</span>
       </figcaption>
     </figure>
 
@@ -63,11 +63,11 @@
       <article class="article">
         <section id="retool">
           <span class="section-no">01 / what Retool solved</span>
-          <h2>One Game, One ROM needed more than a region filter.</h2>
-          <p>A preservation catalogue file, commonly called a DAT, can contain dozens of releases of the same game. Regions, languages, revisions, budget rereleases, compilations and prototypes all sit beside one another. Traditional One Game, One ROM selection relies heavily on parent-and-clone links and region order. That can select a French release because Canada ranked first, or an older revision because it happened to appear earlier in the file.</p>
+          <h2>One Game, One ROM (1G1R) needed more than a region filter.</h2>
+          <p>A preservation catalogue file, commonly called a DAT, can contain dozens of releases of the same game. Regions, languages, revisions, budget rereleases, compilations and prototypes all sit beside one another. Traditional 1G1R selection relies heavily on parent-and-clone links and region order. That can select a French release because Canada ranked first, or an older revision because it happened to appear earlier in the file.</p>
           <p><a href="https://unexpectedpanda.github.io/retool/retool-1g1r/">Retool, created by unexpectedpanda, tackled the harder question</a>. It ignored the parent-and-clone assignments inherited from the input catalogue, derived relationships from normalised title names, and supplemented them with human-maintained lists of equivalent releases. Region, language, version, release status and edition all became ordered policy rather than a single score.</p>
           <p>It also understood that some decisions require research. A compilation may supersede several separate releases. A regional title may be the same game under another name. A cosmetic reskin may belong to the same family, while a release with new levels deserves its own identity. Retool recorded that knowledge instead of asking every user to rediscover it.</p>
-          <p class="pullquote">Retool’s great contribution was treating curation as a body of knowledge that software could apply repeatedly.</p>
+          <p class="pullquote">Retool recorded curation as data that software could apply repeatedly.</p>
           <p><a href="https://github.com/unexpectedpanda/retool/issues/337">Retool is no longer maintained</a>, but its idea and carefully assembled tables still form part of Archivist’s selection policy.</p>
         </section>
 
@@ -76,22 +76,22 @@
           <h2>Retool worked one catalogue at a time.</h2>
           <p>Retool reads one No-Intro or Redump catalogue, applies the user’s preferences, and writes a smaller catalogue for a collection manager. The input file defines the universe of possible titles. Equivalent-release detection, exclusions and selection all happen inside that boundary.</p>
           <p>That boundary made Retool practical. It could understand the naming conventions of two preservation groups deeply, maintain equivalence lists for each catalogue, and leave file management to established tools such as RomVault, CLRMAMEPro and Igir.</p>
-          <p><a href="https://unexpectedpanda.github.io/retool/dat-support/">Its documentation is candid about the catalogues it left alone</a>. MAME and FinalBurn Neo would have required a large, frequently updated curated list. The Old School Emulation Center spans thousands of catalogue files and uses a naming system Retool didn’t implement. Retool chose depth over pretending to cover inputs it couldn’t curate well.</p>
-          <p>Archivist has a different unit of work: the historical system. A Sega Master System game may appear in No-Intro, a MAME software list, FinalBurn Neo, RetroAchievements and an older TOSEC catalogue. Those sources can disagree about names, categories, parentage and even which system owns the release. None of them gets to define the player’s shelf alone.</p>
+          <p><a href="https://unexpectedpanda.github.io/retool/dat-support/">Its documentation is candid about the catalogues it left alone</a>. MAME and FinalBurn Neo would have required a large, frequently updated curated list. The Old School Emulation Center spans thousands of catalogue files and uses a naming system Retool didn’t implement. Retool focused on the catalogues it could curate well and left the others unsupported.</p>
+          <p>Archivist has a different unit of work: the historical system. A Sega Master System game may appear in No-Intro, a MAME software list, FinalBurn Neo, RetroAchievements and an older TOSEC catalogue. Those sources can disagree about names, categories, parentage and even which system owns the release. Archivist compares all accepted sources for the system before selecting its titles.</p>
         </section>
 
         <section id="preservation">
           <span class="section-no">03 / preservation scope</span>
           <h2>Preservation records far more than games.</h2>
-          <p><a href="https://datomatic.no-intro.org/">No-Intro</a>, <a href="http://redump.org/">Redump</a>, <a href="https://www.tosecdev.org/">TOSEC</a> and <a href="https://www.mamedev.org/">MAME</a> document media and machines for preservation. Their breadth is the reason Archivist can exist. It also means a raw import is a poor game menu.</p>
+          <p><a href="https://datomatic.no-intro.org/">No-Intro</a>, <a href="http://redump.org/">Redump</a>, <a href="https://www.tosecdev.org/">TOSEC</a> and <a href="https://www.mamedev.org/">MAME</a> document media and machines for preservation. Archivist uses those records as source material, but a raw import contains far more than its playable-game catalogue needs.</p>
           <p>Import every available catalogue and you collect hundreds of thousands of rows that were never meant to represent distinct playable games: commercials, magazine cover media, manuals, system firmware, test cartridges, store kiosks, McDonald’s toys, educational software, multimedia discs and many varieties of demo and prototype.</p>
-          <p>Choosing only a folder or category called <em>Games</em> doesn’t solve it. Gambling machines, skill testers and vending machines can still slip through. A real game can be filed under Multimedia, Applications, Unofficial, a generic software list, or an unexpected system name. Categories are evidence from the cataloguer who supplied them. They aren’t a final verdict on what belongs in Archivist.</p>
-          <p>That distinction isn’t a complaint about the preservation projects. A commercial, a diagnostic cartridge and a soda dispenser controller may all be worth preserving. Archivist is making the narrower promise that a player can browse the history of playable games without wading through every other artefact preserved alongside them.</p>
+          <p>Choosing only a folder or category called <em>Games</em> doesn’t solve it. Gambling machines, skill testers and vending machines can still slip through. A real game can be filed under Multimedia, Applications, Unofficial, a generic software list, or an unexpected system name. Categories help locate candidates, but cannot decide inclusion by themselves.</p>
+          <p>A commercial, a diagnostic cartridge and a soda dispenser controller may all be worth preserving. Archivist filters that material from its default collection so the catalogue presents playable games.</p>
         </section>
 
         <section id="system">
           <span class="section-no">04 / the system-level join</span>
-          <h2>Gather every account before choosing.</h2>
+          <h2>Combine the sources before selecting releases.</h2>
           <p>Archivist begins with a reviewed system definition. That definition names the relevant catalogue sources, whether they use the common DAT format or another structured format such as XML. It also records aliases for catalogues whose filenames don’t line up neatly with the system’s canonical name. A source contributes to the playable collection only after it has been accepted into policy.</p>
           <p>Each accepted manifest is parsed into the same release model. Archivist records its title and description, playable state, provider identifiers, parent relationships, media hashes and source path. The selection pass then runs across every accepted source for that system. When several catalogues describe the same game, their source paths accumulate under one selected title.</p>
           <div class="architecture" aria-label="System catalogue selection stages">
@@ -138,12 +138,12 @@
 
         <section id="result">
           <span class="section-no">07 / the player’s collection</span>
-          <h2>The player gets the finished shelf.</h2>
+          <h2>The player gets the selected catalogue.</h2>
           <p>When three catalogues describe the same game, Archivist records all three as provenance under one title. When a later revision should win, the policy chooses it. When a provider’s category is wrong, the reviewed override supplies the decision. When an unusual release remains uncertain, it stays out of the default collection until someone has done the research.</p>
           <p>The selected catalogue identity connects this policy to the rest of Archivist. It tells the Historian catalogue service which files count as evidence, the collection verifier what a complete release requires, the interface which title to display, and the launch system what should run.</p>
-          <p>Reviving Retool means accepting the same wager its author made: good curation can be written down, shared and improved. Archivist extends that wager across preservation projects and into MAME, then ships the result as part of the product.</p>
+          <p>Archivist retains Retool’s core approach: record human curation as data that software can reuse. It applies that approach across preservation projects and into MAME, then ships the selected catalogue as part of the product.</p>
           <p>Archivist will also publish its reusable clone and equivalent-release relationships, with their provenance, as a public dataset under terms that permit reuse in other tools.</p>
-          <p class="pullquote">The archive can stay complete. The player’s shelf can stay curated.</p>
+          <p class="pullquote">Preservation sources stay complete. Archivist presents the selected games.</p>
         </section>
       </article>
     </div>
