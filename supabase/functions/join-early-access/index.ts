@@ -80,8 +80,9 @@ Deno.serve(async (request) => {
       ["landing_page", clippedField("landing_page", 200)],
     ].filter((entry): entry is [string, string] => entry[1] !== null),
   );
-  const emphasisSubjectId = clippedField("emphasis_subject_id", 36);
-  const initialFeature = clippedField("initial_feature", 10);
+  const attributionSubjectId = clippedField("attribution_subject_id", 36);
+  const signupSource = clippedField("signup_source", 64);
+  const proFirstFeature = clippedField("pro_first_feature", 64);
   const { data, error } = await db.rpc(
     "request_early_access_with_preferences",
     {
@@ -100,8 +101,9 @@ Deno.serve(async (request) => {
       ),
       p_product_research: field("product_research") === "yes",
       p_attribution: attribution,
-      p_emphasis_subject_id: emphasisSubjectId,
-      p_initial_feature: initialFeature,
+      p_attribution_subject_id: attributionSubjectId,
+      p_signup_source: signupSource,
+      p_pro_first_feature: proFirstFeature,
     },
   );
 

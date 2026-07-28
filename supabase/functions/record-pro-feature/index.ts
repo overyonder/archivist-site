@@ -2,10 +2,9 @@ import { bytea, database } from "../_shared/database.ts";
 import { corsHeaders, json } from "../_shared/http.ts";
 import { requestFingerprint } from "../_shared/token.ts";
 
-const emphasisKey = "pro-benefit-emphasis-v1";
-const features = new Set(["canon", "atlas"]);
 const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const slugPattern = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 Deno.serve(async (request) => {
   const cors = corsHeaders(request);
@@ -21,45 +20,35 @@ Deno.serve(async (request) => {
     | null;
   const field = (name: string) =>
     typeof body?.[name] === "string" ? body[name] as string : null;
-  const key = field("emphasis_key");
   const subjectId = field("subject_id");
-  const initialFeature = field("initial_feature");
-  const eventId = field("event_id");
-  const selectedFeature = field("selected_feature");
+  const firstFeature = field("first_feature");
 
   if (
-    key !== emphasisKey ||
     !subjectId ||
     !uuidPattern.test(subjectId) ||
-    !initialFeature ||
-    !features.has(initialFeature) ||
-    ((eventId === null) !== (selectedFeature === null)) ||
-    (eventId !== null && !uuidPattern.test(eventId)) ||
-    (selectedFeature !== null && !features.has(selectedFeature))
+    !firstFeature ||
+    !slugPattern.test(firstFeature)
   ) {
-    return json({ error: "Invalid feature emphasis" }, 400, cors);
+    return json({ error: "Invalid Pro feature record" }, 400, cors);
   }
 
   const sourceAddress = request.headers.get("cf-connecting-ip")?.trim() ||
     request.headers.get("x-real-ip")?.trim() ||
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
-  const { error } = await database().rpc("record_feature_emphasis", {
-    p_emphasis_key: key,
+  const { error } = await database().rpc("record_pro_feature", {
     p_subject_id: subjectId,
-    p_initial_feature: initialFeature,
+    p_first_feature: firstFeature,
     p_request_fingerprint: bytea(
       await requestFingerprint(`ip:${sourceAddress}`),
     ),
-    p_event_id: eventId,
-    p_selected_feature: selectedFeature,
   });
 
   if (error) {
     if (error.code === "P0001") return json({ accepted: false }, 429, cors);
-    console.error("Feature emphasis could not be recorded", error);
+    console.error("Pro feature order could not be recorded", error);
     return json(
-      { error: "The feature emphasis could not be recorded" },
+      { error: "The Pro feature order could not be recorded" },
       500,
       cors,
     );

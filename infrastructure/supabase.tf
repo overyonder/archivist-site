@@ -107,8 +107,8 @@ resource "supabase_edge_function_secrets" "archivist" {
     { name = "AWS_SECRET_ACCESS_KEY", value = aws_iam_access_key.edge.secret },
     { name = "EMAIL_FROM", value = "Archivist <hello@${local.domain}>" },
     { name = "EMAIL_PROVIDER", value = "resend" },
-    { name = "EARLY_ACCESS_FORM_VERSION", value = "3" },
-    { name = "EARLY_ACCESS_POLICY_VERSION", value = "2026-07-28.2" },
+    { name = "EARLY_ACCESS_FORM_VERSION", value = "4" },
+    { name = "EARLY_ACCESS_POLICY_VERSION", value = "2026-07-28.3" },
     { name = "INTERNAL_FUNCTION_SECRET", value = random_password.internal_function_secret.result },
     { name = "RESEND_API_KEY", value = var.resend_api_key },
     {

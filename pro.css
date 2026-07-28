@@ -2,8 +2,8 @@
 .pro-hero { max-width: 1180px; margin: 0 auto; padding: clamp(58px, 8vw, 112px) clamp(20px, 5vw, 70px) 54px; }
 .pro-hero h1 { max-width: 900px; margin: 0; font-size: clamp(42px, 6vw, 78px); line-height: .95; letter-spacing: -.055em; }
 .feature-copy-atlas { display: none; }
-html[data-feature-emphasis="atlas"] .feature-copy-canon { display: none; }
-html[data-feature-emphasis="atlas"] .feature-copy-atlas { display: inline; }
+html[data-pro-first-feature="atlas"] .feature-copy-canon { display: none; }
+html[data-pro-first-feature="atlas"] .feature-copy-atlas { display: inline; }
 .pro-hero .hero-lede { max-width: 760px; }
 .offer-grid { max-width: 1040px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 48px 0 0; background: var(--line); border: 1px solid var(--line); }
 .offer { position: relative; min-width: 0; padding: clamp(24px, 4vw, 42px); background: var(--panel); }
@@ -28,13 +28,12 @@ html[data-feature-emphasis="atlas"] .feature-copy-atlas { display: inline; }
 .section-intro h2 { margin: 0 0 18px; font-size: clamp(31px, 4vw, 48px); line-height: 1; letter-spacing: -.045em; }
 .section-intro p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.7; }
 .pillars { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); gap: 18px; }
-.pillar { min-width: 0; padding: clamp(26px, 4vw, 42px); background: var(--panel); border: 1px solid var(--line); transition: border-color 160ms ease, opacity 160ms ease; }
+.pillar { min-width: 0; padding: clamp(26px, 4vw, 42px); background: var(--panel); border: 1px solid var(--line); }
 .pillar:not([data-feature="canon"]) { opacity: .72; }
-html[data-feature-emphasis="atlas"] .pillars { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
-html[data-feature-emphasis="atlas"] .pillar[data-feature="canon"] { opacity: .72; }
-html[data-feature-emphasis="atlas"] .pillar[data-feature="atlas"] { opacity: 1; }
-html[data-feature-emphasis="canon"] .pillar[data-feature="canon"],
-html[data-feature-emphasis="atlas"] .pillar[data-feature="atlas"] { border-color: var(--accent); }
+html[data-pro-first-feature="atlas"] .pillar[data-feature="canon"] { order: 2; opacity: .72; }
+html[data-pro-first-feature="atlas"] .pillar[data-feature="atlas"] { order: 1; opacity: 1; }
+html[data-pro-first-feature="canon"] .pillar[data-feature="canon"],
+html[data-pro-first-feature="atlas"] .pillar[data-feature="atlas"] { border-color: var(--accent); }
 .pillar-no { color: var(--accent); font: 10px ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
 .pillar h3 { margin: 18px 0 14px; font-size: clamp(25px, 3vw, 36px); letter-spacing: -.035em; }
 .pillar > p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
@@ -49,9 +48,6 @@ html[data-feature-emphasis="atlas"] .pillar[data-feature="atlas"] { border-color
 .atlas-branches { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; padding-top: 13px; }
 .atlas-branches::before { position: absolute; top: 0; left: 16%; right: 16%; height: 1px; content: ""; background: var(--accent); }
 .atlas-branches span { color: var(--muted); }
-.feature-control { margin-top: 26px; padding: 9px 11px; color: var(--muted); background: transparent; border: 1px solid var(--line-bright); cursor: pointer; font: 700 9px ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
-.feature-control:hover, .feature-control:focus-visible { color: var(--text); border-color: var(--accent); }
-.feature-control[aria-pressed="true"] { color: var(--control-contrast); background: var(--accent); border-color: var(--accent); cursor: default; }
 .ownership { background: var(--surface-1); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .ownership-inner { max-width: 1040px; margin: 0 auto; padding: clamp(64px, 8vw, 100px) clamp(20px, 5vw, 70px); }
 .ownership-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 1px; margin-top: 38px; background: var(--line); border: 1px solid var(--line); }
@@ -73,8 +69,6 @@ html[data-feature-emphasis="atlas"] .pillar[data-feature="atlas"] { border-color
 .pro-notify-link:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .offer-grid, .pillars, .ownership-grid { grid-template-columns: 1fr; }
-  html[data-feature-emphasis="atlas"] .pillars { grid-template-columns: 1fr; }
-  html[data-feature-emphasis="atlas"] .pillar[data-feature="atlas"] { order: -1; }
   .founding { grid-template-columns: 1fr; gap: 8px; }
   .offer-summary { min-height: 0; }
   .nav a:not([aria-current="page"]), .nav i, .nav span { display: none; }

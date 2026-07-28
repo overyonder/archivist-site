@@ -36,12 +36,16 @@ if (form) {
   });
   const landingPage = form.elements.namedItem("landing_page");
   if (landingPage) landingPage.value = window.location.pathname.slice(0, 200);
-  const emphasis = window.ArchivistFeatureEmphasis?.assignment;
-  if (emphasis) {
-    const subjectId = form.elements.namedItem("emphasis_subject_id");
-    const initialFeature = form.elements.namedItem("initial_feature");
-    if (subjectId) subjectId.value = emphasis.subjectId;
-    if (initialFeature) initialFeature.value = emphasis.initialFeature;
+  const signupAttribution = window.ArchivistSignupAttribution?.value;
+  if (signupAttribution) {
+    const subjectId = form.elements.namedItem("attribution_subject_id");
+    const signupSource = form.elements.namedItem("signup_source");
+    const proFirstFeature = form.elements.namedItem("pro_first_feature");
+    if (subjectId) subjectId.value = signupAttribution.subjectId;
+    if (signupSource) signupSource.value = signupAttribution.sourcePage;
+    if (proFirstFeature) {
+      proFirstFeature.value = signupAttribution.proFirstFeature ?? "";
+    }
   }
 
   const setReady = (ready, message = idleMessage) => {

@@ -4,7 +4,7 @@ project_id = "archivist"
 verify_jwt = false
 import_map = "./functions/deno.json"
 
-[functions.record-feature-emphasis]
+[functions.record-pro-feature]
 verify_jwt = false
 import_map = "./functions/deno.json"
 

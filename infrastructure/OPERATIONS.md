@@ -53,10 +53,12 @@ change:
 
 ## Production checks
 
-- Compare initial Canon and Atlas emphasis with
-  `select * from public.feature_emphasis_summary order by initial_feature;`
-  using a service-role or direct database session. Treat confirmed signups as
-  the primary result; card selections are supporting evidence.
+- Compare release-list signups by their last meaningful site page with
+  `select * from public.signup_source_summary order by signup_source;`.
+- Compare the first Pro feature shown with
+  `select * from public.pro_feature_summary order by pro_first_feature;`.
+  Use a service-role or direct database session and treat confirmed signups as
+  the primary result.
 - Resend tracking remains disabled and TLS remains enforced. SES tracking must
   remain privacy-equivalent before switching providers.
 - Review failed, suppressed and dead-letter deliveries, oldest queue age,
