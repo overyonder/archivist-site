@@ -40,7 +40,7 @@ const initializeForm = async (form) => {
   const submit = form.querySelector('button[type="submit"]');
   const status = form.querySelector("[data-early-access-status]");
   const idleMessage =
-    "Release emails cover paid early access, major availability changes and the Archivist Free release. Unsubscribe anytime.";
+    "Release emails cover the paid beta, major availability changes and the Archivist Free release. Unsubscribe anytime.";
 
   const queryAttribution = new URLSearchParams(window.location.search);
   const campaignFields = {

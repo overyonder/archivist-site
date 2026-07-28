@@ -28,7 +28,7 @@ export function confirmationEmail(confirmUrl: string) {
         <tr><td style="padding:52px 24px 46px">
           <p style="margin:0 0 18px;color:#ff8a00;font:700 11px monospace;letter-spacing:2px;text-transform:uppercase">Release notifications · Address confirmation</p>
           <h1 style="margin:0;color:#f4eee6;font:700 36px/1.05 Arial,sans-serif;letter-spacing:-1px">Confirm your address.</h1>
-          <p style="max-width:430px;margin:22px 0 0;color:#a69b90;font:16px/1.6 Arial,sans-serif">Open the link below to be notified when paid early access opens and again when Archivist Free is released.</p>
+          <p style="max-width:430px;margin:22px 0 0;color:#a69b90;font:16px/1.6 Arial,sans-serif">Open the link below to be notified when the paid beta opens and again when Archivist Free is released.</p>
           <p style="margin:34px 0 0"><a href="${escapedUrl}" style="display:inline-block;padding:14px 18px;border:1px solid #ff8a00;background:#ff8a00;color:#130b03;font:700 13px monospace;letter-spacing:1px;text-decoration:none;text-transform:uppercase">Confirm my address&nbsp;&nbsp;→</a></p>
         </td></tr>
         <tr><td style="padding:18px 24px;border-top:1px solid #302820;color:#756d66;font:12px/1.5 Arial,sans-serif">

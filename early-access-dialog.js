@@ -5,14 +5,14 @@ const formMarkup = `
   <dialog class="signup-dialog" id="earlyAccessDialog">
     <div class="signup-dialog-inner">
       <button class="signup-dialog-close" type="button" aria-label="Close release-list signup">×</button>
-      <p class="eyebrow">Release list</p>
-      <h2>Hear when Archivist is ready.</h2>
-      <p class="signup-dialog-lede">Get the founding price, early-access availability and the Archivist Free release by email.</p>
+      <p class="eyebrow">Archivist beta</p>
+      <h2>Join our beta.</h2>
+      <p class="signup-dialog-lede">Get the founding price, beta availability and the Archivist Free release by email.</p>
       <form class="signup-form signup-dialog-form" method="post" action="${joinEndpoint}">
         <div class="signup-dialog-fields">
           <label class="sr-only" for="dialog-early-access-email">Email address</label>
           <input id="dialog-early-access-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
-          <button type="submit" disabled>Get notified</button>
+          <button type="submit" disabled>Join our beta</button>
         </div>
         <label class="signup-dialog-choice">
           <input name="product_research" type="checkbox" value="yes">
@@ -49,7 +49,7 @@ if (!existingForm) {
     const link = document.createElement("a");
     link.className = "early-access-nav";
     link.href = "/#early-access";
-    link.textContent = "Early access";
+    link.textContent = "Join our beta";
     const themeToggle = nav.querySelector(".theme-toggle");
     nav.insertBefore(link, themeToggle);
   }
