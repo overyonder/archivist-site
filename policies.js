@@ -1,12 +1,17 @@
 const policyLinks = document.querySelector(".footer-policies, .legal-links");
 
 if (policyLinks) {
-  policyLinks.insertAdjacentHTML("beforeend", `
+  policyLinks.insertAdjacentHTML(
+    "beforeend",
+    `
     <i aria-hidden="true">|</i>
     <button type="button" data-dialog-open="ownershipDialog">Ownership</button>
-  `);
+  `,
+  );
 
-  document.body.insertAdjacentHTML("beforeend", `
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `
     <dialog class="legal-dialog ownership-dialog" id="ownershipDialog">
       <div>
         <h2>Your copy stays yours.</h2>
@@ -23,15 +28,28 @@ if (policyLinks) {
         <button type="button" data-dialog-close>Understood</button>
       </div>
     </dialog>
-  `);
+  `,
+  );
 }
 
 document.querySelectorAll("[data-dialog-open]").forEach((button) => {
-  button.addEventListener("click", () => document.querySelector(`#${button.dataset.dialogOpen}`).showModal());
+  button.addEventListener("click", () => {
+    const sourceByDialog = {
+      privacyDialog: "privacy",
+      piracyDialog: "piracy",
+      ownershipDialog: "ownership",
+    };
+    const source = sourceByDialog[button.dataset.dialogOpen];
+    if (source) window.ArchivistSignupAttribution?.recordSource(source);
+    document.querySelector(`#${button.dataset.dialogOpen}`).showModal();
+  });
 });
 
 document.querySelectorAll(".legal-dialog").forEach((dialog) => {
-  dialog.querySelector("[data-dialog-close]").addEventListener("click", () => dialog.close());
+  dialog.querySelector("[data-dialog-close]").addEventListener(
+    "click",
+    () => dialog.close(),
+  );
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
   });

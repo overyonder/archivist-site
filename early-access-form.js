@@ -15,15 +15,34 @@ export function renderEarlyAccessChallenge(container, callback) {
   });
 }
 
-const form = document.querySelector(".signup-form");
+const loadTurnstile = () => {
+  if (window.turnstile) return Promise.resolve();
+  const existing = document.querySelector(
+    'script[src^="https://challenges.cloudflare.com/turnstile/"]',
+  );
+  const script = existing ?? document.createElement("script");
+  if (!existing) {
+    script.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    document.head.append(script);
+  }
+  return new Promise((resolve, reject) => {
+    script.addEventListener("load", resolve, { once: true });
+    script.addEventListener("error", reject, { once: true });
+  });
+};
 
-if (form) {
+const initializeForm = async (form) => {
+  if (form.dataset.earlyAccessInitialized) return;
+  form.dataset.earlyAccessInitialized = "true";
   const challenge = form.querySelector("[data-early-access-challenge]");
   const submit = form.querySelector('button[type="submit"]');
   const status = form.querySelector("[data-early-access-status]");
-  const idleMessage = "Release emails cover paid early access, major availability changes and the Archivist Free release. Unsubscribe anytime.";
+  const idleMessage =
+    "Release emails cover paid early access, major availability changes and the Archivist Free release. Unsubscribe anytime.";
 
-  const attribution = new URLSearchParams(window.location.search);
+  const queryAttribution = new URLSearchParams(window.location.search);
   const campaignFields = {
     campaign_source: "utm_source",
     campaign_medium: "utm_medium",
@@ -32,12 +51,16 @@ if (form) {
   };
   Object.entries(campaignFields).forEach(([fieldName, parameterName]) => {
     const field = form.elements.namedItem(fieldName);
-    if (field) field.value = (attribution.get(parameterName) ?? "").slice(0, 100);
+    if (field) {
+      field.value = (queryAttribution.get(parameterName) ?? "").slice(0, 100);
+    }
   });
   const landingPage = form.elements.namedItem("landing_page");
   if (landingPage) landingPage.value = window.location.pathname.slice(0, 200);
-  const signupAttribution = window.ArchivistSignupAttribution?.value;
-  if (signupAttribution) {
+
+  const populateSignupAttribution = () => {
+    const signupAttribution = window.ArchivistSignupAttribution?.value;
+    if (!signupAttribution) return;
     const subjectId = form.elements.namedItem("attribution_subject_id");
     const signupSources = form.elements.namedItem("signup_sources");
     const proFirstFeature = form.elements.namedItem("pro_first_feature");
@@ -48,30 +71,39 @@ if (form) {
     if (proFirstFeature) {
       proFirstFeature.value = signupAttribution.proFirstFeature ?? "";
     }
-  }
+  };
+  populateSignupAttribution();
+  window.addEventListener(
+    "archivist:signup-attribution",
+    populateSignupAttribution,
+  );
 
   const setReady = (ready, message = idleMessage) => {
     submit.disabled = !ready;
     status.textContent = message;
   };
 
-  const initialize = () => {
-    try {
-      renderEarlyAccessChallenge(challenge, (token) => {
-        setReady(Boolean(token), token ? idleMessage : "Verification expired. Please try again.");
-      });
-    } catch (error) {
-      console.error("Could not start early-access verification", error);
-      setReady(false, "Verification didn’t load. Refresh the page to try again.");
-    }
-  };
-
-  if (document.readyState === "complete") initialize();
-  else window.addEventListener("load", initialize, { once: true });
+  try {
+    await loadTurnstile();
+    renderEarlyAccessChallenge(challenge, (token) => {
+      setReady(
+        Boolean(token),
+        token ? idleMessage : "Verification expired. Please try again.",
+      );
+    });
+  } catch (error) {
+    console.error("Could not start early-access verification", error);
+    setReady(false, "Verification didn’t load. Refresh the page to try again.");
+  }
 
   form.addEventListener("submit", () => {
+    populateSignupAttribution();
     submit.disabled = true;
     submit.textContent = "Subscribing…";
     status.textContent = "Sending your confirmation email…";
   });
-}
+};
+
+await Promise.all(
+  [...document.querySelectorAll(".signup-form")].map(initializeForm),
+);

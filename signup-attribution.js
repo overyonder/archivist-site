@@ -55,28 +55,40 @@
   };
 
   const stored = readStoredAttribution();
-  const meaningfulSource = isSlug(sourcePage) ? sourcePage : null;
-  const previousSources = stored?.sourcePages ?? [];
-  const sourcePages = meaningfulSource
-    ? [
-      ...previousSources.filter((source) => source !== "direct"),
-      ...(previousSources.includes(meaningfulSource) ? [] : [meaningfulSource]),
-    ]
-    : (previousSources.length > 0 ? previousSources : ["direct"]);
   const attribution = {
     subjectId: stored?.subjectId ?? window.crypto.randomUUID(),
-    sourcePages,
+    sourcePages: stored?.sourcePages ?? ["direct"],
     proFirstFeature: stored?.proFirstFeature ??
       (proFeatures.length > 0 ? chooseFeature() : null),
   };
 
-  if (!isPreview) {
+  const persist = () => {
+    if (isPreview) return;
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(attribution));
     } catch {
       // Signup still works for this page view when storage is unavailable.
     }
-  }
+  };
+
+  const recordSource = (source) => {
+    if (
+      isPreview || !isSlug(source) || attribution.sourcePages.includes(source)
+    ) {
+      return false;
+    }
+    const retainedSources = attribution.sourcePages.filter((value) =>
+      value !== "direct"
+    );
+    if (retainedSources.length >= 16) return false;
+    attribution.sourcePages = [...retainedSources, source];
+    persist();
+    window.dispatchEvent(new CustomEvent("archivist:signup-attribution"));
+    return true;
+  };
+
+  if (isSlug(sourcePage)) recordSource(sourcePage);
+  else persist();
 
   const displayedFeature = isPreview
     ? previewFeature
@@ -87,6 +99,7 @@
 
   window.ArchivistSignupAttribution = {
     value: isPreview ? null : attribution,
+    recordSource,
   };
 
   if (!isPreview && proFeatures.length > 0 && attribution.proFirstFeature) {
