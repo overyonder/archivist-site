@@ -55,9 +55,7 @@ change:
 
 - Compare release-list signups by every selected site page seen before signup with
   `select * from public.signup_source_summary order by signup_source;`.
-- Compare the first Pro feature shown with
-  `select * from public.pro_feature_summary order by pro_first_feature;`.
-  Use a service-role or direct database session and treat confirmed signups as
+- Use a service-role or direct database session and treat confirmed signups as
   the primary result.
 - Resend tracking remains disabled and TLS remains enforced. SES tracking must
   remain privacy-equivalent before switching providers.

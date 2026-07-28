@@ -63,13 +63,9 @@ const initializeForm = async (form) => {
     if (!signupAttribution) return;
     const subjectId = form.elements.namedItem("attribution_subject_id");
     const signupSources = form.elements.namedItem("signup_sources");
-    const proFirstFeature = form.elements.namedItem("pro_first_feature");
     if (subjectId) subjectId.value = signupAttribution.subjectId;
     if (signupSources) {
       signupSources.value = JSON.stringify(signupAttribution.sourcePages);
-    }
-    if (proFirstFeature) {
-      proFirstFeature.value = signupAttribution.proFirstFeature ?? "";
     }
   };
   populateSignupAttribution();

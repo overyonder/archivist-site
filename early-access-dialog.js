@@ -25,7 +25,6 @@ const formMarkup = `
         <input name="landing_page" type="hidden">
         <input name="attribution_subject_id" type="hidden">
         <input name="signup_sources" type="hidden">
-        <input name="pro_first_feature" type="hidden">
         <div class="turnstile-challenge" data-early-access-challenge></div>
         <small data-early-access-status aria-live="polite">Preparing secure signup…</small>
         <small>See how we handle your information in our <a href="privacy">privacy policy</a>.</small>
