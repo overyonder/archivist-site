@@ -2,6 +2,7 @@ import { bytea, database, errorMessage } from "../_shared/database.ts";
 import { requiredEnv } from "../_shared/config.ts";
 import { acceptsHtml, corsHeaders, json, redirect } from "../_shared/http.ts";
 import { sendConfirmation } from "../_shared/email.ts";
+import { emailDomainStatus } from "../_shared/email-domain.ts";
 import {
   actionToken,
   requestFingerprint,
@@ -64,6 +65,22 @@ Deno.serve(async (request) => {
     return acceptsHtml(request)
       ? redirect("/early-access/error/")
       : json({ error: "Human verification failed" }, 400, cors);
+  }
+
+  const domainStatus = await emailDomainStatus(normalizedEmail);
+  if (domainStatus === "invalid") {
+    return acceptsHtml(request)
+      ? redirect("/early-access/email-invalid/")
+      : json({ error: "A valid email address is required" }, 400, cors);
+  }
+  if (domainStatus === "unreceivable") {
+    return acceptsHtml(request)
+      ? redirect("/early-access/email-invalid/")
+      : json(
+        { error: "That email domain does not receive email" },
+        400,
+        cors,
+      );
   }
 
   const db = database();
